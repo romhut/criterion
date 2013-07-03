@@ -8,14 +8,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class TestCommand extends Command
 {
-	public $app = null;
-	public function __construct($var, $app)
-	{
-		parent::__construct($var);
-		$this->app = $app;
-	}
     protected function configure()
     {
+
+
         $this
             ->setName('test')
             ->setDescription('Run a test')
@@ -27,55 +23,109 @@ class TestCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-    	$build_id = 'build_' . uniqid();
-    	$project_id = $input->getArgument('project_id');
-        $output->writeln('Running tests for project: ' . $project_id);
+        $build_id = 'build_' . uniqid();
+        $project_id = $input->getArgument('project_id');
+
+
+        $this->getApplication()->db['builds']->save(array(
+            'build_id' => $build_id,
+            'project_id' => $project_id,
+            'started' => new \MongoDate()
+        ));
+
+        $output->writeln('CI has started...');
+        $output->writeln('     - Project: '. $project_id);
+        $output->writeln('     - Build: '. $build_id);
+        $output->writeln('');
 
         $project_folder = TEST_DIR . '/' . $project_id;
         $build_folder = $project_folder . '/' . $build_id;
         if ( ! is_dir($project_folder))
         {
-        	mkdir($project_folder, 0777, true);
+            mkdir($project_folder, 0777, true);
         }
 
-        $project = [
-        	'git' => 'git@github.com:scottymeuk/ping',
-        	'tests' => [
-        		'setup' => [
+        $project = array(
+            'id' => $project_id,
+            'repo' => 'git@github.com:romhut/api',
+            'branch' => 'master',
+            'commands' => array(
+                'setup' => array(
+                    'composer install --dev',
+                ),
+                'run' => array(
+                    // 'vendor/bin/phpunit'
+                ),
+                'pass' => array(
+                    'echo "pass"'
+                ),
+                'fail' => array(
 
-        		],
-        		'test' => [
-        			"echo 'hi'"
-        		],
-        		'success' => [
+                )
+            )
+        );
+        $project['commands']['fail'][] = sprintf('rm -rf %s', $build_id);
+        $project['commands']['pass'][] = sprintf('rm -rf %s', $build_id);
 
-        		],
-        		'fail' => [
+        $this->getApplication()->setProject($project);
+        $this->getApplication()->setBuild($build_id);
+        $this->getApplication()->setOutput($output);
 
-        		]
+        $output->writeln('<question>Running setup</question>');
+        $original_dir = getcwd();
+        chdir($project_folder);
+        $this->getApplication()->executeAndLog(sprintf('git clone -b %s --depth=5 %s %s', $project['branch'], $project['repo'], $build_id));
+        chdir($project_folder . '/' . $build_id);
 
-        	]
-       	];
+        // Get and store git info
+        exec('git rev-parse HEAD', $hash);
+        $commit['hash'] = $hash[0];
 
-       	array_unshift($project['tests']['setup'], sprintf('git clone %s %s', $project['git'], $build_id));
-       	$project['tests']['fail'][] = sprintf('rm -rf %s', $build_id);
-       	$project['tests']['success'][] = sprintf('rm -rf %s', $build_id);
+        exec("git --no-pager show -s --format='%an <%ae>' " . $commit['hash'], $author);
+        $commit['author'] = $author[0];
 
-       	$original_dir = getcwd();
-       	chdir($project_folder);
+        exec("git show --format='%ci' " . $commit['hash'], $date);
+        $commit['date'] = new \MongoDate(strtotime($date[0]));
 
-       	foreach ($project['tests']['setup'] as $setup)
-       	{
-       		$this->app->executeAndLog($setup, $build_id, $project);
-       	}
 
-       	foreach ($project['tests']['test'] as $test)
-       	{
-       		$this->app->executeAndLog($test, $build_id, $project);
-       	}
+        $this->getApplication()->db['builds']->update(array(
+            'build_id' => $build_id,
+            'project_id' => $project_id,
+        ), array(
+            '$set' => array(
+                'commit' => $commit,
+                'branch' => $project['branch'],
+                'repo' => $project['repo']
+            )
+        ));
 
-       	chdir($original_dir);
+        foreach ($project['commands']['setup'] as $setup)
+        {
+            $response = $this->getApplication()->executeAndLog($setup);
+            if ($response['response'] != 0)
+            {
+                return $this->getApplication()->buildFailed($response);
+            }
+        }
 
+        $output->writeln('<question>Running tests</question>');
+
+        if (count($project['commands']['run']))
+        {
+            foreach ($project['commands']['run'] as $run)
+            {
+                $response = $this->getApplication()->executeAndLog($run);
+                if ($response['response'] != 0)
+                {
+                    return $this->getApplication()->buildFailed($response);
+                }
+            }
+        }
+        else
+        {
+            $output->writeln('No tests to run');
+        }
+
+        return $this->getApplication()->buildPassed();
     }
-
 }
