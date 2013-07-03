@@ -1,5 +1,7 @@
 {
 	"require": {
+		"ext-mongo": "*",
+		"ext-gearman": "*",
 		"silex/silex": "1.0.*@dev",
 		"symfony/console": "2.3.*@dev",
         "twig/twig": "1.13.*@dev",
