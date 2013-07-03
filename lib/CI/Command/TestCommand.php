@@ -51,7 +51,7 @@ class TestCommand extends Command
                 'setup' => array(
                     'composer install --dev',
                 ),
-                'run' => array(
+                'test' => array(
                     // 'vendor/bin/phpunit'
                 ),
                 'pass' => array(
@@ -108,13 +108,13 @@ class TestCommand extends Command
             }
         }
 
-        $output->writeln('<question>Running "run" commands</question>');
+        $output->writeln('<question>Running "test" commands</question>');
 
-        if (count($project['commands']['run']))
+        if (count($project['commands']['test']))
         {
-            foreach ($project['commands']['run'] as $run)
+            foreach ($project['commands']['test'] as $test)
             {
-                $response = $this->getApplication()->executeAndLog($run);
+                $response = $this->getApplication()->executeAndLog($test);
                 if ($response['response'] != 0)
                 {
                     return $this->getApplication()->buildFailed($response);
