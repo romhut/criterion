@@ -1,16 +1,16 @@
 <?php
 namespace CI\UI\Controller;
 
-class BuildController
+class TestController
 {
     public function view(\Silex\Application $app)
     {
-        $data['build'] = $app['mongo']->builds->findOne(array(
+        $data['test'] = $app['mongo']->tests->findOne(array(
             '_id' => new \MongoId($app['request']->get('id'))
         ));
 
         $logs = $app['mongo']->logs->find(array(
-            'build_id' => new \MongoId($app['request']->get('id'))
+            'test_id' => new \MongoId($app['request']->get('id'))
         ));
 
         $data['log'] = array();

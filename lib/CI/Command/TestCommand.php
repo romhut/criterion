@@ -15,14 +15,15 @@ class TestCommand extends Command
             ->setDescription('Run a test')
              ->setDefinition(array(
                 new InputArgument('project_id', InputArgument::REQUIRED, 'Project ID', null),
+                new InputArgument('test_id', InputArgument::REQUIRED, 'test ID', null),
              ))
             ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $build_id = new \MongoId();
         $project_id = new \MongoId($input->getArgument('project_id'));
+        $test_id = new \MongoId($input->getArgument('test_id'));
 
         $get_project = $this->getApplication()->db->projects->findOne(array(
             '_id' => $project_id
@@ -34,8 +35,18 @@ class TestCommand extends Command
             return false;
         }
 
+        $get_test = $this->getApplication()->db->tests->findOne(array(
+            '_id' => $test_id
+        ));
+
+        if ( ! $get_project)
+        {
+            $output->writeln('<error>No Project Found</error>');
+            return false;
+        }
+
         $data = array(
-            '_id' => $build_id,
+            '_id' => $test_id,
             'project_id' => $project_id,
             'started' => new \MongoDate(),
             'status' => array(
@@ -44,18 +55,18 @@ class TestCommand extends Command
             )
         );
 
-        $this->getApplication()->db->builds->save($data);
-        $this->getApplication()->setBuild($build_id);
+        $this->getApplication()->db->tests->save($data);
+        $this->getApplication()->settest($test_id);
 
-        $build_id = (String) $build_id;
+        $test_id = (String) $test_id;
 
         $output->writeln('CI has started...');
         $output->writeln('     - Project: '. (String) $project_id);
-        $output->writeln('     - Build: '.  $build_id);
+        $output->writeln('     - test: '.  $test_id);
         $output->writeln('');
 
         $project_folder = TEST_DIR . '/' . (String) $project_id;
-        $build_folder = $project_folder . '/' . $build_id;
+        $test_folder = $project_folder . '/' . $test_id;
         if ( ! is_dir($project_folder))
         {
             mkdir($project_folder, 0777, true);
@@ -66,13 +77,13 @@ class TestCommand extends Command
 
         if ( ! $project)
         {
-            return $this->getApplication()->buildFailed('Config file invalid.');
+            return $this->getApplication()->testFailed('Config file invalid.');
         }
 
         $project = $project + $get_project;
         $project['id'] = $project_id;
-        $project['commands']['fail'][] = sprintf('rm -rf %s', $build_id);
-        $project['commands']['pass'][] = sprintf('rm -rf %s', $build_id);
+        $project['commands']['fail'][] = sprintf('rm -rf %s', $test_id);
+        $project['commands']['pass'][] = sprintf('rm -rf %s', $test_id);
 
         $this->getApplication()->setProject($project);
         $this->getApplication()->setOutput($output);
@@ -80,8 +91,8 @@ class TestCommand extends Command
         $output->writeln('<question>Running "setup" commands</question>');
         $original_dir = getcwd();
         chdir($project_folder);
-        $this->getApplication()->executeAndLog(sprintf('git clone -b %s --depth=1 %s %s', $project['branch'], $project['repo'], $build_id));
-        chdir($project_folder . '/' . $build_id);
+        $this->getApplication()->executeAndLog(sprintf('git clone -b %s --depth=1 %s %s', $project['branch'], $project['repo'], $test_id));
+        chdir($project_folder . '/' . $test_id);
 
         exec("git --no-pager show -s --format='%h'", $short_hash);
         $commit['hash']['short'] = $short_hash[0];
@@ -101,8 +112,8 @@ class TestCommand extends Command
         exec("git show --format='%ci' " . $commit['hash']['long'], $date);
         $commit['date'] = new \MongoDate(strtotime($date[0]));
 
-        $this->getApplication()->db->builds->update(array(
-            'build_id' => $build_id,
+        $this->getApplication()->db->tests->update(array(
+            'test_id' => $test_id,
             'project_id' => $project_id,
         ), array(
             '$set' => array(
@@ -119,7 +130,7 @@ class TestCommand extends Command
                 $response = $this->getApplication()->executeAndLog($setup);
                 if ($response['response'] != 0)
                 {
-                    return $this->getApplication()->buildFailed($response);
+                    return $this->getApplication()->testFailed($response);
                 }
             }
         }
@@ -133,7 +144,7 @@ class TestCommand extends Command
                 $response = $this->getApplication()->executeAndLog($test);
                 if ($response['response'] != 0)
                 {
-                    return $this->getApplication()->buildFailed($response);
+                    return $this->getApplication()->testFailed($response);
                 }
             }
         }
@@ -142,6 +153,6 @@ class TestCommand extends Command
             $output->writeln('No tests to run');
         }
 
-        return $this->getApplication()->buildPassed();
+        return $this->getApplication()->testPassed();
     }
 }

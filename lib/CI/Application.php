@@ -10,7 +10,7 @@ class Application extends SymfonyApplication
 {
 	public $mongo = null;
 	public $project = array();
-	public $build = null;
+	public $test = null;
 	public $output = null;
 	public $db = array();
 
@@ -25,9 +25,9 @@ class Application extends SymfonyApplication
 		$this->project = $project;
 	}
 
-	public function setBuild($build)
+	public function settest($test)
 	{
-		$this->build = $build;
+		$this->test = $test;
 	}
 
 	public function setOutput($output)
@@ -50,7 +50,7 @@ class Application extends SymfonyApplication
 			'output' => $output,
 			'response' => $response,
 			'command' => $command,
-			'build_id' => new \MongoId($this->build),
+			'test_id' => new \MongoId($this->test),
 			'project_id' => $this->project['id'],
 			'time' => new \MongoDate()
 		);
@@ -65,10 +65,10 @@ class Application extends SymfonyApplication
 		return $data;
 	}
 
-	public function buildFailed($command_response)
+	public function testFailed($command_response)
 	{
-		$this->db->builds->update(array(
-            '_id' => $this->build,
+		$this->db->tests->update(array(
+            '_id' => $this->test,
             'project_id' => $this->project['id'],
         ), array(
             '$set' => array(
@@ -88,14 +88,14 @@ class Application extends SymfonyApplication
             $response = $this->executeAndLog($fail);
         }
 
-        $this->output->writeln('<error>Build failed</error>');
+        $this->output->writeln('<error>test failed</error>');
 		return false;
 	}
 
-	public function buildPassed()
+	public function testPassed()
 	{
-		$this->db->builds->update(array(
-            '_id' => $this->build,
+		$this->db->tests->update(array(
+            '_id' => $this->test,
             'project_id' => $this->project['id'],
         ), array(
             '$set' => array(
@@ -114,7 +114,7 @@ class Application extends SymfonyApplication
             $response = $this->executeAndLog($pass);
         }
 
-        $this->output->writeln('<question>Build passed</question>');
+        $this->output->writeln('<question>test passed</question>');
 		return false;
 	}
 
@@ -135,8 +135,8 @@ class Application extends SymfonyApplication
         	}
         }
 
-        $this->db->builds->update(array(
-        	'_id' => $this->build,
+        $this->db->tests->update(array(
+        	'_id' => $this->test,
         ), array(
         	'$set' => array(
         		'config' => $project

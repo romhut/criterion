@@ -10,6 +10,7 @@ $mongo = new MongoMinify\Client();
 $app->setMongo($mongo);
 $app->addCommands(array(
     new CI\Command\TestCommand('test', $app),
+    new CI\Command\CreateTestCommand('create_test', $app),
 ));
 
 $app->run();
