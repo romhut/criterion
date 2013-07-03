@@ -89,7 +89,7 @@ class Application extends SymfonyApplication
 
 	public function buildPassed()
 	{
-		$this->db['builds']->update(array(
+		$this->db->builds->update(array(
             'build_id' => $this->build,
             'project_id' => $this->project['id'],
         ), array(
