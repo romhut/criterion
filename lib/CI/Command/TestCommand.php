@@ -45,7 +45,7 @@ class TestCommand extends Command
 
         $project = array(
             'id' => $project_id,
-            'repo' => 'git@github.com:romhut/api',
+            'repo' => 'git@github.com:marcqualie/mongominify',
             'branch' => 'master',
             'commands' => array(
                 'setup' => array(
