@@ -10,7 +10,7 @@ class BuildController
         ));
 
         $logs = $app['mongo']->logs->find(array(
-            'build_id' => $app['request']->get('id') // TODO: use mongoid
+            'build_id' => new \MongoId($app['request']->get('id'))
         ));
 
         $data['log'] = array();

@@ -21,12 +21,12 @@ class TestCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $build_id = 'build_' . uniqid();
-        $project_id = $input->getArgument('project_id');
+        $build_id = new \MongoId();
+        $project_id = new \MongoId();
 
         $data = array(
-            'build_id' => $build_id,
-            'project_id' => $project_id,
+            '_id' => $build_id,
+            'project_id' => new \MongoId($project_id),
             'started' => new \MongoDate(),
             'status' => array(
                 'code' => '3',
@@ -35,6 +35,8 @@ class TestCommand extends Command
         );
 
         $this->getApplication()->db->builds->save($data);
+
+        $build_id = (String) $build_id;
 
         $output->writeln('CI has started...');
         $output->writeln('     - Project: '. $project_id);
