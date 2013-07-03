@@ -24,8 +24,7 @@ class TestCommand extends Command
         $build_id = 'build_' . uniqid();
         $project_id = $input->getArgument('project_id');
 
-
-        $this->getApplication()->db->builds->save(array(
+        $data = array(
             'build_id' => $build_id,
             'project_id' => $project_id,
             'started' => new \MongoDate(),
@@ -33,7 +32,9 @@ class TestCommand extends Command
                 'code' => '3',
                 'message' => 'Running'
             )
-        ));
+        );
+
+        $this->getApplication()->db->builds->save($data);
 
         $output->writeln('CI has started...');
         $output->writeln('     - Project: '. $project_id);

@@ -2,7 +2,8 @@
 	"require": {
 		"silex/silex": "1.0.*@dev",
 		"symfony/console": "2.3.*@dev",
-        "twig/twig": "1.13.*@dev"
+        "twig/twig": "1.13.*@dev",
+        "marcqualie/mongominify": "dev-master"
 	},
 	"autoload": {
 		"psr-0": {
