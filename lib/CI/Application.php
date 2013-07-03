@@ -68,7 +68,7 @@ class Application extends SymfonyApplication
 	public function buildFailed($command_response)
 	{
 		$this->db->builds->update(array(
-            'build_id' => $this->build,
+            '_id' => $this->build,
             'project_id' => $this->project['id'],
         ), array(
             '$set' => array(
@@ -95,7 +95,7 @@ class Application extends SymfonyApplication
 	public function buildPassed()
 	{
 		$this->db->builds->update(array(
-            'build_id' => $this->build,
+            '_id' => $this->build,
             'project_id' => $this->project['id'],
         ), array(
             '$set' => array(
@@ -144,6 +144,14 @@ class Application extends SymfonyApplication
         		 $project['commands'][$section] = array();
         	}
         }
+
+        $this->db->builds->update(array(
+        	'_id' => $this->build,
+        ), array(
+        	'$set' => array(
+        		'config' => $project
+        	)
+        ));
 
         return $project;
 	}

@@ -26,7 +26,7 @@ class TestCommand extends Command
 
         $data = array(
             '_id' => $build_id,
-            'project_id' => new \MongoId($project_id),
+            'project_id' => $project_id,
             'started' => new \MongoDate(),
             'status' => array(
                 'code' => '3',
@@ -35,15 +35,16 @@ class TestCommand extends Command
         );
 
         $this->getApplication()->db->builds->save($data);
+        $this->getApplication()->setBuild($build_id);
 
         $build_id = (String) $build_id;
 
         $output->writeln('CI has started...');
-        $output->writeln('     - Project: '. $project_id);
-        $output->writeln('     - Build: '. $build_id);
+        $output->writeln('     - Project: '. (String) $project_id);
+        $output->writeln('     - Build: '.  $build_id);
         $output->writeln('');
 
-        $project_folder = TEST_DIR . '/' . $project_id;
+        $project_folder = TEST_DIR . '/' . (String) $project_id;
         $build_folder = $project_folder . '/' . $build_id;
         if ( ! is_dir($project_folder))
         {
@@ -63,7 +64,6 @@ class TestCommand extends Command
         $project['commands']['pass'][] = sprintf('rm -rf %s', $build_id);
 
         $this->getApplication()->setProject($project);
-        $this->getApplication()->setBuild($build_id);
         $this->getApplication()->setOutput($output);
 
         $output->writeln('<question>Running "setup" commands</question>');
