@@ -77,7 +77,7 @@ class Application extends SymfonyApplication
         ));
 
 		$this->output->writeln('');
-		$this->output->writeln('<question>Running failed</question>');
+		$this->output->writeln('<question>Running "fail" commands</question>');
         foreach ($this->project['commands']['fail'] as $fail)
         {
             $response = $this->executeAndLog($fail);
@@ -103,7 +103,7 @@ class Application extends SymfonyApplication
         ));
 
 		$this->output->writeln('');
-		$this->output->writeln('<question>Running success</question>');
+		$this->output->writeln('<question>Running "pass" commands</question>');
         foreach ($this->project['commands']['pass'] as $pass)
         {
             $response = $this->executeAndLog($pass);

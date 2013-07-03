@@ -69,7 +69,7 @@ class TestCommand extends Command
         $this->getApplication()->setBuild($build_id);
         $this->getApplication()->setOutput($output);
 
-        $output->writeln('<question>Running setup</question>');
+        $output->writeln('<question>Running "setup" commands</question>');
         $original_dir = getcwd();
         chdir($project_folder);
         $this->getApplication()->executeAndLog(sprintf('git clone -b %s --depth=5 %s %s', $project['branch'], $project['repo'], $build_id));
@@ -108,7 +108,7 @@ class TestCommand extends Command
             }
         }
 
-        $output->writeln('<question>Running tests</question>');
+        $output->writeln('<question>Running "run" commands</question>');
 
         if (count($project['commands']['run']))
         {
