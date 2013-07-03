@@ -28,7 +28,11 @@ class TestCommand extends Command
         $this->getApplication()->db->builds->save(array(
             'build_id' => $build_id,
             'project_id' => $project_id,
-            'started' => new \MongoDate()
+            'started' => new \MongoDate(),
+            'status' => array(
+                'code' => '3',
+                'message' => 'Running'
+            )
         ));
 
         $output->writeln('CI has started...');
@@ -75,14 +79,22 @@ class TestCommand extends Command
         $this->getApplication()->executeAndLog(sprintf('git clone -b %s --depth=5 %s %s', $project['branch'], $project['repo'], $build_id));
         chdir($project_folder . '/' . $build_id);
 
-        // Get and store git info
-        exec('git rev-parse HEAD', $hash);
-        $commit['hash'] = $hash[0];
+        exec("git --no-pager show -s --format='%h'", $short_hash);
+        $commit['hash']['short'] = $short_hash[0];
 
-        exec("git --no-pager show -s --format='%an <%ae>' " . $commit['hash'], $author);
-        $commit['author'] = $author[0];
+        exec("git --no-pager show -s --format='%H'", $long_hash);
+        $commit['hash']['long'] = $long_hash[0];
 
-        exec("git show --format='%ci' " . $commit['hash'], $date);
+        exec("git --no-pager show -s --format='%an' " . $commit['hash']['long'], $author_name);
+        $commit['author']['name'] = $author_name[0];
+
+        exec("git --no-pager show -s --format='%ae' " . $commit['hash']['long'], $author_email);
+        $commit['author']['email'] = $author_email[0];
+
+        exec("git --no-pager show -s --format='%s' " . $commit['hash']['long'], $message);
+        $commit['message'] = $message[0];
+
+        exec("git show --format='%ci' " . $commit['hash']['long'], $date);
         $commit['date'] = new \MongoDate(strtotime($date[0]));
 
         $this->getApplication()->db->builds->update(array(
