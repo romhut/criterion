@@ -24,6 +24,16 @@ class TestCommand extends Command
         $build_id = new \MongoId();
         $project_id = new \MongoId($input->getArgument('project_id'));
 
+        $get_project = $this->getApplication()->db->projects->findOne(array(
+            '_id' => $project_id
+        ));
+
+        if ( ! $get_project)
+        {
+            $output->writeln('<error>No Project Found</error>');
+            return false;
+        }
+
         $data = array(
             '_id' => $build_id,
             'project_id' => $project_id,
@@ -59,6 +69,7 @@ class TestCommand extends Command
             return $this->getApplication()->buildFailed('Config file invalid.');
         }
 
+        $project = $project + $get_project;
         $project['id'] = $project_id;
         $project['commands']['fail'][] = sprintf('rm -rf %s', $build_id);
         $project['commands']['pass'][] = sprintf('rm -rf %s', $build_id);
@@ -69,7 +80,7 @@ class TestCommand extends Command
         $output->writeln('<question>Running "setup" commands</question>');
         $original_dir = getcwd();
         chdir($project_folder);
-        $this->getApplication()->executeAndLog(sprintf('git clone -b %s --depth=5 %s %s', $project['branch'], $project['repo'], $build_id));
+        $this->getApplication()->executeAndLog(sprintf('git clone -b %s --depth=1 %s %s', $project['branch'], $project['repo'], $build_id));
         chdir($project_folder . '/' . $build_id);
 
         exec("git --no-pager show -s --format='%h'", $short_hash);

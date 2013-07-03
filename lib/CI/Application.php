@@ -122,16 +122,6 @@ class Application extends SymfonyApplication
 	{
         $project = Yaml::parse($config);
 
-        if ( ! isset($project['repo']))
-        {
-        	return false;
-        }
-
-        if( ! isset($project['branch']))
-        {
-        	$project['branch'] = 'master';
-        }
-
         if( ! isset($project['commands']) || ! is_array($project['commands']))
         {
         	return false;

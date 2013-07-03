@@ -1,5 +1,3 @@
-repo: git@github.com:marcqualie/mongominify
-branch: master
 commands:
     setup:
         - composer install --dev
