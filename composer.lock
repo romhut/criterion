@@ -11,12 +11,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/marcqualie/mongominify.git",
-                "reference": "d278901f5ba97fb1d0e4ec7d2786b674eab0462b"
+                "reference": "1b30c4ecf3296c3e1c5a36903f675cd59eb7a3a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marcqualie/mongominify/zipball/d278901f5ba97fb1d0e4ec7d2786b674eab0462b",
-                "reference": "d278901f5ba97fb1d0e4ec7d2786b674eab0462b",
+                "url": "https://api.github.com/repos/marcqualie/mongominify/zipball/1b30c4ecf3296c3e1c5a36903f675cd59eb7a3a1",
+                "reference": "1b30c4ecf3296c3e1c5a36903f675cd59eb7a3a1",
                 "shasum": ""
             },
             "require": {
@@ -45,7 +45,7 @@
                 "library",
                 "mongodb"
             ],
-            "time": "2013-07-03 11:49:08"
+            "time": "2013-07-03 17:45:40"
         },
         {
             "name": "pimple/pimple",
