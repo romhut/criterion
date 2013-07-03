@@ -42,12 +42,16 @@ class Application extends SymfonyApplication
 		$output = ob_get_contents();
 		ob_end_clean();
 
+		$output = trim($output);
+		$output = str_replace(TEST_DIR, null, $output);
+
 		$data = array(
-			'output' => trim($output),
+			'output' => $output,
 			'response' => $response,
 			'command' => $command,
-			'build_id' => $this->build,
-			'project_id' => $this->project['id']
+			'build_id' => new \MongoId($this->build),
+			'project_id' => $this->project['id'],
+			'time' => new \MongoDate()
 		);
 		$this->db->logs->save($data);
 
