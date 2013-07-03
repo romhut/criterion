@@ -50,25 +50,15 @@ class TestCommand extends Command
             mkdir($project_folder, 0777, true);
         }
 
-        $project = array(
-            'id' => $project_id,
-            'repo' => 'git@github.com:marcqualie/mongominify',
-            'branch' => 'master',
-            'commands' => array(
-                'setup' => array(
-                    'composer install --dev',
-                ),
-                'test' => array(
-                    'vendor/bin/phpunit'
-                ),
-                'pass' => array(
-                    'echo "pass"'
-                ),
-                'fail' => array(
+        $config_file = ROOT . '/ci.yml';
+        $project = $this->getApplication()->parseConfig($config_file);
 
-                )
-            )
-        );
+        if ( ! $project)
+        {
+            return $this->getApplication()->buildFailed('Config file invalid.');
+        }
+
+        $project['id'] = $project_id;
         $project['commands']['fail'][] = sprintf('rm -rf %s', $build_id);
         $project['commands']['pass'][] = sprintf('rm -rf %s', $build_id);
 

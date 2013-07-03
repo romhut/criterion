@@ -3,6 +3,7 @@ namespace CI;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Yaml\Yaml;
 
 
 class Application extends SymfonyApplication
@@ -115,6 +116,36 @@ class Application extends SymfonyApplication
 
         $this->output->writeln('<question>Build passed</question>');
 		return false;
+	}
+
+	public function parseConfig($config)
+	{
+        $project = Yaml::parse($config);
+
+        if ( ! isset($project['repo']))
+        {
+        	return false;
+        }
+
+        if( ! isset($project['branch']))
+        {
+        	$project['branch'] = 'master';
+        }
+
+        if( ! isset($project['commands']) || ! is_array($project['commands']))
+        {
+        	return false;
+        }
+
+        foreach (array('setup', 'test', 'fail', 'pass') as $section)
+        {
+        	if ( ! isset($project['commands'][$section]) ||  ! is_array($project['commands'][$section]))
+        	{
+        		 $project['commands'][$section] = array();
+        	}
+        }
+
+        return $project;
 	}
 
 

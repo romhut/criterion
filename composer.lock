@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "5fc7c8deb83b9b2cb51f727a7218186f",
+    "hash": "82b26d1ace5aa0bf8b4b70a502e93c23",
     "packages": [
         {
             "name": "marcqualie/mongominify",
@@ -555,6 +555,53 @@
             "time": "2013-05-20 08:57:26"
         },
         {
+            "name": "symfony/yaml",
+            "version": "dev-master",
+            "target-dir": "Symfony/Component/Yaml",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/Yaml.git",
+                "reference": "82100c7732c95452702d11433aad50988700d36c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/82100c7732c95452702d11433aad50988700d36c",
+                "reference": "82100c7732c95452702d11433aad50988700d36c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Symfony\\Component\\Yaml\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony Yaml Component",
+            "homepage": "http://symfony.com",
+            "time": "2013-05-16 07:54:39"
+        },
+        {
             "name": "twig/twig",
             "version": "dev-master",
             "source": {
@@ -615,7 +662,8 @@
         "silex/silex": 20,
         "symfony/console": 20,
         "twig/twig": 20,
-        "marcqualie/mongominify": 20
+        "marcqualie/mongominify": 20,
+        "symfony/yaml": 20
     },
     "platform": [
 
