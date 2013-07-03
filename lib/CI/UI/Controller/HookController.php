@@ -3,7 +3,7 @@ namespace CI\UI\Controller;
 
 class HookController
 {
-    public function github(\Silex\Application $app)
+    public function hook(\Silex\Application $app)
     {
     	$client= new \GearmanClient();
 		$client->addServer('127.0.0.1', 4730);

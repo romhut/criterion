@@ -10,6 +10,6 @@ $app->register(new MongoMinify\Silex\ServiceProvider(), array(
 
 $app['debug'] = true;
 $app->get('/test/{id}', 'CI\UI\Controller\TestController::view');
-$app->get('/hook/github/{id}', 'CI\UI\Controller\HookController::github');
+$app->get('/hook/{id}', 'CI\UI\Controller\HookController::hook');
 
 $app->run();
