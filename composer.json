@@ -1,0 +1,11 @@
+{
+	"require": {
+		"silex/silex": "dev-master",
+		"symfony/console": "dev-master"
+	},
+	"autoload": {
+		"psr-0": {
+			"" : "lib/"
+		}
+	}
+}
