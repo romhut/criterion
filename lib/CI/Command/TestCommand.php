@@ -52,7 +52,7 @@ class TestCommand extends Command
                     'composer install --dev',
                 ),
                 'test' => array(
-                    // 'vendor/bin/phpunit'
+                    'vendor/bin/phpunit'
                 ),
                 'pass' => array(
                     'echo "pass"'
