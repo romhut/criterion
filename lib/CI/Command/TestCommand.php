@@ -22,7 +22,7 @@ class TestCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $build_id = new \MongoId();
-        $project_id = new \MongoId();
+        $project_id = new \MongoId($input->getArgument('project_id'));
 
         $data = array(
             '_id' => $build_id,
