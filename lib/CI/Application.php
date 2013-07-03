@@ -15,11 +15,8 @@ class Application extends SymfonyApplication
 
 	public function setMongo($mongo)
 	{
-		$db = $mongo->ci;
-        $this->db['builds'] = $db->builds;
-        $this->db['logs'] = $db->logs;
-
-		$this->mongo = $mongo;
+        $this->mongo = $mongo;
+        $this->db = $this->mongo->ci;
 	}
 
 	public function setProject($project)
@@ -52,7 +49,7 @@ class Application extends SymfonyApplication
 			'build_id' => $this->build,
 			'project_id' => $this->project['id']
 		);
-		$this->db['logs']->save($data);
+		$this->db->logs->save($data);
 
 		$output = $response == 0 ? "<info>success</info>" : "<error>failed</error>";
 
@@ -65,7 +62,7 @@ class Application extends SymfonyApplication
 
 	public function buildFailed($command_response)
 	{
-		$this->db['builds']->update(array(
+		$this->db->builds->update(array(
             'build_id' => $this->build,
             'project_id' => $this->project['id'],
         ), array(

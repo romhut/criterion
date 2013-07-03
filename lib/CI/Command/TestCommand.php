@@ -10,8 +10,6 @@ class TestCommand extends Command
 {
     protected function configure()
     {
-
-
         $this
             ->setName('test')
             ->setDescription('Run a test')
@@ -27,7 +25,7 @@ class TestCommand extends Command
         $project_id = $input->getArgument('project_id');
 
 
-        $this->getApplication()->db['builds']->save(array(
+        $this->getApplication()->db->builds->save(array(
             'build_id' => $build_id,
             'project_id' => $project_id,
             'started' => new \MongoDate()
@@ -87,8 +85,7 @@ class TestCommand extends Command
         exec("git show --format='%ci' " . $commit['hash'], $date);
         $commit['date'] = new \MongoDate(strtotime($date[0]));
 
-
-        $this->getApplication()->db['builds']->update(array(
+        $this->getApplication()->db->builds->update(array(
             'build_id' => $build_id,
             'project_id' => $project_id,
         ), array(
@@ -99,12 +96,15 @@ class TestCommand extends Command
             )
         ));
 
-        foreach ($project['commands']['setup'] as $setup)
+        if (count($project['commands']['setup']))
         {
-            $response = $this->getApplication()->executeAndLog($setup);
-            if ($response['response'] != 0)
+            foreach ($project['commands']['setup'] as $setup)
             {
-                return $this->getApplication()->buildFailed($response);
+                $response = $this->getApplication()->executeAndLog($setup);
+                if ($response['response'] != 0)
+                {
+                    return $this->getApplication()->buildFailed($response);
+                }
             }
         }
 
