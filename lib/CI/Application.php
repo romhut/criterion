@@ -25,7 +25,7 @@ class Application extends SymfonyApplication
 		$this->project = $project;
 	}
 
-	public function settest($test)
+	public function setTest($test)
 	{
 		$this->test = $test;
 	}

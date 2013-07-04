@@ -56,7 +56,7 @@ class TestCommand extends Command
         );
 
         $this->getApplication()->db->tests->save($data);
-        $this->getApplication()->settest($test_id);
+        $this->getApplication()->setTest($test_id);
 
         $test_id = (String) $test_id;
 
