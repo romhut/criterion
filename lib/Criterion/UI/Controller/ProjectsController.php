@@ -1,5 +1,5 @@
 <?php
-namespace CI\UI\Controller;
+namespace Criterion\UI\Controller;
 
 class ProjectsController
 {

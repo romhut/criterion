@@ -1,5 +1,5 @@
 <?php
-namespace CI;
+namespace Criterion;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -17,7 +17,7 @@ class Application extends SymfonyApplication
 	public function setMongo($mongo)
 	{
         $this->mongo = $mongo;
-        $this->db = $this->mongo->ci;
+        $this->db = $this->mongo->criterion;
 	}
 
 	public function setProject($project)

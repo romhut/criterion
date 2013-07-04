@@ -1,5 +1,5 @@
 <?php
-namespace CI\Command;
+namespace Criterion\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;

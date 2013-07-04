@@ -1,5 +1,5 @@
 <?php
-namespace CI\Command;
+namespace Criterion\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -63,7 +63,7 @@ class TestCommand extends Command
 
         $test_id = (String) $test_id;
 
-        $output->writeln('CI has started...');
+        $output->writeln('Criterion test has started...');
         $output->writeln('     - Project: '. (String) $project_id);
         $output->writeln('     - test: '.  $test_id);
         $output->writeln('');
@@ -75,7 +75,7 @@ class TestCommand extends Command
             mkdir($project_folder, 0777, true);
         }
 
-        $config_file = ROOT . '/ci.yml';
+        $config_file = ROOT . '/criterion.yml';
         $project = $this->getApplication()->parseConfig($config_file);
 
         if ( ! $project)
