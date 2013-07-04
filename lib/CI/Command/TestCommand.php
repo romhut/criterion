@@ -91,7 +91,13 @@ class TestCommand extends Command
         $output->writeln('<question>Running "setup" commands</question>');
         $original_dir = getcwd();
         chdir($project_folder);
-        $this->getApplication()->executeAndLog(sprintf('git clone -b %s --depth=1 %s %s', $project['branch'], $project['repo'], $test_id));
+        $git_clone = $this->getApplication()->executeAndLog(sprintf('git clone -b %s --depth=1 %s %s', $project['branch'], $project['repo'], $test_id));
+
+        if ($git_clone['response'] != 0)
+        {
+            return $this->getApplication()->testFailed($git_clone);
+        }
+
         chdir($project_folder . '/' . $test_id);
 
         exec("git --no-pager show -s --format='%h'", $short_hash);
@@ -113,7 +119,7 @@ class TestCommand extends Command
         $commit['date'] = new \MongoDate(strtotime($date[0]));
 
         $this->getApplication()->db->tests->update(array(
-            'test_id' => $test_id,
+            '_id' => new \MongoId($test_id),
             'project_id' => $project_id,
         ), array(
             '$set' => array(
