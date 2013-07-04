@@ -81,6 +81,18 @@ class Application extends SymfonyApplication
             )
         ));
 
+        $this->db->projects->update(array(
+            '_id' => $this->project['id'],
+        ), array(
+            '$set' => array(
+                'status' => array(
+                    'message' => 'Failed',
+                    'code' => '0'
+                ),
+                'last_run' => new \MongoDate()
+            )
+        ));
+
 		$this->output->writeln('');
 		$this->output->writeln('<question>Running "fail" commands</question>');
         foreach ($this->project['commands']['fail'] as $fail)
@@ -104,6 +116,18 @@ class Application extends SymfonyApplication
                     'code' => '1'
                 ),
                 'finished' => new \MongoDate()
+            )
+        ));
+
+        $this->db->projects->update(array(
+            '_id' => $this->project['id'],
+        ), array(
+            '$set' => array(
+                'status' => array(
+                    'message' => 'Passed',
+                    'code' => '1'
+                ),
+                'last_run' => new \MongoDate()
             )
         ));
 
