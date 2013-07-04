@@ -14,14 +14,7 @@
         <span class="label label-{{ status_label }}">{{ test.status.message }}</span>
     </h1>
 
-    {% if test.status.code == '0' %}
-        <div>
-            <b>{{ test.status.command.output|nl2br }}</b>
-        </div>
-    {% endif %}
-
     <hr />
-
 
     <table class="table table-bordered">
             <thead>

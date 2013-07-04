@@ -23,6 +23,8 @@
                         {% set project_class = 'error' %}
                     {% elseif project.status.code == '1' %}
                         {% set project_class = 'success' %}
+                    {% elseif project.status.code == '2' %}
+                        {% set project_class = 'warning' %}
                     {% endif %}
 
                     <tr class="{{ project_class }}" >

@@ -18,6 +18,26 @@ class ProjectsController
         return $app['twig']->render('Projects/All.twig', $data);
     }
 
+    public function create(\Silex\Application $app)
+    {
+        if ($app['request']->getMethod() === 'POST')
+        {
+            $data['repo'] = $app['request']->get('repo');
+            $data['branch'] = $app['request']->get('branch');
+            $data['status'] = array(
+                'code' => '2',
+                'message' => 'New'
+            );
+
+            $app['mongo']->projects->save($data);
+
+            return $app->redirect('/project/run/' . $data['_id']);
+        }
+
+        return $app['twig']->render('Projects/Create.twig');
+
+    }
+
     public function run(\Silex\Application $app)
     {
         $client= new \GearmanClient();

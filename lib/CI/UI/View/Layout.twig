@@ -9,18 +9,20 @@
     <div class="navbar navbar-fixed-top">
         <div class="navbar-inner">
             <div class="container">
+                <div class="pull-right">
+                    <a href="/project/create" class="btn btn-primary">Create Project</a>
+                </div>
                 <a class="brand" href="/">CI</a>
                 <ul class="nav">
                     <li class="active"><a href="/">Projects</a></li>
                 </ul>
-        </div>
+            </div>
         </div>
     </div>
 
     <div style="padding-top:60px"></div>
 
     <div class="container">
-
         {% block content %}{% endblock %}
     </div>
 </body>

@@ -6,6 +6,8 @@
         {% set project_class = 'important' %}
     {% elseif project.status.code == '1' %}
         {% set project_class = 'success' %}
+    {% elseif project.status.code == '2' %}
+        {% set project_class = 'warning' %}
     {% endif %}
 
     <h1 class="lead">{{ project.repo }} <span class="label label-{{ project_class }}">{{ project.status.message }}</span> </h1>

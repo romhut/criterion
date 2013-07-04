@@ -1,0 +1,18 @@
+{% extends 'Layout.twig' %}
+
+{% block content %}
+    <h1 class="lead">Create Project</h1>
+    <hr />
+
+    <form method="post" action="">
+        <label>Repo</label>
+        <input name="repo" required type="text" class="span12">
+
+        <label>Branch</label>
+        <input name="branch" required type="text" class="span12">
+
+        <button class="btn btn-success">Create + Test</button>
+    </form>
+
+
+{% endblock %}
