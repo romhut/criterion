@@ -48,7 +48,6 @@ class TestCommand extends Command
         $data = array(
             '_id' => $test_id,
             'project_id' => $project_id,
-            'started' => new \MongoDate(),
             'status' => array(
                 'code' => '3',
                 'message' => 'Running'
