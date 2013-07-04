@@ -46,15 +46,19 @@ class TestCommand extends Command
         }
 
         $data = array(
-            '_id' => $test_id,
-            'project_id' => $project_id,
             'status' => array(
                 'code' => '3',
                 'message' => 'Running'
             )
         );
 
-        $this->getApplication()->db->tests->save($data);
+        $this->getApplication()->db->tests->update(array(
+            '_id' => $test_id,
+            'project_id' => $project_id
+        ), array(
+            '$set' => $data
+        ));
+
         $this->getApplication()->setTest($test_id);
 
         $test_id = (String) $test_id;
