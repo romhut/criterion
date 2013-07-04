@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "b0dbbf4e3c301c3319d8e2fe8638c878",
+    "hash": "57841ff7d861ba6d08bf291915198d1b",
     "packages": [
         {
             "name": "marcqualie/mongominify",
@@ -137,12 +137,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Silex.git",
-                "reference": "a7a7ef41c9a09ebd21c2df78429a163a0a5f4f17"
+                "reference": "9717cc0c58b8d6ee750f0a9daa99ca33acb5fd0e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Silex/zipball/a7a7ef41c9a09ebd21c2df78429a163a0a5f4f17",
-                "reference": "a7a7ef41c9a09ebd21c2df78429a163a0a5f4f17",
+                "url": "https://api.github.com/repos/fabpot/Silex/zipball/9717cc0c58b8d6ee750f0a9daa99ca33acb5fd0e",
+                "reference": "9717cc0c58b8d6ee750f0a9daa99ca33acb5fd0e",
                 "shasum": ""
             },
             "require": {
@@ -211,7 +211,7 @@
             "keywords": [
                 "microframework"
             ],
-            "time": "2013-07-03 07:18:11"
+            "time": "2013-07-04 06:45:19"
         },
         {
             "name": "symfony/console",
@@ -666,7 +666,8 @@
         "symfony/yaml": 20
     },
     "platform": {
-        "ext-mongo": ">=1.3"
+        "ext-mongo": "*",
+        "ext-gearman": "*"
     },
     "platform-dev": [
 
