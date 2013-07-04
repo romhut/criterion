@@ -18,6 +18,14 @@ class ProjectsController
         return $app['twig']->render('Projects/All.twig', $data);
     }
 
+    public function run(\Silex\Application $app)
+    {
+        $client= new \GearmanClient();
+        $client->addServer('127.0.0.1', 4730);
+        $test_id = $client->doNormal('create_test', $app['request']->get('id'));
+        return $app->redirect('/project/' . $app['request']->get('id'));
+    }
+
     public function view(\Silex\Application $app)
     {
         $data['project'] = $app['mongo']->projects->findOne(array(

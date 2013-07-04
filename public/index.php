@@ -15,7 +15,9 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 $app['debug'] = true;
 $app->get('/', 'CI\UI\Controller\ProjectsController::all');
 $app->match('/project/{id}', 'CI\UI\Controller\ProjectsController::view')->method('POST|GET');
+$app->match('/project/run/{id}', 'CI\UI\Controller\ProjectsController::run')->method('GET');
 $app->get('/test/{id}', 'CI\UI\Controller\TestController::view');
+$app->get('/test/delete/{id}', 'CI\UI\Controller\TestController::delete');
 $app->get('/hook/{id}', 'CI\UI\Controller\HookController::hook');
 
 $app->run();
