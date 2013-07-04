@@ -21,4 +21,27 @@ class TestController
 
         return $app['twig']->render('Test.twig', $data);
     }
+
+    public function delete(\Silex\Application $app)
+    {
+        $test = $app['mongo']->tests->findOne(array(
+            '_id' => new \MongoId($app['request']->get('id'))
+        ));
+
+        if ( ! $test)
+        {
+            return $app->redirect('/');
+        }
+
+        $app['mongo']->tests->remove(array(
+            '_id' => new \MongoId($app['request']->get('id'))
+        ));
+
+        $app['mongo']->logs->remove(array(
+            'test_id' => new \MongoId($app['request']->get('id'))
+        ));
+
+        return $app->redirect('/project/' . $test['project_id']);
+
+    }
 }

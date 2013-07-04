@@ -36,6 +36,7 @@
                     <th>Author</th>
                     <th>Branch</th>
                     <th>Time</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -61,6 +62,11 @@
                         <td>{% if test.commit is defined %} {{test.commit.author.name}}  {% else %} N/A {% endif %}</td>
                         <td>{% if test.commit is defined %} {{test.branch}}  {% else %} N/A {% endif %}</td>
                         <td>{{ test.started.sec|date('H:i - jS F Y') }}</td>
+                        <td>
+                            <a class="btn btn-danger" href="/test/delete/{{ test._id }}">
+                                <i class="icon-remove"></i>
+                            </a>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
