@@ -3,7 +3,7 @@
 {% block content %}
 
     {% if project.status.code == '0' %}
-        {% set project_class = 'error' %}
+        {% set project_class = 'important' %}
     {% elseif project.status.code == '1' %}
         {% set project_class = 'success' %}
     {% endif %}
