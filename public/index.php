@@ -9,7 +9,7 @@ $app->register(new MongoMinify\Silex\ServiceProvider(), array(
 ));
 
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
-    'twig.path' => dirname(__DIR__) . '/lib/Criterion/UI/View',
+    'twig.path' => dirname(__DIR__) . '/app/Criterion/UI/View',
 ));
 
 $app['debug'] = true;
