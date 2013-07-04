@@ -48,7 +48,7 @@ class Application extends SymfonyApplication
 
 		$data = array(
 			'output' => $output,
-			'response' => $response,
+			'response' => (string) $response,
 			'command' => $command,
 			'test_id' => new \MongoId($this->test),
 			'project_id' => $this->project['id'],

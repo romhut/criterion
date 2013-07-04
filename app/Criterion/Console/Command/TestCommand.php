@@ -137,7 +137,7 @@ class TestCommand extends Command
             foreach ($project['commands']['setup'] as $setup)
             {
                 $response = $this->getApplication()->executeAndLog($setup);
-                if ($response['response'] != 0)
+                if ($response['response'] !== '0')
                 {
                     return $this->getApplication()->testFailed($response);
                 }
@@ -151,7 +151,7 @@ class TestCommand extends Command
             foreach ($project['commands']['test'] as $test)
             {
                 $response = $this->getApplication()->executeAndLog($test);
-                if ($response['response'] != 0)
+                if ($response['response'] !== '0')
                 {
                     return $this->getApplication()->testFailed($response);
                 }
