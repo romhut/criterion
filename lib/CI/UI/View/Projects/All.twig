@@ -1,0 +1,46 @@
+{% extends 'Layout.twig' %}
+
+{% block content %}
+    <h1 class="lead">Projects</h1>
+
+    <hr />
+
+    {% if projects|length > 0 %}
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Repo</th>
+                    <th>Branch</th>
+                    <th>Last Run</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for project in projects %}
+
+                    {% if project.status.code == '0' %}
+                        {% set project_class = 'error' %}
+                    {% elseif project.status.code == '1' %}
+                        {% set project_class = 'success' %}
+                    {% endif %}
+
+                    <tr class="{{ project_class }}" >
+                        <td>
+                            <a href="/project/{{ project._id }}">
+                                {{ project.repo }}
+                            </a>
+                        </td>
+                        <td>{{ project.branch }}</td>
+                        <td>{{ project.last_run.sec|date('H:i - jS F Y') }}</td>
+                        <td>{{ project.status.message }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="alert alert-danger">There are no projects yet.</p>
+    {% endif %}
+
+
+{% endblock %}

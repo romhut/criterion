@@ -1,0 +1,73 @@
+{% extends 'Layout.twig' %}
+
+{% block content %}
+
+    {% if project.status.code == '0' %}
+        {% set project_class = 'error' %}
+    {% elseif project.status.code == '1' %}
+        {% set project_class = 'success' %}
+    {% endif %}
+
+    <h1 class="lead">{{ project.repo }} <span class="label label-{{ project_class }}">{{ project.status.message }}</span> </h1>
+
+    <form method="post" action="" class="well">
+        <fieldset>
+            <label>Repo</label>
+            <input name="repo" class="span11" type="text" value="{{ project.repo }}">
+
+            <label>Branch</label>
+            <input name="branch" class="span11" type="text" value="{{ project.branch }}">
+
+        </fieldset>
+        <button type="submit" class="btn btn-small btn-primary">Save</button>
+    </form>
+
+    <h1 class="lead">
+        Tests
+        <a href="/hook/{{ project._id }}?redirect=1" class="btn btn-success btn-small">Run Now</a>
+    </h1>
+    {% if tests|length > 0 %}
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Commit</th>
+                    <th>Author</th>
+                    <th>Branch</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for test in tests %}
+
+                    {% if test.status.code == '0' %}
+                        {% set status_class = 'error' %}
+                    {% elseif test.status.code == '1' %}
+                        {% set status_class = 'success' %}
+                    {% elseif test.status.code == '3' %}
+                        {% set status_class = 'warning' %}
+                    {% elseif test.status.code == '4' %}
+                        {% set status_class = 'info' %}
+                    {% endif %}
+
+                    <tr class="{{status_class}}" >
+                        <td>
+                            <a href="/test/{{ test._id }}">
+                                {{ test._id }}
+                            </a>
+                        </td>
+                        <td>{% if test.commit is defined %} {{test.commit.hash.short}}  {% else %} N/A {% endif %}</td>
+                        <td>{% if test.commit is defined %} {{test.commit.author.name}}  {% else %} N/A {% endif %}</td>
+                        <td>{% if test.commit is defined %} {{test.branch}}  {% else %} N/A {% endif %}</td>
+                        <td>{{ test.started.sec|date('H:i - jS F Y') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="alert alert-danger">There are no tests for this project yet.</p>
+    {% endif %}
+
+
+{% endblock %}

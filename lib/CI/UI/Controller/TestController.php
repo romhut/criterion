@@ -19,6 +19,6 @@ class TestController
             $data['log'][] = $log;
         }
 
-        return $app->json($data);
+        return $app['twig']->render('Test.twig', $data);
     }
 }

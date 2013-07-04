@@ -8,7 +8,13 @@ $app->register(new MongoMinify\Silex\ServiceProvider(), array(
     'mongo.server' => 'mongodb://127.0.0.1:27017/ci',
 ));
 
+$app->register(new Silex\Provider\TwigServiceProvider(), array(
+    'twig.path' => dirname(__DIR__) . '/lib/CI/UI/View',
+));
+
 $app['debug'] = true;
+$app->get('/', 'CI\UI\Controller\ProjectsController::all');
+$app->match('/project/{id}', 'CI\UI\Controller\ProjectsController::view')->method('POST|GET');
 $app->get('/test/{id}', 'CI\UI\Controller\TestController::view');
 $app->get('/hook/{id}', 'CI\UI\Controller\HookController::hook');
 

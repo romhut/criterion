@@ -1,0 +1,77 @@
+{% extends 'Layout.twig' %}
+
+{% block content %}
+    <h1 class="lead">{{ test._id }}
+        {% if test.status.code == '1' %}
+            {% set status_label = 'success' %}
+        {% elseif test.status.code == '4' %}
+            {% set status_label = 'info' %}
+        {% elseif test.status.code == '3' %}
+            {% set status_label = 'warning' %}
+        {% elseif test.status.code == '0' %}
+            {% set status_label = 'important' %}
+        {% endif %}
+        <span class="label label-{{ status_label }}">{{ test.status.message }}</span>
+    </h1>
+
+    {% if test.status.code == '0' %}
+        <div>
+            <b>{{ test.status.command.output|nl2br }}</b>
+        </div>
+    {% endif %}
+
+    <hr />
+
+
+    <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Commit</th>
+                    <th>Author</th>
+                    <th>Branch</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{% if test.commit is defined %} {{test.commit.hash.short}}  {% else %} N/A {% endif %}</td>
+                    <td>{% if test.commit is defined %} {{test.commit.author.name}}  {% else %} N/A {% endif %}</td>
+                    <td>{% if test.commit is defined %} {{test.branch}}  {% else %} N/A {% endif %}</td>
+                    <td>{{ test.started.sec|date('H:i - jS F Y') }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+    <h1 class="lead">Logs</h1>
+    {% for item in log %}
+        <div>
+            <a href="javascript:void(0)" class="output-log">
+                {% if item.response == 0 %}
+                    <p class="alert alert-success">{{ item.command }}</p>
+                {% else %}
+                    <p class="alert alert-danger">{{ item.command }}</p>
+                {% endif %}
+            </a>
+
+            <div class="well well-small {% if item.response == 0 %} hide {% endif %}">
+                {% if item.output %}
+                    {{ item.output|nl2br }}
+                {% else %}
+                    There was no output from this command.
+                {% endif %}
+            </div>
+
+        </div>
+    {% else %}
+        <p class="alert alert-info">There are no logs for this test yet</p>
+    {% endfor %}
+
+    <script>
+        $(document).ready(function() {
+            $('.output-log').on('click', function(){
+                $(this).next().toggle();
+            });
+        });
+    </script>
+
+{% endblock %}
