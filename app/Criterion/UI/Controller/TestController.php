@@ -10,6 +10,16 @@ class TestController
             '_id' => new \MongoId($app['request']->get('id'))
         ));
 
+        $logs = $app['mongo']->logs->find(array(
+            'test_id' => new \MongoId($test['_id'])
+        ));
+
+        $test['log'] = array();
+        foreach ($logs as $log)
+        {
+            $test['log'][] = $log;
+        }
+
         if ( ! $test)
         {
             return $app->abort(404, 'Test not found.');

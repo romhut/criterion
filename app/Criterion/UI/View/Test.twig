@@ -2,10 +2,6 @@
 
 {% block content %}
 
-    {% if test.status.code == '3' or test.status.code == '4' %}
-        <meta http-equiv="refresh" content="1">
-    {% endif %}
-
     <h1 class="lead">{{ project.repo }}
         {% if test.status.code == '1' %}
             {% set status_label = 'success' %}
@@ -16,7 +12,9 @@
         {% elseif test.status.code == '0' %}
             {% set status_label = 'important' %}
         {% endif %}
-        <span class="label label-{{ status_label }}">{{ test.status.message }}</span>
+        <span id="status" class="label label-{{ status_label }}">
+            {{ test.status.message }}
+        </span>
     </h1>
 
     <hr />
@@ -32,9 +30,15 @@
         </thead>
         <tbody>
             <tr>
-                <td>{% if test.commit is defined %} {{test.commit.hash.short}}  {% else %} N/A {% endif %}</td>
-                <td>{% if test.commit is defined %} {{test.commit.author.name}}  {% else %} N/A {% endif %}</td>
-                <td>{% if test.commit is defined %} {{test.branch}}  {% else %} N/A {% endif %}</td>
+                <td id="commit-hash">
+                    {% if test.commit is defined %} {{test.commit.hash.short}}  {% else %} N/A {% endif %}
+                </td>
+                <td id="commit-author">
+                    {% if test.commit is defined %} {{test.commit.author.name}}  {% else %} N/A {% endif %}
+                </td>
+                <td id="branch">
+                    {% if test.commit is defined %} {{test.branch}}  {% else %} N/A {% endif %}
+                </td>
                 <td>
                     <span class="timeago" title="{{ test.started.sec|date('c') }}">
                         {{ test.started.sec|date('jS M Y') }}
@@ -47,36 +51,37 @@
     <hr />
 
     <h1 class="lead">Logs</h1>
-    {% for item in log %}
-        <div>
-            <a href="javascript:void(0)" class="output-log">
-                {% if item.response == 0 %}
-                    <p class="alert alert-success">{{ item.command }}</p>
-                {% else %}
-                    <p class="alert alert-danger">{{ item.command }}</p>
-                {% endif %}
-            </a>
+    <div id="logs">
+        {% for item in log %}
+            <div>
+                <a href="javascript:void(0)" class="output-log">
+                    {% if item.response == 0 %}
+                        <p class="alert alert-success">{{ item.command }}</p>
+                    {% else %}
+                        <p class="alert alert-danger">{{ item.command }}</p>
+                    {% endif %}
+                </a>
 
-            <div class="well well-small {% if item.response == 0 %} hide {% endif %}">
-                {% if item.output %}
-                    {{ item.output|nl2br }}
-                {% else %}
-                    There was no output from this command.
-                {% endif %}
+                <div class="well well-small {% if item.response == 0 %} hide {% endif %}">
+                    {% if item.output %}
+                        {{ item.output|nl2br }}
+                    {% else %}
+                        There was no output from this command.
+                    {% endif %}
+                </div>
+
             </div>
-
-        </div>
-    {% else %}
-        <p class="alert alert-info">There are no logs for this test yet</p>
-    {% endfor %}
+        {% else %}
+            <p class="alert alert-info">There are no logs for this test yet</p>
+        {% endfor %}
+    </div>
 
     <script>
+        var build = setInterval(function() {
+            getStatus()
+        }, 1000);
         $(document).ready(function() {
-
-            var build = setInterval(function() {
-                getStatus()
-            }, 1000);
-
+            getStatus();
             $('.output-log').on('click', function(){
                 $(this).next().toggle();
             });
@@ -84,8 +89,48 @@
 
         function getStatus() {
             $.get('/test/status/{{ test._id }}', function(data) {
-                console.log('hi');
-                console.log(data);
+
+                if (data.status.code == '1') {
+                    var status_class = 'success';
+                    clearInterval(build);
+                } else if (data.status.code == '3') {
+                    var status_class = 'warning';
+                } else {
+                    var status_class = 'info';
+                }
+
+                $('#status').text(data.status.message);
+                $('#status').removeClass().addClass('label').addClass('label-' + status_class);
+                if (typeof data.commit != 'undefined') {
+                    $('#commit-hash').text(data.commit.hash.short);
+                    $('#commit-author').text(data.commit.author.name);
+                    $('#branch').text(data.branch);
+                }
+
+                if (data.log.length > 0) {
+                    $('#logs').html('');
+                    $.each(data.log, function(key, val) {
+
+                        if (val.response == '0') {
+                            var alert = 'success';
+                        } else {
+                            var alert = 'alert';
+                        }
+
+                        $('#logs').append(
+                        '<div>' +
+                            '<a href="javascript:void(0)" class="output-log">' +
+                                '<p class="alert alert-'+alert+' ">' +
+                                    val.command +
+                                '</p>' +
+                            '</a>' +
+                            '<div class="well well-small hide">' +
+                                val.output +
+                            '</div>' +
+                        '</div>');
+                    });
+                }
+
             });
         }
     </script>
