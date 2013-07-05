@@ -31,13 +31,13 @@
         <tbody>
             <tr>
                 <td id="commit-hash">
-                    {% if test.commit is defined %} {{test.commit.hash.short}}  {% else %} N/A {% endif %}
+                    ...
                 </td>
                 <td id="commit-author">
-                    {% if test.commit is defined %} {{test.commit.author.name}}  {% else %} N/A {% endif %}
+                    ...
                 </td>
                 <td id="branch">
-                    {% if test.commit is defined %} {{test.branch}}  {% else %} N/A {% endif %}
+                    ...
                 </td>
                 <td>
                     <span class="timeago" title="{{ test.started.sec|date('c') }}">
