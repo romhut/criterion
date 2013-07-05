@@ -14,15 +14,14 @@ You can add GIT repos from any provider, and run any commands you wish against i
 
 ### Example criterion.yaml
 ```yml
-commands:
-    setup:
-        - composer install --dev
-    test:
-        - phpunit
-    fail:
-        - sh log-fail.sh
-    pass:
-        - sh deploy.sh
+setup:
+    - composer install --dev
+test:
+    - phpunit
+fail:
+    - sh log-fail.sh
+pass:
+    - sh deploy.sh
 ```
 
 
