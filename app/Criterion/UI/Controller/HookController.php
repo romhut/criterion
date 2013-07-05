@@ -5,7 +5,7 @@ class HookController
 {
     public function hook(\Silex\Application $app)
     {
-        $payload = json_decode($app['request']->get('payload'));
+        $payload = $app['request']->get('payload');
 
         if ( ! isset($payload['repository']['url']))
         {
