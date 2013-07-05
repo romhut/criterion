@@ -14,13 +14,21 @@ class HookController
             ));
         }
 
+        $repo = $payload['repository']['url'];
+
+        // Detect if its an private repository, if so then we need to use SSH
+        if ($payload['repository']['private'])
+        {
+            $repo = \Criterion\Helper\Github::toSSHUrl($repo);
+        }
+
         $project = $app['mongo']->projects->findOne(array(
-            'repo' => $payload['repository']['url']
+            'repo' => $repo
         ));
 
         if ( ! $project)
         {
-            $project['repo'] = $payload['repository']['url'];
+            $project['repo'] = $repo;
             $project['status'] = array(
                 'code' => '2',
                 'message' => 'New'
