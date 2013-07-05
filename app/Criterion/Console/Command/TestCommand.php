@@ -88,9 +88,9 @@ class TestCommand extends Command
         $project['commands']['fail'][] = sprintf('rm -rf %s', $test_id);
         $project['commands']['pass'][] = sprintf('rm -rf %s', $test_id);
 
-        if ( ! isset($project['branch']))
+        if ( ! isset($get_test['branch']))
         {
-            $project['branch'] = 'master';
+            $get_test['branch'] = 'master';
         }
 
         $this->getApplication()->setProject($project);
@@ -99,7 +99,7 @@ class TestCommand extends Command
         $output->writeln('<question>Running "setup" commands</question>');
         $original_dir = getcwd();
         chdir($project_folder);
-        $git_clone = $this->getApplication()->executeAndLog(sprintf('git clone -b %s --depth=1 %s %s', $project['branch'], $project['repo'], $test_id));
+        $git_clone = $this->getApplication()->executeAndLog(sprintf('git clone -b %s --depth=1 %s %s', $get_test['branch'], $project['repo'], $test_id));
 
         if ($git_clone['response'] != 0)
         {
