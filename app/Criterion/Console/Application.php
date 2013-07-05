@@ -163,9 +163,9 @@ class Application extends SymfonyApplication
         if( ! isset($project) || ! is_array($project))
         {
             $data = array(
-                'output' => 'The criterion.yml file does not seem valid, or does not exist',
+                'output' => 'The .criterion.yml file does not seem valid, or does not exist',
                 'response' => '1',
-                'command' => 'Checking criterion.yml',
+                'command' => 'Checking .criterion.yml',
                 'test_id' => $this->test,
                 'project_id' => $this->project['_id'],
                 'time' => new \MongoDate()

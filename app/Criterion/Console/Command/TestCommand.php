@@ -125,7 +125,7 @@ class TestCommand extends Command
         ));
 
         // Check the config file
-        $config_file = $project_folder . '/' . $test_id . '/criterion.yml';
+        $config_file = $project_folder . '/' . $test_id . '/.criterion.yml';
         $project_config = $this->getApplication()->parseConfig($config_file);
 
         if ( ! $project_config)
