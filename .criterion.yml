@@ -1,5 +1,6 @@
 setup:
-    - composer install --dev
+    - curl -sS https://getcomposer.org/installer | php
+    - php composer.phar install --dev
 test:
     - vendor/bin/phpunit --coverage-text
 fail:
