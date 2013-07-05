@@ -69,6 +69,15 @@ class ProjectsController
 
     public function run(\Silex\Application $app)
     {
+        $data['project'] = $app['mongo']->projects->findOne(array(
+            '_id' => new \MongoId($app['request']->get('id'))
+        ));
+
+        if ( ! $data['project'])
+        {
+            return $app->abort(404, 'Project not found.');
+        }
+
         $test = array(
             'project_id' => new \MongoId($app['request']->get('id')),
             'status' => array(
@@ -90,7 +99,7 @@ class ProjectsController
 
         if ( ! $data['project'])
         {
-            return $app->redirect('/');
+            return $app->abort(404, 'Project not found.');
         }
 
         if ($app['request']->getMethod() == 'POST')
