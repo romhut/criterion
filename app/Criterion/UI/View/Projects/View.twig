@@ -16,7 +16,10 @@
         <fieldset>
             <label>Repo</label>
             <input name="repo" class="span11" type="text" value="{{ project.repo }}">
-
+            <label>Public SSH Key</label>
+            <textarea class="span11" rows="5" name="ssh_key.public">{{ project.ssh_key.public }}</textarea>
+            <label>Private SSH Key</label>
+            <textarea class="span11" rows="5" name="ssh_key.private">{{ project.ssh_key.private }}</textarea>
         </fieldset>
         <button type="submit" class="btn btn-small btn-primary">Save</button>
     </form>
