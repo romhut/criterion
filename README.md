@@ -8,14 +8,11 @@ Criterion is a simple Continuous Integration tool build in PHP using MongoDB.
 
 You can add GIT repos from any provider, and run any commands you wish against it.
 
-Dependencies
-----
+### Dependencies
 - PHP >=5.3.3
 - MongoDB
 
-An example criterion.yaml file:
-----
-
+### Example criterion.yaml
 ```yml
 commands:
     setup:
