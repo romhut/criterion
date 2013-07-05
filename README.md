@@ -23,5 +23,3 @@ fail:
 pass:
     - sh deploy.sh
 ```
-
-
