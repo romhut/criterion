@@ -6,7 +6,7 @@ class ProjectsController
     public function all(\Silex\Application $app)
     {
         $projects = $app['mongo']->projects->find()->sort(array(
-            '_id' => -1
+            'last_run' => -1
         ));
 
         $data['projects'] = array();
