@@ -51,7 +51,7 @@ class Application extends SymfonyApplication
             'response' => (string) $response,
             'command' => $command,
             'test_id' => new \MongoId($this->test),
-            'project_id' => $this->project['id'],
+            'project_id' => $this->project['_id'],
             'time' => new \MongoDate()
         );
         $this->db->logs->save($data);
@@ -69,7 +69,7 @@ class Application extends SymfonyApplication
     {
         $this->db->tests->update(array(
             '_id' => $this->test,
-            'project_id' => $this->project['id'],
+            'project_id' => $this->project['_id'],
         ), array(
             '$set' => array(
                 'status' => array(
@@ -82,7 +82,7 @@ class Application extends SymfonyApplication
         ));
 
         $this->db->projects->update(array(
-            '_id' => $this->project['id'],
+            '_id' => $this->project['_id'],
         ), array(
             '$set' => array(
                 'status' => array(
@@ -100,6 +100,9 @@ class Application extends SymfonyApplication
             $response = $this->executeAndLog($fail);
         }
 
+        $path = TEST_DIR . '/' . $this->project['_id']  . '/' . (string) $this->test;
+        $this->executeAndLog(sprintf('rm -rf %s', $path));
+
         $this->output->writeln('<error>test failed</error>');
         return false;
     }
@@ -108,7 +111,7 @@ class Application extends SymfonyApplication
     {
         $this->db->tests->update(array(
             '_id' => $this->test,
-            'project_id' => $this->project['id'],
+            'project_id' => $this->project['_id'],
         ), array(
             '$set' => array(
                 'status' => array(
@@ -120,7 +123,7 @@ class Application extends SymfonyApplication
         ));
 
         $this->db->projects->update(array(
-            '_id' => $this->project['id'],
+            '_id' => $this->project['_id'],
         ), array(
             '$set' => array(
                 'status' => array(
@@ -137,6 +140,9 @@ class Application extends SymfonyApplication
         {
             $response = $this->executeAndLog($pass);
         }
+
+        $path = TEST_DIR . '/' . $this->project['_id']  . '/' . (string) $this->test;
+        $this->executeAndLog(sprintf('rm -rf %s', $path));
 
         $this->output->writeln('<question>test passed</question>');
         return false;

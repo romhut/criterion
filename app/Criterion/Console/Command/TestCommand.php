@@ -25,11 +25,11 @@ class TestCommand extends Command
         $project_id = new \MongoId($input->getArgument('project_id'));
         $test_id = new \MongoId($input->getArgument('test_id'));
 
-        $get_project = $this->getApplication()->db->projects->findOne(array(
+        $project = $this->getApplication()->db->projects->findOne(array(
             '_id' => $project_id
         ));
 
-        if ( ! $get_project)
+        if ( ! $project)
         {
             $output->writeln('<error>No Project Found</error>');
             return false;
@@ -39,7 +39,7 @@ class TestCommand extends Command
             '_id' => $test_id
         ));
 
-        if ( ! $get_project)
+        if ( ! $project)
         {
             $output->writeln('<error>No Project Found</error>');
             return false;
@@ -75,19 +75,6 @@ class TestCommand extends Command
             mkdir($project_folder, 0777, true);
         }
 
-        $config_file = ROOT . '/criterion.yml';
-        $project = $this->getApplication()->parseConfig($config_file);
-
-        if ( ! $project)
-        {
-            return $this->getApplication()->testFailed('Config file invalid.');
-        }
-
-        $project = $project + $get_project;
-        $project['id'] = $project_id;
-        $project['commands']['fail'][] = sprintf('rm -rf %s', $test_id);
-        $project['commands']['pass'][] = sprintf('rm -rf %s', $test_id);
-
         if ( ! isset($get_test['branch']))
         {
             $get_test['branch'] = 'master';
@@ -105,6 +92,17 @@ class TestCommand extends Command
         {
             return $this->getApplication()->testFailed($git_clone);
         }
+
+        $config_file = $project_folder . '/' . $test_id . '/criterion.yml';
+        $project_config = $this->getApplication()->parseConfig($config_file);
+
+        if ( ! $project_config)
+        {
+            return $this->getApplication()->testFailed('Config file invalid.');
+        }
+
+        $project = $project + $project_config;
+        $this->getApplication()->setProject($project);
 
         chdir($project_folder . '/' . $test_id);
 
