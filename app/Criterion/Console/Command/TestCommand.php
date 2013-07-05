@@ -136,9 +136,9 @@ class TestCommand extends Command
         $project = $project + $project_config;
         $this->getApplication()->setProject($project);
 
-        if (count($project['commands']['setup']))
+        if (count($project['setup']))
         {
-            foreach ($project['commands']['setup'] as $setup)
+            foreach ($project['setup'] as $setup)
             {
                 $response = $this->getApplication()->executeAndLog($setup);
                 if ($response['response'] !== '0')
@@ -150,9 +150,9 @@ class TestCommand extends Command
 
         $output->writeln('<question>Running "test" commands</question>');
 
-        if (count($project['commands']['test']))
+        if (count($project['test']))
         {
-            foreach ($project['commands']['test'] as $test)
+            foreach ($project['test'] as $test)
             {
                 $response = $this->getApplication()->executeAndLog($test);
                 if ($response['response'] !== '0')

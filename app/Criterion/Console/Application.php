@@ -96,9 +96,9 @@ class Application extends SymfonyApplication
         $this->output->writeln('');
         $this->output->writeln('<question>Running "fail" commands</question>');
 
-        if (isset($this->project['commands']['fail']) && count($this->project['commands']['fail']))
+        if (isset($this->project['fail']) && count($this->project['fail']))
         {
-            foreach ($this->project['commands']['fail'] as $fail)
+            foreach ($this->project['fail'] as $fail)
             {
                 $response = $this->executeAndLog($fail);
             }
@@ -141,9 +141,9 @@ class Application extends SymfonyApplication
         $this->output->writeln('');
         $this->output->writeln('<question>Running "pass" commands</question>');
 
-        if (isset($this->project['commands']['pass']) && count($this->project['commands']['pass']))
+        if (isset($this->project['pass']) && count($this->project['pass']))
         {
-            foreach ($this->project['commands']['pass'] as $pass)
+            foreach ($this->project['pass'] as $pass)
             {
                 $response = $this->executeAndLog($pass);
             }
@@ -160,7 +160,7 @@ class Application extends SymfonyApplication
     {
         $project = Yaml::parse($config);
 
-        if( ! isset($project['commands']) || ! is_array($project['commands']))
+        if( ! isset($project) || ! is_array($project))
         {
             $data = array(
                 'output' => 'The criterion.yml file does not seem valid, or does not exist',
@@ -178,9 +178,9 @@ class Application extends SymfonyApplication
 
         foreach (array('setup', 'test', 'fail', 'pass') as $section)
         {
-            if ( ! isset($project['commands'][$section]) ||  ! is_array($project['commands'][$section]))
+            if ( ! isset($project[$section]) ||  ! is_array($project[$section]))
             {
-                 $project['commands'][$section] = array();
+                 $project[$section] = array();
             }
         }
 

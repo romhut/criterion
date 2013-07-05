@@ -1,7 +1,6 @@
-commands:
-    setup:
-        - composer install --dev
-    test:
-        - vendor/bin/phpunit --coverage-text
-    fail:
-    pass:
+setup:
+    - composer install --dev
+test:
+    - vendor/bin/phpunit --coverage-text
+fail:
+pass:
