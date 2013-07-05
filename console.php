@@ -9,8 +9,7 @@ define('TEST_DIR', ROOT . '/tests');
 $mongo = new MongoMinify\Client();
 $app->setMongo($mongo);
 $app->addCommands(array(
-    new Criterion\Console\Command\TestCommand('test', $app),
-    new Criterion\Console\Command\CreateTestCommand('create_test', $app),
+    new Criterion\Console\Command\TestCommand('test', $app)
 ));
 
 $app->run();
