@@ -9,6 +9,11 @@ class TestController
             '_id' => new \MongoId($app['request']->get('id'))
         ));
 
+        if ( ! $data['test'])
+        {
+            return $app->abort(404, 'Test not found.');
+        }
+
         $logs = $app['mongo']->logs->find(array(
             'test_id' => new \MongoId($app['request']->get('id'))
         ));
@@ -30,7 +35,7 @@ class TestController
 
         if ( ! $test)
         {
-            return $app->redirect('/');
+            return $app->abort(404, 'Test not found.');
         }
 
         $app['mongo']->tests->remove(array(
