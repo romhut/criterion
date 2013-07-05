@@ -38,16 +38,17 @@
         <button type="submit" class="btn btn-small btn-primary">Save</button>
     </form>
 
-    <h1 class="lead">
-        Tests
-        <a href="/project/run/{{ project._id }}?redirect=1" class="btn btn-success btn-small">Run Now</a>
-    </h1>
+    <p class="pull-right">
+        <a href="/project/run/{{ project._id }}" class="btn btn-success btn-mini">
+            <i class="icon-play"></i> Run Test
+        </a>
+    </p>
+
     {% if tests|length > 0 %}
 
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Commit</th>
                     <th>Author</th>
                     <th>Branch</th>
@@ -69,18 +70,17 @@
                     {% endif %}
 
                     <tr class="{{status_class}}" >
-                        <td>
-                            <a href="/test/{{ test._id }}">
-                                {{ test._id }}
-                            </a>
-                        </td>
                         <td>{% if test.commit is defined %} {{test.commit.hash.short}}  {% else %} N/A {% endif %}</td>
                         <td>{% if test.commit is defined %} {{test.commit.author.name}}  {% else %} N/A {% endif %}</td>
                         <td>{% if test.commit is defined %} {{test.branch}}  {% else %} N/A {% endif %}</td>
                         <td>{{ test.started.sec|date('H:i - jS F Y') }}</td>
-                        <td>
-                            <a class="btn btn-danger" href="/test/delete/{{ test._id }}">
-                                <i class="icon-remove"></i>
+                        <td width="16%">
+                            <a class="btn btn-danger btn-small" href="/test/delete/{{ test._id }}">
+                                <i class="icon-remove"></i> Delete
+                            </a>
+
+                            <a class="btn btn-success btn-small" href="/test/{{ test._id }}">
+                                <i class="icon-zoom-in"></i> View
                             </a>
                         </td>
                     </tr>
