@@ -56,6 +56,10 @@ class ProjectsController
                 )
             ));
 
+            // Remove the SSH files due to permissions issue, let PHP generate them later on.
+            exec('rm ' . $ssh_key_file);
+            exec('rm ' . $ssh_key_file . '.pub');
+
             return $app->redirect('/project/' . (string)$project['_id']);
         }
 
