@@ -35,9 +35,9 @@ class HookController
 
         $app['mongo']->tests->save($test);
 
-		return $app->json(array(
-			'success' => true,
+        return $app->json(array(
+            'success' => true,
             'test' => (string) $test['_id']
-		));
+        ));
     }
 }
