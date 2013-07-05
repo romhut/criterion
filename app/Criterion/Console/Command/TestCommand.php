@@ -93,17 +93,6 @@ class TestCommand extends Command
             return $this->getApplication()->testFailed($git_clone);
         }
 
-        $config_file = $project_folder . '/' . $test_id . '/criterion.yml';
-        $project_config = $this->getApplication()->parseConfig($config_file);
-
-        if ( ! $project_config)
-        {
-            return $this->getApplication()->testFailed('Config file invalid.');
-        }
-
-        $project = $project + $project_config;
-        $this->getApplication()->setProject($project);
-
         chdir($project_folder . '/' . $test_id);
 
         exec("git --no-pager show -s --format='%h'", $short_hash);
@@ -134,6 +123,18 @@ class TestCommand extends Command
                 'repo' => $project['repo']
             )
         ));
+
+        // Check the config file
+        $config_file = $project_folder . '/' . $test_id . '/criterion.yml';
+        $project_config = $this->getApplication()->parseConfig($config_file);
+
+        if ( ! $project_config)
+        {
+            return $this->getApplication()->testFailed('Config file invalid.');
+        }
+
+        $project = $project + $project_config;
+        $this->getApplication()->setProject($project);
 
         if (count($project['commands']['setup']))
         {
