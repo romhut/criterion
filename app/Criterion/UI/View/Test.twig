@@ -72,10 +72,22 @@
 
     <script>
         $(document).ready(function() {
+
+            var build = setInterval(function() {
+                getStatus()
+            }, 1000);
+
             $('.output-log').on('click', function(){
                 $(this).next().toggle();
             });
         });
+
+        function getStatus() {
+            $.get('/test/status/{{ test._id }}', function(data) {
+                console.log('hi');
+                console.log(data);
+            });
+        }
     </script>
 
 {% endblock %}
