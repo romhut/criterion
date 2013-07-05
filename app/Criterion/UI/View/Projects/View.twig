@@ -73,7 +73,11 @@
                         <td>{% if test.commit is defined %} {{test.commit.hash.short}}  {% else %} N/A {% endif %}</td>
                         <td>{% if test.commit is defined %} {{test.commit.author.name}}  {% else %} N/A {% endif %}</td>
                         <td>{% if test.commit is defined %} {{test.branch}}  {% else %} N/A {% endif %}</td>
-                        <td>{{ test.started.sec|date('H:i - jS F Y') }}</td>
+                        <td>
+                            <span class="timeago" title="{{ test.started.sec|date('c') }}">
+                                {{ test.started.sec|date('jS M Y') }}
+                            </span>
+                        </td>
                         <td width="16%">
                             <a class="btn btn-danger btn-small" href="/test/delete/{{ test._id }}">
                                 <i class="icon-remove"></i> Delete

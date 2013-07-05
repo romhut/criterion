@@ -36,7 +36,11 @@
                                 {{ project.repo }}
                             </a>
                         </td>
-                        <td>{{ project.last_run.sec|date('H:i - jS F Y') }}</td>
+                        <td>
+                            <span class="timeago" title="{{ project.last_run.sec|date('c') }}">
+                                {{ project.last_run.sec|date('jS M Y') }}
+                            </span>
+                        </td>
                         <td width="14%">
                             <a class="btn btn-success btn-mini" href="/project/run/{{ project._id }}">
                                 <i class="icon-play"></i> Test
