@@ -132,7 +132,7 @@ class TestCommand extends Command
         ), array(
             '$set' => array(
                 'commit' => $commit,
-                'branch' => $project['branch'],
+                'branch' => $get_test['branch'],
                 'repo' => $project['repo']
             )
         ));
