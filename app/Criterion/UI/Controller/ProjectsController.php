@@ -88,7 +88,7 @@ class ProjectsController
         );
 
         $app['mongo']->tests->save($test);
-        return $app->redirect('/project/' . $app['request']->get('id'));
+        return $app->redirect('/test/' . (string)$test['_id']);
     }
 
     public function view(\Silex\Application $app)
