@@ -1,5 +1,8 @@
-Criterion
+Criterion (/krīˈti(ə)rēən/)
 ===
+"A principle or standard by which something may be judged or decided"
+
+----
 
 Criterion is a simple Continuous Integration tool build in PHP using MongoDB.
 
