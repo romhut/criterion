@@ -3,6 +3,21 @@ namespace Criterion\UI\Controller;
 
 class TestController
 {
+
+    public function status(\Silex\Application $app)
+    {
+        $test = $app['mongo']->tests->findOne(array(
+            '_id' => new \MongoId($app['request']->get('id'))
+        ));
+
+        if ( ! $test)
+        {
+            return $app->abort(404, 'Test not found.');
+        }
+
+        return $app->json($test);
+    }
+
     public function view(\Silex\Application $app)
     {
         $data['test'] = $app['mongo']->tests->findOne(array(

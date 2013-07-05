@@ -23,6 +23,7 @@ $app->match('/project/create', 'Criterion\UI\Controller\ProjectsController::crea
 $app->match('/project/{id}', 'Criterion\UI\Controller\ProjectsController::view')->method('POST|GET');
 $app->match('/project/run/{id}', 'Criterion\UI\Controller\ProjectsController::run')->method('GET');
 $app->get('/test/{id}', 'Criterion\UI\Controller\TestController::view');
+$app->get('/test/status/{id}', 'Criterion\UI\Controller\TestController::status');
 $app->get('/test/delete/{id}', 'Criterion\UI\Controller\TestController::delete');
 $app->post('/hook/github', 'Criterion\UI\Controller\HookController::github');
 
