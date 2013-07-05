@@ -3,7 +3,7 @@ namespace Criterion\UI\Controller;
 
 class HookController
 {
-    public function hook(\Silex\Application $app)
+    public function github(\Silex\Application $app)
     {
         $payload = $app['request']->get('payload');
 
@@ -21,8 +21,15 @@ class HookController
         if ( ! $project)
         {
             $project['repo'] = $payload['repository']['url'];
+            $project['status'] = array(
+                'code' => '2',
+                'message' => 'New'
+            );
+            $project['last_run'] = new \MongoDate();
             $app['mongo']->projects->save($project);
         }
+
+        $branch = str_replace('refs/heads/', null, $payload['ref']);
 
         $test = array(
             'project_id' => $project['_id'],
@@ -30,7 +37,8 @@ class HookController
                 'code' => '4',
                 'message' => 'Pending'
             ),
-            'started' => new \MongoDate()
+            'started' => new \MongoDate(),
+            'branch' => $branch
         );
 
         $app['mongo']->tests->save($test);

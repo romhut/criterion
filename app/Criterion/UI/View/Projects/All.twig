@@ -11,7 +11,6 @@
             <thead>
                 <tr>
                     <th>Repo</th>
-                    <th>Branch</th>
                     <th>Last Run</th>
                     <th>Status</th>
                 </tr>
@@ -33,7 +32,6 @@
                                 {{ project.repo }}
                             </a>
                         </td>
-                        <td>{{ project.branch }}</td>
                         <td>{{ project.last_run.sec|date('H:i - jS F Y') }}</td>
                         <td>{{ project.status.message }}</td>
                     </tr>

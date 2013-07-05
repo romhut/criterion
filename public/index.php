@@ -19,6 +19,6 @@ $app->match('/project/{id}', 'Criterion\UI\Controller\ProjectsController::view')
 $app->match('/project/run/{id}', 'Criterion\UI\Controller\ProjectsController::run')->method('GET');
 $app->get('/test/{id}', 'Criterion\UI\Controller\TestController::view');
 $app->get('/test/delete/{id}', 'Criterion\UI\Controller\TestController::delete');
-$app->post('/hook', 'Criterion\UI\Controller\HookController::hook');
+$app->post('/hook/github', 'Criterion\UI\Controller\HookController::github');
 
 $app->run();
