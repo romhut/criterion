@@ -1,6 +1,11 @@
 {% extends 'Layout.twig' %}
 
 {% block content %}
+
+    {% if test.status.code == '3' or test.status.code == '4' %}
+        <meta http-equiv="refresh" content="2">
+    {% endif %}
+
     <h1 class="lead">{{ test._id }}
         {% if test.status.code == '1' %}
             {% set status_label = 'success' %}
