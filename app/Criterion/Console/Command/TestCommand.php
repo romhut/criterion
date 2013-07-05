@@ -88,6 +88,11 @@ class TestCommand extends Command
         $project['commands']['fail'][] = sprintf('rm -rf %s', $test_id);
         $project['commands']['pass'][] = sprintf('rm -rf %s', $test_id);
 
+        if ( ! isset($project['branch']))
+        {
+            $project['branch'] = 'master';
+        }
+
         $this->getApplication()->setProject($project);
         $this->getApplication()->setOutput($output);
 
