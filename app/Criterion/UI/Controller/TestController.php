@@ -14,6 +14,15 @@ class TestController
             return $app->abort(404, 'Test not found.');
         }
 
+        $data['project'] = $app['mongo']->projects->findOne(array(
+            '_id' => $data['test']['project_id']
+        ));
+
+        if ( ! $data['project'])
+        {
+            return $app->abort(404, 'Project not found.');
+        }
+
         $logs = $app['mongo']->logs->find(array(
             'test_id' => new \MongoId($app['request']->get('id'))
         ));
