@@ -194,6 +194,4 @@ class Application extends SymfonyApplication
 
         return $project;
     }
-
-
 }
