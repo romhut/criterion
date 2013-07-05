@@ -5,7 +5,7 @@ class HookController
 {
     public function github(\Silex\Application $app)
     {
-        $payload = $app['request']->get('payload');
+        $payload = json_decode($app['request']->get('payload'), true);
 
         if ( ! isset($payload['repository']['url']))
         {
