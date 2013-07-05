@@ -3,8 +3,54 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "b351e925a1a177c993c28268c8211384",
+    "hash": "4ad7e8a3640904ad53b411c6a9f8b78e",
     "packages": [
+        {
+            "name": "marcqualie/hoard",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/marcqualie/hoard-php-client.git",
+                "reference": "89a798b74e39d7f36745b09b63c32f12a7afda66"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/marcqualie/hoard-php-client/zipball/89a798b74e39d7f36745b09b63c32f12a7afda66",
+                "reference": "89a798b74e39d7f36745b09b63c32f12a7afda66",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "": "lib"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marc Qualie",
+                    "email": "hoard@marcqualie.com",
+                    "homepage": "http://marcqualie.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Hoard client library for PHP",
+            "homepage": "http://github.com/marcqualie/hoard-php-client",
+            "keywords": [
+                "analytics",
+                "log",
+                "logging",
+                "mongodb",
+                "stats"
+            ],
+            "time": "2013-07-03 19:37:44"
+        },
         {
             "name": "marcqualie/mongominify",
             "version": "v1.0.0",
@@ -1123,9 +1169,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "marcqualie/hoard": 20
+    },
     "platform": {
         "ext-mongo": ">=1.3.0",
         "php": ">=5.3.3"
