@@ -1,5 +1,10 @@
 <?php
 
+define('ROOT', dirname(__DIR__));
+define('DATA_DIR', ROOT  . '/data');
+define('TEST_DIR', DATA_DIR . '/tests');
+define('KEY_DIR', DATA_DIR . '/keys');
+
 include dirname(__DIR__) . '/vendor/autoload.php';
 
 $app = new Silex\Application();

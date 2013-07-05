@@ -22,16 +22,41 @@ class ProjectsController
     {
         if ($app['request']->getMethod() === 'POST')
         {
-            $data['repo'] = $app['request']->get('repo');
-            $data['branch'] = $app['request']->get('branch');
-            $data['status'] = array(
+            $project['repo'] = $app['request']->get('repo');
+            $project['status'] = array(
                 'code' => '2',
                 'message' => 'New'
             );
+            $project['last_run'] = new \MongoDate();
+            $app['mongo']->projects->save($project);
 
-            $app['mongo']->projects->save($data);
+            $ssh_key_file = KEY_DIR . '/' . (string) $project['_id'];
 
-            return $app->redirect('/project/run/' . $data['_id']);
+            exec('ssh-keygen -t rsa -q -f "' . $ssh_key_file . '" -N "" -C "ci@criterion"', $ssh_key, $response);
+
+            if ((string) $response !== '0')
+            {
+                $app['mongo']->projects->remove(array(
+                    '_id' => $project['_id']
+                ));
+
+                return $app->json(array(
+                    'success' => false
+                ));
+            }
+
+            $app['mongo']->projects->update(array(
+                '_id' => $project['_id']
+            ), array(
+                '$set' => array(
+                    'ssh_key' => array(
+                        'public' => file_get_contents($ssh_key_file . '.pub'),
+                        'private' => file_get_contents($ssh_key_file),
+                    )
+                )
+            ));
+
+            return $app->redirect('/project/' . (string)$project['_id']);
         }
 
         return $app['twig']->render('Projects/Create.twig');
@@ -62,7 +87,8 @@ class ProjectsController
         if ($app['request']->getMethod() == 'POST')
         {
             $update_data['repo'] = $app['request']->get('repo');
-            $update_data['branch'] = $app['request']->get('branch');
+            $update_data['ssh_key']['public'] = $app['request']->get('ssh_key_public');
+            $update_data['ssh_key']['private'] = $app['request']->get('ssh_key_private');
 
             $update = $app['mongo']->projects->update($data['project'], array(
                 '$set' => $update_data
