@@ -1,3 +1,5 @@
 vendor
 data
 composer.phar
+public/less
+public/scss
