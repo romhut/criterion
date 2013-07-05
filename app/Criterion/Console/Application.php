@@ -8,66 +8,66 @@ use Symfony\Component\Yaml\Yaml;
 
 class Application extends SymfonyApplication
 {
-	public $mongo = null;
-	public $project = array();
-	public $test = null;
-	public $output = null;
-	public $db = array();
+    public $mongo = null;
+    public $project = array();
+    public $test = null;
+    public $output = null;
+    public $db = array();
 
-	public function setMongo($mongo)
-	{
+    public function setMongo($mongo)
+    {
         $this->mongo = $mongo;
         $this->db = $this->mongo->criterion;
-	}
+    }
 
-	public function setProject($project)
-	{
-		$this->project = $project;
-	}
+    public function setProject($project)
+    {
+        $this->project = $project;
+    }
 
-	public function setTest($test)
-	{
-		$this->test = $test;
-	}
+    public function setTest($test)
+    {
+        $this->test = $test;
+    }
 
-	public function setOutput($output)
-	{
-		$this->output = $output;
-	}
+    public function setOutput($output)
+    {
+        $this->output = $output;
+    }
 
-	public function executeAndLog($command)
-	{
+    public function executeAndLog($command)
+    {
 
-		ob_start();
-		passthru($command . ' 2>&1', $response);
-		$output = ob_get_contents();
-		ob_end_clean();
+        ob_start();
+        passthru($command . ' 2>&1', $response);
+        $output = ob_get_contents();
+        ob_end_clean();
 
-		$output = trim($output);
-		$output = str_replace(TEST_DIR, null, $output);
+        $output = trim($output);
+        $output = str_replace(TEST_DIR, null, $output);
 
-		$data = array(
-			'output' => $output,
-			'response' => (string) $response,
-			'command' => $command,
-			'test_id' => new \MongoId($this->test),
-			'project_id' => $this->project['id'],
-			'time' => new \MongoDate()
-		);
-		$this->db->logs->save($data);
+        $data = array(
+            'output' => $output,
+            'response' => (string) $response,
+            'command' => $command,
+            'test_id' => new \MongoId($this->test),
+            'project_id' => $this->project['id'],
+            'time' => new \MongoDate()
+        );
+        $this->db->logs->save($data);
 
-		$output = $response == 0 ? "<info>success</info>" : "<error>failed</error>";
+        $output = $response == 0 ? "<info>success</info>" : "<error>failed</error>";
 
-		$this->output->writeln($data['command']);
-		$this->output->writeln('... ' . $output);
-		$this->output->writeln('');
+        $this->output->writeln($data['command']);
+        $this->output->writeln('... ' . $output);
+        $this->output->writeln('');
 
-		return $data;
-	}
+        return $data;
+    }
 
-	public function testFailed($command_response)
-	{
-		$this->db->tests->update(array(
+    public function testFailed($command_response)
+    {
+        $this->db->tests->update(array(
             '_id' => $this->test,
             'project_id' => $this->project['id'],
         ), array(
@@ -93,20 +93,20 @@ class Application extends SymfonyApplication
             )
         ));
 
-		$this->output->writeln('');
-		$this->output->writeln('<question>Running "fail" commands</question>');
+        $this->output->writeln('');
+        $this->output->writeln('<question>Running "fail" commands</question>');
         foreach ($this->project['commands']['fail'] as $fail)
         {
             $response = $this->executeAndLog($fail);
         }
 
         $this->output->writeln('<error>test failed</error>');
-		return false;
-	}
+        return false;
+    }
 
-	public function testPassed()
-	{
-		$this->db->tests->update(array(
+    public function testPassed()
+    {
+        $this->db->tests->update(array(
             '_id' => $this->test,
             'project_id' => $this->project['id'],
         ), array(
@@ -131,44 +131,44 @@ class Application extends SymfonyApplication
             )
         ));
 
-		$this->output->writeln('');
-		$this->output->writeln('<question>Running "pass" commands</question>');
+        $this->output->writeln('');
+        $this->output->writeln('<question>Running "pass" commands</question>');
         foreach ($this->project['commands']['pass'] as $pass)
         {
             $response = $this->executeAndLog($pass);
         }
 
         $this->output->writeln('<question>test passed</question>');
-		return false;
-	}
+        return false;
+    }
 
-	public function parseConfig($config)
-	{
+    public function parseConfig($config)
+    {
         $project = Yaml::parse($config);
 
         if( ! isset($project['commands']) || ! is_array($project['commands']))
         {
-        	return false;
+            return false;
         }
 
         foreach (array('setup', 'test', 'fail', 'pass') as $section)
         {
-        	if ( ! isset($project['commands'][$section]) ||  ! is_array($project['commands'][$section]))
-        	{
-        		 $project['commands'][$section] = array();
-        	}
+            if ( ! isset($project['commands'][$section]) ||  ! is_array($project['commands'][$section]))
+            {
+                 $project['commands'][$section] = array();
+            }
         }
 
         $this->db->tests->update(array(
-        	'_id' => $this->test,
+            '_id' => $this->test,
         ), array(
-        	'$set' => array(
-        		'config' => $project
-        	)
+            '$set' => array(
+                'config' => $project
+            )
         ));
 
         return $project;
-	}
+    }
 
 
 }
