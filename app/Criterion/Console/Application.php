@@ -95,9 +95,13 @@ class Application extends SymfonyApplication
 
         $this->output->writeln('');
         $this->output->writeln('<question>Running "fail" commands</question>');
-        foreach ($this->project['commands']['fail'] as $fail)
+
+        if (isset($this->project['commands']['fail']) && count($this->project['commands']['fail']))
         {
-            $response = $this->executeAndLog($fail);
+            foreach ($this->project['commands']['fail'] as $fail)
+            {
+                $response = $this->executeAndLog($fail);
+            }
         }
 
         $path = TEST_DIR . '/' . $this->project['_id']  . '/' . (string) $this->test;
@@ -136,9 +140,13 @@ class Application extends SymfonyApplication
 
         $this->output->writeln('');
         $this->output->writeln('<question>Running "pass" commands</question>');
-        foreach ($this->project['commands']['pass'] as $pass)
+
+        if (isset($this->project['commands']['pass']) && count($this->project['commands']['pass']))
         {
-            $response = $this->executeAndLog($pass);
+            foreach ($this->project['commands']['pass'] as $pass)
+            {
+                $response = $this->executeAndLog($pass);
+            }
         }
 
         $path = TEST_DIR . '/' . $this->project['_id']  . '/' . (string) $this->test;
