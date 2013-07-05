@@ -3,10 +3,10 @@
 {% block content %}
 
     {% if test.status.code == '3' or test.status.code == '4' %}
-        <meta http-equiv="refresh" content="2">
+        <meta http-equiv="refresh" content="1">
     {% endif %}
 
-    <h1 class="lead">{{ test._id }}
+    <h1 class="lead">{{ project.repo }}
         {% if test.status.code == '1' %}
             {% set status_label = 'success' %}
         {% elseif test.status.code == '4' %}
@@ -21,24 +21,26 @@
 
     <hr />
 
-    <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>Commit</th>
-                    <th>Author</th>
-                    <th>Branch</th>
-                    <th>Time</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{% if test.commit is defined %} {{test.commit.hash.short}}  {% else %} N/A {% endif %}</td>
-                    <td>{% if test.commit is defined %} {{test.commit.author.name}}  {% else %} N/A {% endif %}</td>
-                    <td>{% if test.commit is defined %} {{test.branch}}  {% else %} N/A {% endif %}</td>
-                    <td>{{ test.started.sec|date('H:i - jS F Y') }}</td>
-                </tr>
-            </tbody>
-        </table>
+    <table class="table well">
+        <thead>
+            <tr>
+                <th>Commit</th>
+                <th>Author</th>
+                <th>Branch</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{% if test.commit is defined %} {{test.commit.hash.short}}  {% else %} N/A {% endif %}</td>
+                <td>{% if test.commit is defined %} {{test.commit.author.name}}  {% else %} N/A {% endif %}</td>
+                <td>{% if test.commit is defined %} {{test.branch}}  {% else %} N/A {% endif %}</td>
+                <td>{{ test.started.sec|date('H:i - jS F Y') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr />
 
     <h1 class="lead">Logs</h1>
     {% for item in log %}
