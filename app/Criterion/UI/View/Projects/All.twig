@@ -13,6 +13,7 @@
                     <th>Repo</th>
                     <th>Last Run</th>
                     <th>Status</th>
+                    <th>Test</th>
                 </tr>
             </thead>
             <tbody>
@@ -34,6 +35,11 @@
                         </td>
                         <td>{{ project.last_run.sec|date('H:i - jS F Y') }}</td>
                         <td>{{ project.status.message }}</td>
+                        <td>
+                            <a class="btn btn-success btn-mini" href="/project/run/{{ project._id }}">
+                                <i class="icon-play"></i> Test
+                            </a>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
