@@ -40,9 +40,16 @@ class ProjectsController
 
     public function run(\Silex\Application $app)
     {
-        $client= new \GearmanClient();
-        $client->addServer('127.0.0.1', 4730);
-        $test_id = $client->doNormal('create_test', $app['request']->get('id'));
+        $test = array(
+            'project_id' => new \MongoId($app['request']->get('id')),
+            'status' => array(
+                'code' => '4',
+                'message' => 'Pending'
+            ),
+            'started' => new \MongoDate()
+        );
+
+        $app['mongo']->tests->save($test);
         return $app->redirect('/project/' . $app['request']->get('id'));
     }
 

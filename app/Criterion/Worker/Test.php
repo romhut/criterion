@@ -1,22 +1,34 @@
 <?php
+
 $root = dirname(dirname(dirname(__DIR__)));
 
 include $root . '/vendor/autoload.php';
 
-# Reverse Worker Code
-$worker= new GearmanWorker();
-$worker->addServer('127.0.0.1', 4730);
-$worker->addFunction('test', 'test', $root);
-while ($worker->work());
+$client = new MongoMinify\Client('mongodb://127.0.0.1:27017', array('connect' => true));
+$tests = $client->criterion->tests;
 
-function test($job, $root)
+while (true)
 {
-	$work = json_decode($job->workload(), true);
+    $test = $tests->findAndModify(array(
+        'status.code' => '4'
+    ), array(
+        '$set' => array(
+            'status' => array(
+                'code' => '3',
+                'message' => 'Running'
+            )
+        )
+    ));
 
-	$project = $work['project'];
-	$test = $work['test'];
+    if ($test)
+    {
+        $project = (string) $test['project_id'];
+        $test = (string)  $test['_id'];
 
-	echo 'Testing Project: ' . $project . "\n";
-	exec("php $root/console.php test $project $test", $output);
-	echo 'Done' . "\n\n";
+        echo 'Testing Project: ' . $project . "\n";
+        exec("php $root/console.php test $project $test", $output);
+        echo 'Done' . "\n\n";
+    }
+
+    sleep(5);
 }

@@ -24,12 +24,20 @@ class HookController
             $app['mongo']->projects->save($project);
         }
 
-    	$client= new \GearmanClient();
-		$client->addServer('127.0.0.1', 4730);
-		$test_id = $client->doBackground('create_test', (string) $project['_id']);
+        $test = array(
+            'project_id' => $project['_id'],
+            'status' => array(
+                'code' => '4',
+                'message' => 'Pending'
+            ),
+            'started' => new \MongoDate()
+        );
+
+        $app['mongo']->tests->save($test);
 
 		return $app->json(array(
-			'success' => true
+			'success' => true,
+            'test' => (string) $test['_id']
 		));
     }
 }

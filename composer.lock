@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "5d8fd7b959cf6baf0a0561e9655b8239",
+    "hash": "b34302d7aa645b3540cf318107bb3645",
     "packages": [
         {
             "name": "marcqualie/mongominify",
@@ -663,8 +663,7 @@
 
     ],
     "platform": {
-        "ext-mongo": "*",
-        "ext-gearman": "*"
+        "ext-mongo": "*"
     },
     "platform-dev": [
 
