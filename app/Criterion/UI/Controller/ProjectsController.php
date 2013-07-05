@@ -88,6 +88,11 @@ class ProjectsController
             '_id' => new \MongoId($app['request']->get('id'))
         ));
 
+        if ( ! $data['project'])
+        {
+            return $app->redirect('/');
+        }
+
         if ($app['request']->getMethod() == 'POST')
         {
             $update_data['repo'] = $app['request']->get('repo');
