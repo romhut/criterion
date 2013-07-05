@@ -10,8 +10,14 @@ class ProjectsController
         ));
 
         $data['projects'] = array();
+        $data['failing'] = 0;
         foreach ($projects as $project)
         {
+            if ($project['status']['code'] === '0')
+            {
+                $data['failing']++;
+            }
+
             $data['projects'][] = $project;
         }
 

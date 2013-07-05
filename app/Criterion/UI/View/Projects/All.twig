@@ -3,6 +3,10 @@
 {% block content %}
     <h1 class="lead">Projects</h1>
 
+    {% if failing > 0 %}
+        <p class="alert alert-danger"><b>Warning:</b> {{ failing }} of your projects are failing.</p>
+    {% endif %}
+
     <hr />
 
     {% if projects|length > 0 %}
