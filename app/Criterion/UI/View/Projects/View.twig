@@ -2,6 +2,15 @@
 
 {% block content %}
 
+    <script>
+        $(document).ready(function() {
+            $('#show_ssh_keys').on('click', function() {
+                $(this).parent().hide();
+                $('#ssh_keys').show();
+            });
+        });
+    </script>
+
     {% if project.status.code == '0' %}
         {% set project_class = 'important' %}
     {% elseif project.status.code == '1' %}
@@ -16,10 +25,15 @@
         <fieldset>
             <label>Repo</label>
             <input name="repo" class="span11" type="text" value="{{ project.repo }}">
-            <label>Public SSH Key</label>
-            <textarea class="span11" rows="5" name="ssh_key.public">{{ project.ssh_key.public }}</textarea>
-            <label>Private SSH Key</label>
-            <textarea class="span11" rows="5" name="ssh_key.private">{{ project.ssh_key.private }}</textarea>
+            <p>
+                <a id="show_ssh_keys" href="javascript:void(0)">View SSH Keys</a>
+            </p>
+            <div class="hide" id="ssh_keys">
+                <label>Public SSH Key</label>
+                <textarea class="span11" rows="5" name="ssh_key.public">{{ project.ssh_key.public }}</textarea>
+                <label>Private SSH Key</label>
+                <textarea class="span11" rows="5" name="ssh_key.private">{{ project.ssh_key.private }}</textarea>
+            </div>
         </fieldset>
         <button type="submit" class="btn btn-small btn-primary">Save</button>
     </form>
