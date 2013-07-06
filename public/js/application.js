@@ -1,5 +1,13 @@
 $(document).ready(function() {
     $('.timeago').timeago();
+
+    $('#addProject').on('shown', function () {
+        $('#repo_url').focus();
+    });
+
+    $('.delete_project').on('click', function() {
+        criterion.project.delete(this);
+    });
 });
 
 function nl2br (str, is_xhtml) {
@@ -8,6 +16,20 @@ function nl2br (str, is_xhtml) {
 }
 
 var criterion = {
+    project : {
+        delete : function(el) {
+            var el = $(el);
+            el.attr('disabled', true);
+            var id = el.data('id');
+            var sure = confirm('Are you sure you wish to delete this project?');
+            if (sure) {
+                window.location.href = '/project/delete/' + id;
+            } else {
+                el.removeAttr('disabled');
+                return false;
+            }
+        }
+    },
     test : {
         getStatus : function(id) {
             $.get('/test/status/' + id, function(data) {

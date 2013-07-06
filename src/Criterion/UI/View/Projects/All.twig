@@ -1,6 +1,7 @@
 {% extends 'Layout.twig' %}
 
 {% block content %}
+
     {% if failing > 0 %}
         <p class="alert alert-danger"><b>Warning:</b> {{ failing }} of your projects are failing.</p>
     {% endif %}
@@ -41,7 +42,7 @@
                             <a class="btn btn-success btn-mini" href="/project/run/{{ project._id }}">
                                 <i class="icon-play"></i> <span class="hidden-phone">Test</span>
                             </a>
-                            <a class="btn btn-danger btn-mini hidden-phone" href="/project/delete/{{ project._id }}">
+                            <a class="btn btn-danger btn-mini hidden-phone delete_project" data-id="{{ project._id }}" >
                                 <i class="icon-remove"></i> Delete
                             </a>
                         </td>

@@ -86,6 +86,39 @@ class ProjectsController
         return $app->redirect('/img/status/' . $images[$project['status']['code']] . '.jpg');
     }
 
+    public function delete(\Silex\Application $app)
+    {
+        $project = $app['mongo']->projects->findOne(array(
+            '_id' => new \MongoId($app['request']->get('id'))
+        ));
+
+        if ( ! $project)
+        {
+            return $app->abort(404, 'Project not found.');
+        }
+
+        $tests = $app['mongo']->tests->find(array(
+            'project_id' => new \MongoId($app['request']->get('id'))
+        ));
+
+        foreach ($tests as $test)
+        {
+            $app['mongo']->logs->remove(array(
+                'test_id' => $test['_id']
+            ));
+
+            $app['mongo']->tests->remove(array(
+                '_id' => $test['_id']
+            ));
+        }
+
+        $app['mongo']->projects->remove(array(
+            '_id' => new \MongoId($app['request']->get('id'))
+        ));
+
+        return $app->redirect('/');
+    }
+
     public function run(\Silex\Application $app)
     {
         $data['project'] = $app['mongo']->projects->findOne(array(

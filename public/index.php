@@ -22,6 +22,7 @@ $app->get('/', 'Criterion\UI\Controller\ProjectsController::all');
 $app->post('/project/create', 'Criterion\UI\Controller\ProjectsController::create');
 $app->match('/project/{id}', 'Criterion\UI\Controller\ProjectsController::view')->method('POST|GET');
 $app->get('/project/run/{id}', 'Criterion\UI\Controller\ProjectsController::run');
+$app->get('/project/delete/{id}', 'Criterion\UI\Controller\ProjectsController::delete');
 $app->get('/project/status/{id}', 'Criterion\UI\Controller\ProjectsController::status');
 $app->get('/test/{id}', 'Criterion\UI\Controller\TestController::view');
 $app->get('/test/status/{id}', 'Criterion\UI\Controller\TestController::status');
