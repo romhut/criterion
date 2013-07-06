@@ -43,6 +43,7 @@
             <i class="icon-play"></i> Run Test
         </a>
     </p>
+    <div style="clear:both"></div>
 
     {% if tests|length > 0 %}
 
@@ -72,7 +73,7 @@
                     <tr class="{{status_class}}" >
                         <td>{% if test.commit is defined %} {{test.commit.hash.short}}  {% else %} N/A {% endif %}</td>
                         <td>{% if test.commit is defined %} {{test.commit.author.name}}  {% else %} N/A {% endif %}</td>
-                        <td>{% if test.commit is defined %} {{test.branch}}  {% else %} N/A {% endif %}</td>
+                        <td>{% if test.commit is defined %} {{test.commit.branch.name}}  {% else %} N/A {% endif %}</td>
                         <td>
                             <span class="timeago" title="{{ test.started.sec|date('c') }}">
                                 {{ test.started.sec|date('jS M Y') }}

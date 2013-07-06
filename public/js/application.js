@@ -63,6 +63,10 @@ var criterion = {
                             var alert = 'error';
                         }
 
+                        if (val.output == '') {
+                            val.output = 'There is no output for this command.';
+                        }
+
                         $('#logs').append(
                         '<div>' +
                             '<a href="javascript:void(0)" class="output-log">' +
