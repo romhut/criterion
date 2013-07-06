@@ -92,11 +92,11 @@ var criterion = {
                         $('#logs').append(
                         '<div>' +
                             '<a href="javascript:void(0)" class="output-log">' +
-                                '<p class="alert alert-'+alert+' ">' +
-                                    val.command +
+                                '<p class="'+alert+' ">' +
+                                    '<span class="dollar">$</span> ' + val.command +
                                 '</p>' +
                             '</a>' +
-                            '<div class="well well-small ' + hide_class + '">' +
+                            '<div class="output ' + hide_class + '">' +
                                 nl2br(val.output) +
                             '</div>' +
                         '</div>');

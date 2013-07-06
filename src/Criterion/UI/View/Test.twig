@@ -59,28 +59,7 @@
     </table>
 
     <div id="logs">
-        {% for item in log %}
-            <div>
-                <a href="javascript:void(0)" class="output-log">
-                    {% if item.response == 0 %}
-                        <p class="alert alert-success">{{ item.command }}</p>
-                    {% else %}
-                        <p class="alert alert-danger">{{ item.command }}</p>
-                    {% endif %}
-                </a>
-
-                <div class="well well-small {% if item.response == 0 %} hide {% endif %}">
-                    {% if item.output %}
-                        {{ item.output|nl2br }}
-                    {% else %}
-                        There was no output from this command.
-                    {% endif %}
-                </div>
-
-            </div>
-        {% else %}
-            <p class="alert alert-info">There are no logs for this test yet</p>
-        {% endfor %}
+        <span class="none">There are no logs for this test yet</span>
     </div>
 
     <script>
