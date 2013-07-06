@@ -26,51 +26,45 @@ class ProjectsController
 
     public function create(\Silex\Application $app)
     {
-        if ($app['request']->getMethod() === 'POST')
+        $project['repo'] = $app['request']->get('repo');
+        $project['status'] = array(
+            'code' => '2',
+            'message' => 'New'
+        );
+        $project['last_run'] = new \MongoDate();
+        $app['mongo']->projects->save($project);
+
+        $ssh_key_file = KEY_DIR . '/' . (string) $project['_id'];
+
+        exec('ssh-keygen -t rsa -q -f "' . $ssh_key_file . '" -N "" -C "ci@criterion"', $ssh_key, $response);
+
+        if ((string) $response !== '0')
         {
-            $project['repo'] = $app['request']->get('repo');
-            $project['status'] = array(
-                'code' => '2',
-                'message' => 'New'
-            );
-            $project['last_run'] = new \MongoDate();
-            $app['mongo']->projects->save($project);
-
-            $ssh_key_file = KEY_DIR . '/' . (string) $project['_id'];
-
-            exec('ssh-keygen -t rsa -q -f "' . $ssh_key_file . '" -N "" -C "ci@criterion"', $ssh_key, $response);
-
-            if ((string) $response !== '0')
-            {
-                $app['mongo']->projects->remove(array(
-                    '_id' => $project['_id']
-                ));
-
-                return $app->json(array(
-                    'success' => false
-                ));
-            }
-
-            $app['mongo']->projects->update(array(
+            $app['mongo']->projects->remove(array(
                 '_id' => $project['_id']
-            ), array(
-                '$set' => array(
-                    'ssh_key' => array(
-                        'public' => file_get_contents($ssh_key_file . '.pub'),
-                        'private' => file_get_contents($ssh_key_file),
-                    )
-                )
             ));
 
-            // Remove the SSH files due to permissions issue, let PHP generate them later on.
-            exec('rm ' . $ssh_key_file);
-            exec('rm ' . $ssh_key_file . '.pub');
-
-            return $app->redirect('/project/' . (string)$project['_id']);
+            return $app->json(array(
+                'success' => false
+            ));
         }
 
-        return $app['twig']->render('Projects/Create.twig');
+        $app['mongo']->projects->update(array(
+            '_id' => $project['_id']
+        ), array(
+            '$set' => array(
+                'ssh_key' => array(
+                    'public' => file_get_contents($ssh_key_file . '.pub'),
+                    'private' => file_get_contents($ssh_key_file),
+                )
+            )
+        ));
 
+        // Remove the SSH files due to permissions issue, let PHP generate them later on.
+        exec('rm ' . $ssh_key_file);
+        exec('rm ' . $ssh_key_file . '.pub');
+
+        return $app->redirect('/project/' . (string)$project['_id']);
     }
 
     public function status(\Silex\Application $app)

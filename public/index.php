@@ -19,7 +19,7 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 
 $app['debug'] = true;
 $app->get('/', 'Criterion\UI\Controller\ProjectsController::all');
-$app->match('/project/create', 'Criterion\UI\Controller\ProjectsController::create')->method('POST|GET');
+$app->post('/project/create', 'Criterion\UI\Controller\ProjectsController::create');
 $app->match('/project/{id}', 'Criterion\UI\Controller\ProjectsController::view')->method('POST|GET');
 $app->get('/project/run/{id}', 'Criterion\UI\Controller\ProjectsController::run');
 $app->get('/project/status/{id}', 'Criterion\UI\Controller\ProjectsController::status');

@@ -8,6 +8,7 @@
     <link href="/css/application.css" rel="stylesheet"/>
     <script src="/js/jquery.min.js"></script>
     <script src="/js/jquery.timeago.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
     <script src="/js/application.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0"/>
 </head>
@@ -16,7 +17,7 @@
         <div class="navbar-inner">
             <div class="container">
                 <div class="pull-right">
-                    <a href="/project/create" class="btn btn-info btn-small">
+                    <a href="#addProject" role="button" data-toggle="modal" class="btn btn-info btn-small">
                         Create Project
                     </a>
                 </div>
@@ -33,5 +34,7 @@
     <div class="container content">
         {% block content %}{% endblock %}
     </div>
+
+    {% include 'Blocks/AddProject.twig' %}
 </body>
 </html>

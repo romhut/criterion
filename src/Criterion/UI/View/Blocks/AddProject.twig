@@ -1,0 +1,16 @@
+<div id="addProject" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addProjectLabel" aria-hidden="true">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h3 id="addProjectLabel">Add Project</h3>
+    </div>
+    <form method="post" action="/project/create">
+        <div class="modal-body">
+            <label>Repository URL</label>
+            <input name="repo" required type="text" placeholder="git@github.com:romhut/criterion" class="span7">
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Create</button>
+            <button class="btn btn-danger" data-dismiss="modal" aria-hidden="true">Close</button>
+        </div>
+    </form>
+</div>
