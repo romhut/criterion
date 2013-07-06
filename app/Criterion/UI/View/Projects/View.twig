@@ -71,9 +71,34 @@
                     {% endif %}
 
                     <tr class="{{status_class}}" >
-                        <td>{% if test.commit is defined %} {{test.commit.hash.short}}  {% else %} N/A {% endif %}</td>
+                        <td>
+                            {% if test.commit is defined %}
+                                {% if test.commit.url %}
+                                    <a href="{{ test.commit.url }}">
+                                        {{ test.commit.hash.short }}
+                                    </a>
+                                {% else %}
+                                    {{test.commit.hash.short}}
+                                {% endif %}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
                         <td>{% if test.commit is defined %} {{test.commit.author.name}}  {% else %} N/A {% endif %}</td>
-                        <td>{% if test.commit is defined %} {{test.commit.branch.name}}  {% else %} N/A {% endif %}</td>
+                        <td>
+                            {% if test.commit is defined %}
+                                {% if test.commit.url %}
+                                    <a href="{{ test.commit.branch.url }}">
+                                        {{test.commit.branch.name}}
+                                    </a>
+                                {% else %}
+                                    {{test.commit.branch.name}}
+                                {% endif %}
+
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
                         <td>
                             <span class="timeago" title="{{ test.started.sec|date('c') }}">
                                 {{ test.started.sec|date('jS M Y') }}
