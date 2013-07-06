@@ -2,22 +2,29 @@
 
 {% block content %}
 
-    <h1 class="lead">{{ project.repo }}
-        {% if test.status.code == '1' %}
-            {% set status_label = 'success' %}
-        {% elseif test.status.code == '4' %}
-            {% set status_label = 'info' %}
-        {% elseif test.status.code == '3' %}
-            {% set status_label = 'warning' %}
-        {% elseif test.status.code == '0' %}
-            {% set status_label = 'important' %}
-        {% endif %}
-        <span id="status" class="label label-{{ status_label }}">
-            {{ test.status.message }}
-        </span>
-    </h1>
+    {% if test.status.code == '1' %}
+        {% set status_label = 'success' %}
+    {% elseif test.status.code == '4' %}
+        {% set status_label = 'info' %}
+    {% elseif test.status.code == '3' %}
+        {% set status_label = 'warning' %}
+    {% elseif test.status.code == '0' %}
+        {% set status_label = 'important' %}
+    {% endif %}
 
-    <hr />
+    <ul class="breadcrumb">
+        <li>
+            <a href="/project/{{ project._id }}">
+                "{{ project.repo }}"
+            </a> <span class="divider">/</span>
+        </li>
+        <li class="active">
+            {{ test._id }}
+            <span id="status" class="label label-{{ status_label }}">
+                {{ test.status.message }}
+            </span>
+        </li>
+    </ul>
 
     <table class="table">
         <thead>

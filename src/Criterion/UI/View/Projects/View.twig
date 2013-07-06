@@ -12,14 +12,10 @@
     </script>
 
     {% if project.status.code == '0' %}
-        {% set project_class = 'important' %}
-    {% elseif project.status.code == '1' %}
-        {% set project_class = 'success' %}
-    {% elseif project.status.code == '2' %}
-        {% set project_class = 'warning' %}
+        <p class="alert alert-danger">
+            WARNING: This project is failing.
+        </p>
     {% endif %}
-
-    <h1 class="lead">{{ project.repo }} <span class="label label-{{ project_class }}">{{ project.status.message }}</span> </h1>
 
     <form method="post" action="" class="well">
         <fieldset>
