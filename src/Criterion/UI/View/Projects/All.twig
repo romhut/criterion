@@ -11,7 +11,7 @@
             <thead>
                 <tr>
                     <th>Repo</th>
-                    <th>Last Run</th>
+                    <th class="hidden-phone">Last Run</th>
                     <th>Test</th>
                 </tr>
             </thead>
@@ -32,16 +32,16 @@
                                 {{ project.repo }}
                             </a>
                         </td>
-                        <td>
+                        <td class="hidden-phone">
                             <span class="timeago" title="{{ project.last_run.sec|date('c') }}">
                                 {{ project.last_run.sec|date('jS M Y') }}
                             </span>
                         </td>
                         <td width="16%">
                             <a class="btn btn-success btn-mini" href="/project/run/{{ project._id }}">
-                                <i class="icon-play"></i> Test
+                                <i class="icon-play"></i> <span class="hidden-phone">Test</span>
                             </a>
-                            <a class="btn btn-danger btn-mini" href="/project/delete/{{ project._id }}">
+                            <a class="btn btn-danger btn-mini hidden-phone" href="/project/delete/{{ project._id }}">
                                 <i class="icon-remove"></i> Delete
                             </a>
                         </td>

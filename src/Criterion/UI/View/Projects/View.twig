@@ -51,9 +51,9 @@
             <thead>
                 <tr>
                     <th>Commit</th>
-                    <th>Author</th>
-                    <th>Branch</th>
-                    <th>Time</th>
+                    <th class="hidden-phone">Author</th>
+                    <th class="hidden-phone">Branch</th>
+                    <th class="hidden-phone">Time</th>
                     <th></th>
                 </tr>
             </thead>
@@ -84,8 +84,8 @@
                                 N/A
                             {% endif %}
                         </td>
-                        <td>{% if test.commit is defined %} {{test.commit.author.name}}  {% else %} N/A {% endif %}</td>
-                        <td>
+                        <td class="hidden-phone">{% if test.commit is defined %} {{test.commit.author.name}}  {% else %} N/A {% endif %}</td>
+                        <td class="hidden-phone">
                             {% if test.commit is defined %}
                                 {% if test.commit.url %}
                                     <a href="{{ test.commit.branch.url }}">
@@ -99,18 +99,18 @@
                                 N/A
                             {% endif %}
                         </td>
-                        <td>
+                        <td class="hidden-phone">
                             <span class="timeago" title="{{ test.started.sec|date('c') }}">
                                 {{ test.started.sec|date('jS M Y') }}
                             </span>
                         </td>
                         <td width="16%">
-                            <a class="btn btn-danger btn-mini" href="/test/delete/{{ test._id }}">
+                            <a class="btn btn-danger btn-mini hidden-phone" href="/test/delete/{{ test._id }}">
                                 <i class="icon-remove"></i> Delete
                             </a>
 
                             <a class="btn btn-success btn-mini" href="/test/{{ test._id }}">
-                                <i class="icon-zoom-in"></i> View
+                                <i class="icon-zoom-in"></i> <span class="hidden-phone">View</span>
                             </a>
                         </td>
                     </tr>
