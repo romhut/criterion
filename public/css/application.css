@@ -6,6 +6,9 @@
     -moz-box-shadow: 4px 4px 4px #eee;
     -webkit-box-shadow: 4px 4px 4px #eee;
     box-shadow: 4px 4px 4px #eee;
+
+    border-left: 1px #eee solid;
+    border-top: 1px #eee solid;
 }
 
 footer {
