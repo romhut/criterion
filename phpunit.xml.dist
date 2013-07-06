@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="vendor/autoload.php">
+<phpunit bootstrap="test/Criterion/Test/TestCase.php" colors="true">
     <testsuites>
         <testsuite name="Criterion Test Suite">
-            <directory>test</directory>
+            <directory>test/Criterion/Test</directory>
         </testsuite>
     </testsuites>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">app/</directory>
+        </whitelist>
+    </filter>
 </phpunit>
