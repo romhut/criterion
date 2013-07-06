@@ -26,9 +26,29 @@ var criterion = {
                 $('#status').text(data.status.message);
                 $('#status').removeClass().addClass('label').addClass('label-' + status_class);
                 if (typeof data.commit != 'undefined') {
-                    $('#commit-hash').text(data.commit.hash.short);
+
+                    if (data.commit.url) {
+                        $('#commit-hash').html(
+                            '<a href="' + data.commit.url + '">' +
+                                data.commit.hash.short +
+                            '</a>'
+                        );
+                    } else {
+                        $('#commit-hash').text(data.commit.hash.short);
+                    }
+
+
                     $('#commit-author').text(data.commit.author.name);
-                    $('#branch').text(data.branch);
+
+                    if (data.commit.branch.url) {
+                        $('#branch').html(
+                            '<a href="' + data.commit.branch.url + '">' +
+                                data.commit.branch.name +
+                            '</a>'
+                        );
+                    } else {
+                        $('#branch').text(data.commit.branch.name);
+                    }
                 }
 
                 if (data.log.length > 0) {

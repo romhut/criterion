@@ -113,13 +113,17 @@ class TestCommand extends Command
         exec("git show --format='%ci' " . $commit['hash']['long'], $date);
         $commit['date'] = new \MongoDate(strtotime($date[0]));
 
+        $commit['url'] = \Criterion\Helper\Commit::getUrl($commit, $project['repo']);
+
+        $commit['branch']['name'] = $get_test['branch'];
+        $commit['branch']['url'] = \Criterion\Helper\Commit::getBranchUrl($get_test['branch'], $project['repo']);
+
         $this->getApplication()->db->tests->update(array(
             '_id' => new \MongoId($test_id),
             'project_id' => $project_id,
         ), array(
             '$set' => array(
                 'commit' => $commit,
-                'branch' => $get_test['branch'],
                 'repo' => $project['repo']
             )
         ));
@@ -160,10 +164,6 @@ class TestCommand extends Command
                     return $this->getApplication()->testFailed($response);
                 }
             }
-        }
-        else
-        {
-            $output->writeln('No tests to run');
         }
 
         return $this->getApplication()->testPassed();
