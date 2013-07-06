@@ -1,0 +1,14 @@
+.content {
+    border-radius: 5px;
+    padding: 10px;
+    margin-top: 80px;
+    background: #fff;
+    -moz-box-shadow: 4px 4px 4px #eee;
+    -webkit-box-shadow: 4px 4px 4px #eee;
+    box-shadow: 4px 4px 4px #eee;
+}
+
+footer {
+    text-align: center;
+    font-size: 13px;
+}
