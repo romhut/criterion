@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "4ad7e8a3640904ad53b411c6a9f8b78e",
+    "hash": "8ec46fff171ea0e1a718661755ce0e26",
     "packages": [
         {
             "name": "marcqualie/hoard",

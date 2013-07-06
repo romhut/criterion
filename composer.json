@@ -16,7 +16,7 @@
     "autoload": {
         "psr-0": {
             "Criterion\\Test": "test",
-            "" : "app"
+            "" : "src"
         }
     }
 }
