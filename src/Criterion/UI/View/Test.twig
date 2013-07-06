@@ -20,15 +20,13 @@
         </li>
         <li class="active">
             {{ test._id }}
-            <span id="status" class="label label-{{ status_label }}">
-                {{ test.status.message }}
-            </span>
         </li>
     </ul>
 
     <table class="table">
         <thead>
             <tr>
+                <th>Status</th>
                 <th>Commit</th>
                 <th>Author</th>
                 <th>Branch</th>
@@ -37,6 +35,11 @@
         </thead>
         <tbody>
             <tr>
+                <td>
+                    <span id="status" class="label label-{{ status_label }}">
+                        {{ test.status.message }}
+                    </span>
+                </td>
                 <td id="commit-hash">
                     ...
                 </td>
@@ -90,8 +93,6 @@
                 $(this).next().toggle();
             });
         });
-
-
     </script>
 
 {% endblock %}
