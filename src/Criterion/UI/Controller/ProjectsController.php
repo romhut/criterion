@@ -73,6 +73,25 @@ class ProjectsController
 
     }
 
+    public function status(\Silex\Application $app)
+    {
+        $project = $app['mongo']->projects->findOne(array(
+            '_id' => new \MongoId($app['request']->get('id'))
+        ));
+
+        if ( ! $project)
+        {
+            return $app->abort(404, 'Project not found.');
+        }
+
+        $images = array(
+            0 => 'fail',
+            1 => 'pass'
+        );
+
+        return $app->redirect('/img/status/' . $images[$project['status']['code']] . '.jpg');
+    }
+
     public function run(\Silex\Application $app)
     {
         $data['project'] = $app['mongo']->projects->findOne(array(
