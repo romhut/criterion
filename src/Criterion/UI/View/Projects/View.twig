@@ -61,7 +61,7 @@
                 <tr>
                     <th>Commit</th>
                     <th class="hidden-phone">Author</th>
-                    <th class="hidden-phone">Branch</th>
+                    <th>Branch</th>
                     <th class="hidden-phone">Started</th>
                     <th></th>
                 </tr>
@@ -94,7 +94,7 @@
                             {% endif %}
                         </td>
                         <td class="hidden-phone">{% if test.commit is defined %} {{test.commit.author.name}}  {% else %} N/A {% endif %}</td>
-                        <td class="hidden-phone">
+                        <td>
                             {% if test.commit is defined %}
                                 {% if test.commit.url %}
                                     <a href="{{ test.commit.branch.url }}">
@@ -103,7 +103,6 @@
                                 {% else %}
                                     {{test.commit.branch.name}}
                                 {% endif %}
-
                             {% else %}
                                 N/A
                             {% endif %}
