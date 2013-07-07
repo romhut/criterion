@@ -26,12 +26,7 @@ class ProjectsController
 
     public function create(\Silex\Application $app)
     {
-        $project['repo'] = $app['request']->get('repo');
-        $project['status'] = array(
-            'code' => '2',
-            'message' => 'New'
-        );
-        $project['last_run'] = new \MongoDate();
+        $project = \Criterion\Helper\Project::fromRepo($app['request']->get('repo'));
         $app['mongo']->projects->save($project);
 
         $ssh_key_file = KEY_DIR . '/' . (string) $project['_id'];
@@ -157,6 +152,8 @@ class ProjectsController
         if ($app['request']->getMethod() == 'POST')
         {
             $update_data['repo'] = $app['request']->get('repo');
+            $update_data['short_repo'] = \Criterion\Helper\Repo::short($update_data['repo']);
+            $update_data['provider'] = \Criterion\Helper\Repo::provider($update_data['repo']);
             $update_data['ssh_key']['public'] = $app['request']->get('ssh_key_public');
             $update_data['ssh_key']['private'] = $app['request']->get('ssh_key_private');
 
