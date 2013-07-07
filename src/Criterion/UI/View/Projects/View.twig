@@ -48,7 +48,7 @@
         <button type="submit" class="btn btn-small btn-info">Save</button>
     </form>
 
-    {% if project.status.code == '0' %}
+    {% if project.status.code == '0' and tests|length != 0 %}
         <p class="alert alert-danger">
             Please be aware that the latest test in this project failed.
         </p>
