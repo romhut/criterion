@@ -16,7 +16,9 @@
         {% if project.provider %}
             <i class="icon-{{ project.provider }}"></i>
         {% endif %}
-        {{ project.short_repo }}
+        <a href="/project/{{ project._id }}">
+            {{ project.short_repo }}
+        </a>
     </h1>
     <div class="pull-right hidden-phone">
         <h4 style="margin-top:5px;"><small>#{{ test._id }}</small></h4>
