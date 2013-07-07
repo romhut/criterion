@@ -12,29 +12,26 @@
         {% set status_label = 'important' %}
     {% endif %}
 
-    <ul class="breadcrumb">
-        <li>
-            {% if project.provider %}
-                <i class="icon-{{ project.provider }}"></i>
-            {% endif %}
-            <a href="/project/{{ project._id }}">
-                {{ project.short_repo }}
-            </a>
-            <span class="divider">/</span>
-        </li>
-        <li class="active">
-            {{ test._id }}
-        </li>
-    </ul>
+    <h1 class="lead pull-left" style="margin-top:0">
+        {% if project.provider %}
+            <i class="icon-{{ project.provider }}"></i>
+        {% endif %}
+        {{ project.short_repo }}
+    </h1>
+    <div class="pull-right hidden-phone">
+        <h4 style="margin-top:5px;"><small>#{{ test._id }}</small></h4>
+    </div>
+    <div style="clear:both"></div>
+
 
     <table class="table">
         <thead>
             <tr>
                 <th>Status</th>
                 <th>Commit</th>
-                <th>Author</th>
+                <th class="hidden-phone">Author</th>
                 <th>Branch</th>
-                <th>Started</th>
+                <th class="hidden-phone">Started</th>
             </tr>
         </thead>
         <tbody>
@@ -47,13 +44,13 @@
                 <td id="commit-hash">
                     ...
                 </td>
-                <td id="commit-author">
+                <td id="commit-author" class="hidden-phone">
                     ...
                 </td>
                 <td id="branch">
                     ...
                 </td>
-                <td>
+                <td class="hidden-phone">
                     <span class="timeago" title="{{ test.started.sec|date('c') }}">
                         {{ test.started.sec|date('jS M Y') }}
                     </span>

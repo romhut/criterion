@@ -1,6 +1,5 @@
 <?php
 namespace Criterion\Helper;
-
 class Github
 {
     public static function toSSHUrl($url)
