@@ -39,4 +39,11 @@ class GithubHelperTest extends TestCase
         $this->assertEquals($commit_url, 'https://github.com/romhut/criterion/tree/master');
     }
 
+    public function testShortRepo()
+    {
+        $repo = 'git@github.com:romhut/criterion';
+        $commit_url = \Criterion\Helper\Github::shortRepo($repo);
+        $this->assertEquals($commit_url, 'romhut/criterion');
+    }
+
 }
