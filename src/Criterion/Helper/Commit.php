@@ -5,7 +5,7 @@ class Commit
 {
     public static function getURL($commit, $repo)
     {
-        if (strpos($repo, 'github.com') !== false)
+        if (Repo::provider($repo) == 'github')
         {
             return Github::commitUrl($commit, $repo);
         }
@@ -15,7 +15,7 @@ class Commit
 
     public static function getBranchURL($branch, $repo)
     {
-        if (strpos($repo, 'github.com') !== false)
+        if (Repo::provider($repo) == 'github')
         {
             return Github::branchUrl($branch, $repo);
         }
