@@ -2,19 +2,6 @@
 
 {% block content %}
 
-    <script>
-        $(document).ready(function() {
-            $('#show_ssh_keys').on('click', function() {
-                $(this).parent().hide();
-                $('#ssh_keys').show();
-            });
-
-            $('#edit_project').on('click', function() {
-                $('#edit_project_form').toggle();
-            });
-        });
-    </script>
-
     <h1 class="lead pull-left" style="margin-top:0">
         {% if project.provider %}
             <i class="icon-{{ project.provider }}"></i>

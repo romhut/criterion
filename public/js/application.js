@@ -8,6 +8,15 @@ $(document).ready(function() {
     $('.delete_project').on('click', function() {
         criterion.project.delete(this);
     });
+
+    $('#show_ssh_keys').on('click', function() {
+        $(this).parent().hide();
+        $('#ssh_keys').show();
+    });
+
+    $('#edit_project').on('click', function() {
+        $('#edit_project_form').toggle();
+    });
 });
 
 function nl2br (str, is_xhtml) {
