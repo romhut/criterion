@@ -29,8 +29,11 @@
 
                     <tr class="{{ project_class }}" >
                         <td>
+                            {% if project.provider %}
+                                <i class="icon-{{ project.provider }}"></i>
+                            {% endif %}
                             <a href="/project/{{ project._id }}">
-                                {{ project.repo }}
+                                {{ project.short_repo }}
                             </a>
                         </td>
                         <td class="hidden-phone">

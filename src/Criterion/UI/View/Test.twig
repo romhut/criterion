@@ -14,9 +14,13 @@
 
     <ul class="breadcrumb">
         <li>
+            {% if project.provider %}
+                <i class="icon-{{ project.provider }}"></i>
+            {% endif %}
             <a href="/project/{{ project._id }}">
-                "{{ project.repo }}"
-            </a> <span class="divider">/</span>
+                {{ project.short_repo }}
+            </a>
+            <span class="divider">/</span>
         </li>
         <li class="active">
             {{ test._id }}
