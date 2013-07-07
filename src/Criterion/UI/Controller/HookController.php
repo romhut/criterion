@@ -28,12 +28,7 @@ class HookController
 
         if ( ! $project)
         {
-            $project['repo'] = $repo;
-            $project['status'] = array(
-                'code' => '2',
-                'message' => 'New'
-            );
-            $project['last_run'] = new \MongoDate();
+            $project = \Criterion\Helper\Project::fromRepo($repo);
             $app['mongo']->projects->save($project);
 
             $ssh_key_file = KEY_DIR . '/' . (string) $project['_id'];
