@@ -21,6 +21,8 @@ class ProjectsController
             $data['projects'][] = $project;
         }
 
+        $data['title'] = 'Projects';
+
         return $app['twig']->render('Projects/All.twig', $data);
     }
 
@@ -176,6 +178,8 @@ class ProjectsController
         {
             $data['tests'][] = $test;
         }
+
+        $data['title'] = $data['project']['short_repo'];
 
         return $app['twig']->render('Projects/View.twig', $data);
     }

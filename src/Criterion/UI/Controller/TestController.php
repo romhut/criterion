@@ -60,6 +60,8 @@ class TestController
             $data['log'][] = $log;
         }
 
+        $data['title'] = $data['test']['_id'] . ' | ' . $data['project']['short_repo'];
+
         return $app['twig']->render('Test.twig', $data);
     }
 
