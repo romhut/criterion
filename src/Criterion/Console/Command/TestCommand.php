@@ -59,7 +59,7 @@ class TestCommand extends Command
             '$set' => $data
         ));
 
-        $this->getApplication()->setTest($test_id);
+        $this->getApplication()->test($test_id);
 
         $test_id = (String) $test_id;
 
@@ -80,8 +80,8 @@ class TestCommand extends Command
             $get_test['branch'] = 'master';
         }
 
-        $this->getApplication()->setProject($project);
-        $this->getApplication()->setOutput($output);
+        $this->getApplication()->project($project);
+        $this->getApplication()->output($output);
 
         $output->writeln('<question>Running "setup" commands</question>');
         $original_dir = getcwd();
