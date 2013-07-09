@@ -20,19 +20,20 @@ class Application extends SymfonyApplication
         $this->db = $this->mongo->criterion;
     }
 
-    public function setProject($project)
+    public function __get($property) 
     {
-        $this->project = $project;
+        if (property_exists($this, $property)) 
+        {
+            return $this->$property;
+        }
     }
 
-    public function setTest($test)
+    public function __set($property, $value) 
     {
-        $this->test = $test;
-    }
-
-    public function setOutput($output)
-    {
-        $this->output = $output;
+        if (property_exists($this, $property)) 
+        {
+            $this->$property = $value;
+        }
     }
 
     public function executeAndLog($command)
