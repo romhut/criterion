@@ -71,7 +71,7 @@ class Application extends SymfonyApplication
         return $data;
     }
 
-    public function testFailed($command_response)
+    public function testFailed($command_response = false)
     {
         $this->db->tests->update(array(
             '_id' => $this->test,
