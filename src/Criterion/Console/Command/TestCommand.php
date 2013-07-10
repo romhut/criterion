@@ -128,42 +128,81 @@ class TestCommand extends Command
             )
         ));
 
-        // Check the config file
-        $config_file = $project_folder . '/' . $test_id . '/.criterion.yml';
-        $project_config = $this->getApplication()->parseConfig($config_file);
+        $test_folder = $project_folder . '/' . $test_id . '/';
+        $test_type = \Criterion\Helper\Test::detectType($test_folder);
 
-        if ( ! $project_config)
+        var_dump($test_type);
+
+        $this->getApplication()->log('Detecting test type', $test_type);
+
+        if ($test_type === 'criterion')
         {
-            return $this->getApplication()->testFailed('Config file invalid.');
-        }
+            // Check the config file
+            $config_file = $test_folder . '.criterion.yml';
+            $project_config = $this->getApplication()->parseConfig($config_file);
 
-        $project = $project + $project_config;
-        $this->getApplication()->setProject($project);
-
-        if (count($project['setup']))
-        {
-            foreach ($project['setup'] as $setup)
+            if ( ! $project_config)
             {
-                $response = $this->getApplication()->executeAndLog($setup);
+                return $this->getApplication()->testFailed('Config file invalid.');
+            }
+
+            $project = $project + $project_config;
+            $this->getApplication()->setProject($project);
+
+            if (count($project['setup']))
+            {
+                foreach ($project['setup'] as $setup)
+                {
+                    $response = $this->getApplication()->executeAndLog($setup);
+                    if ($response['response'] !== '0')
+                    {
+                        return $this->getApplication()->testFailed($response);
+                    }
+                }
+            }
+
+            $output->writeln('<question>Running "test" commands</question>');
+
+            if (count($project['test']))
+            {
+                foreach ($project['test'] as $test)
+                {
+                    $response = $this->getApplication()->executeAndLog($test);
+                    if ($response['response'] !== '0')
+                    {
+                        return $this->getApplication()->testFailed($response);
+                    }
+                }
+            }
+        }
+        elseif ($test_type === 'phpunit')
+        {
+            $is_composer = \Criterion\Helper\Test::isComposer($test_folder);
+
+            if ($is_composer)
+            {
+                $response = $this->getApplication()->executeAndLog('curl -sS https://getcomposer.org/installer | php');
+                if ($response['response'] !== '0')
+                {
+                    return $this->getApplication()->testFailed($response);
+                }
+
+                $response = $this->getApplication()->executeAndLog('php composer.phar install');
                 if ($response['response'] !== '0')
                 {
                     return $this->getApplication()->testFailed($response);
                 }
             }
-        }
 
-        $output->writeln('<question>Running "test" commands</question>');
-
-        if (count($project['test']))
-        {
-            foreach ($project['test'] as $test)
+            $response = $this->getApplication()->executeAndLog('vendor/bin/phpunit');
+            if ($response['response'] !== '0')
             {
-                $response = $this->getApplication()->executeAndLog($test);
-                if ($response['response'] !== '0')
-                {
-                    return $this->getApplication()->testFailed($response);
-                }
+                return $this->getApplication()->testFailed($response);
             }
+        }
+        else
+        {
+            return $this->getApplication()->testFailed('Could not detect test type.');
         }
 
         return $this->getApplication()->testPassed();

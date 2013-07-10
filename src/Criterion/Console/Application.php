@@ -46,6 +46,19 @@ class Application extends SymfonyApplication
         $output = trim($output);
         $output = str_replace(TEST_DIR, null, $output);
 
+        $data = $this->log($command, $output, $response);
+
+        $output = $response == 0 ? "<info>success</info>" : "<error>failed</error>";
+
+        $this->output->writeln($data['command']);
+        $this->output->writeln('... ' . $output);
+        $this->output->writeln('');
+
+        return $data;
+    }
+
+    public function log($command, $output, $response = '0')
+    {
         $data = array(
             'output' => $output,
             'response' => (string) $response,
@@ -55,13 +68,6 @@ class Application extends SymfonyApplication
             'time' => new \MongoDate()
         );
         $this->db->logs->save($data);
-
-        $output = $response == 0 ? "<info>success</info>" : "<error>failed</error>";
-
-        $this->output->writeln($data['command']);
-        $this->output->writeln('... ' . $output);
-        $this->output->writeln('');
-
         return $data;
     }
 
