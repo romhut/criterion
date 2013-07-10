@@ -22,19 +22,11 @@ class Test
 
     public static function isComposer($folder)
     {
-        if (file_exists($folder . 'composer.json'))
-        {
-            return 'phpunit';
-        }
-        return false;
+        return file_exists($folder . 'composer.json');
     }
 
     public static function isPHPUnit($folder)
     {
-        if (file_exists($folder . 'phpunit.xml') || file_exists($folder . 'phpunit.xml.dist'))
-        {
-            return 'phpunit';
-        }
-        return false;
+        return file_exists($folder . 'phpunit.xml') || file_exists($folder . 'phpunit.xml.dist');
     }
 }
