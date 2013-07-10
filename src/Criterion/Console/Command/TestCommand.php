@@ -205,8 +205,11 @@ class TestCommand extends Command
             }
             else
             {
-                $this->getApplication()->log('Checking for PHPUnit', 'PHPUnit is not in composer.json', 1);
-                return $this->getApplication()->testFailed();
+                $response = $this->getApplication()->executeAndLog('phpunit');
+                if ($response['response'] !== '0')
+                {
+                    return $this->getApplication()->testFailed($response);
+                }
             }
         }
         else
