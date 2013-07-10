@@ -7,7 +7,7 @@ class Test
     {
         if (is_dir($folder))
         {
-            if (file_exists($folder . '.criterion.yml'))
+            if (self::isCriterion($folder))
             {
                 return 'criterion';
             }
@@ -18,6 +18,11 @@ class Test
         }
 
         return false;
+    }
+
+    public static function isCriterion($folder)
+    {
+        return file_exists($folder . '.criterion.yml');
     }
 
     public static function isComposer($folder)
