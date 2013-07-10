@@ -45,21 +45,24 @@ class TestCommand extends Command
             return false;
         }
 
-        $data = array(
-            'status' => array(
-                'code' => '3',
-                'message' => 'Running'
-            )
-        );
-
-        $this->getApplication()->db->tests->update(array(
-            '_id' => $test_id,
-            'project_id' => $project_id
-        ), array(
-            '$set' => $data
-        ));
-
         $this->getApplication()->setTest($test_id);
+
+        if ($get_test['status']['code'] !== '3')
+        {
+            $data = array(
+                'status' => array(
+                    'code' => '3',
+                    'message' => 'Running'
+                )
+            );
+
+            $this->getApplication()->db->tests->update(array(
+                '_id' => $test_id,
+                'project_id' => $project_id
+            ), array(
+                '$set' => $data
+            ));
+        }
 
         $test_id = (String) $test_id;
 
