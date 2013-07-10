@@ -131,9 +131,7 @@ class TestCommand extends Command
         $test_folder = $project_folder . '/' . $test_id . '/';
         $test_type = \Criterion\Helper\Test::detectType($test_folder);
 
-        var_dump($test_type);
-
-        $this->getApplication()->log('Detecting test type', $test_type);
+        $this->getApplication()->log('Detecting test type', $test_type ?: 'Not Found', $test_type ? '0' : '1');
 
         if ($test_type === 'criterion')
         {
@@ -194,10 +192,18 @@ class TestCommand extends Command
                 }
             }
 
-            $response = $this->getApplication()->executeAndLog('vendor/bin/phpunit');
-            if ($response['response'] !== '0')
+            if (file_exists($test_folder . 'vendor/bin/phpunit'))
             {
-                return $this->getApplication()->testFailed($response);
+                $response = $this->getApplication()->executeAndLog('vendor/bin/phpunit');
+                if ($response['response'] !== '0')
+                {
+                    return $this->getApplication()->testFailed($response);
+                }
+            }
+            else
+            {
+                $this->getApplication()->log('Checking for PHPUnit', 'PHPUnit is not in composer.json', 1);
+                return $this->getApplication()->testFailed();
             }
         }
         else
