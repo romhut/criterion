@@ -182,13 +182,7 @@ class TestCommand extends Command
 
             if ($is_composer)
             {
-                $response = $this->getApplication()->executeAndLog('curl -sS https://getcomposer.org/installer | php');
-                if ($response['response'] !== '0')
-                {
-                    return $this->getApplication()->testFailed($response);
-                }
-
-                $response = $this->getApplication()->executeAndLog('php composer.phar install');
+                $response = $this->getApplication()->executeAndLog('composer install');
                 if ($response['response'] !== '0')
                 {
                     return $this->getApplication()->testFailed($response);
