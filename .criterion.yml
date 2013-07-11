@@ -1,6 +1,5 @@
 setup:
-    - curl -sS https://getcomposer.org/installer | php
-    - php composer.phar install --dev
+    - composer install
 test:
     - vendor/bin/phpunit
 fail:
