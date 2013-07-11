@@ -15,8 +15,22 @@
   }
 }
 footer {
+  margin-top: 10px;
   text-align: center;
-  font-size: 13px;
+  font-size: 14px;
+}
+footer a {
+  color: #000;
+}
+footer a:hover {
+  color: #000;
+  text-decoration: none;
+}
+footer p {
+  margin-top: -8px;
+}
+footer i {
+  font-size: 20px;
 }
 #logs {
   background: #000;
