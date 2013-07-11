@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="test/Criterion/Test/TestCase.php" colors="true">
+<phpunit bootstrap="test/Criterion/Test/TestCase.php">
     <testsuites>
         <testsuite name="Criterion Test Suite">
             <directory>test/Criterion/Test</directory>
