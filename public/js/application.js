@@ -86,12 +86,17 @@ var criterion = {
                     $('#logs').html('');
                     $.each(data.log, function(key, val) {
 
-                        if (val.response == '0') {
-                            var hide_class = 'hide';
-                            var alert = 'success';
+                        if (val.status == '1') {
+                            if (val.response == '0') {
+                                var hide_class = 'hide';
+                                var alert = 'success';
+                            } else {
+                                var hide_class = false;
+                                var alert = 'error';
+                            }
                         } else {
                             var hide_class = false;
-                            var alert = 'error';
+                            var alert = 'warning';
                         }
 
                         if (val.output == '') {

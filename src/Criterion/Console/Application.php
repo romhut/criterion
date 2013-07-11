@@ -35,40 +35,65 @@ class Application extends SymfonyApplication
         $this->output = $output;
     }
 
-    public function executeAndLog($command)
+    public function executeAndLog($command_string)
     {
+        $prelog = $this->preLog($command_string);
 
-        ob_start();
-        passthru($command . ' 2>&1', $response);
-        $output = ob_get_contents();
-        ob_end_clean();
+        $command = new \Criterion\Helper\Command();
+        $command->execute($command_string);
+        $log = $this->log($command_string, $command->output, $command->response, $prelog);
 
-        $output = trim($output);
-        $output = str_replace(TEST_DIR, null, $output);
-
-        $data = $this->log($command, $output, $response);
-
-        $output = $response == 0 ? "<info>success</info>" : "<error>failed</error>";
-
-        $this->output->writeln($data['command']);
-        $this->output->writeln('... ' . $output);
+        $output = $command->response == 0 ? "<info>success</info>" : "<error>failed</error>";
+        $this->output->writeln($command_string);
+        $this->output->writeln('... ' . $command->output);
         $this->output->writeln('');
 
-        return $data;
+        return $log;
     }
 
-    public function log($command, $output, $response = '0')
+    // Add a log item before the command has run
+    public function preLog($command)
     {
-        $data = array(
+        $log = array(
+            'output' => 'Running...',
+            'response' => false,
+            'command' => $command,
+            'test_id' => new \MongoId($this->test),
+            'project_id' => $this->project['_id'],
+            'time' => new \MongoDate(),
+            'status' => '0'
+        );
+
+        $this->db->logs->save($log);
+        return $log['_id'];
+    }
+
+    public function log($command, $output, $response = '0', $log_id = false)
+    {
+        $log = array(
             'output' => $output,
             'response' => (string) $response,
             'command' => $command,
             'test_id' => new \MongoId($this->test),
             'project_id' => $this->project['_id'],
-            'time' => new \MongoDate()
+            'time' => new \MongoDate(),
+            'status' => '1'
         );
-        $this->db->logs->save($data);
-        return $data;
+
+        if ($log_id)
+        {
+            $this->db->logs->update(array(
+                '_id' => $log_id
+            ), array(
+                '$set' => $log
+            ));
+        }
+        else
+        {
+            $this->db->logs->save($log);
+        }
+
+        return $log;
     }
 
     public function testFailed($command_response = false)

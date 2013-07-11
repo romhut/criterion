@@ -31,23 +31,24 @@ class TestCommand extends Command
 
         if ( ! $project)
         {
-            $output->writeln('<error>No Project Found</error>');
+            $output->writeln('<error>No project found</error>');
             return false;
         }
 
-        $get_test = $this->getApplication()->db->tests->findOne(array(
+        $test = $this->getApplication()->db->tests->findOne(array(
             '_id' => $test_id
         ));
 
-        if ( ! $project)
+        if ( ! $test)
         {
-            $output->writeln('<error>No Project Found</error>');
+            $output->writeln('<error>No test found</error>');
             return false;
         }
 
+        // Pass the test into the application for future use
         $this->getApplication()->setTest($test_id);
 
-        if ($get_test['status']['code'] !== '3')
+        if ($test['status']['code'] !== '3')
         {
             $data = array(
                 'status' => array(
@@ -64,92 +65,78 @@ class TestCommand extends Command
             ));
         }
 
-        $test_id = (String) $test_id;
-
         $output->writeln('Criterion test has started...');
-        $output->writeln('     - Project: '. (String) $project_id);
-        $output->writeln('     - test: '.  $test_id);
+        $output->writeln('     - Project: '. (string) $project_id);
+        $output->writeln('     - test: '.  (string) $test_id);
         $output->writeln('');
 
-        $project_folder = TEST_DIR . '/' . (String) $project_id;
-        $test_folder = $project_folder . '/' . $test_id;
+        $project_folder = TEST_DIR . '/' . (string) $project_id;
+        $test_folder = $project_folder . '/' . (string) $test_id;
         if ( ! is_dir($project_folder))
         {
             mkdir($project_folder, 0777, true);
         }
 
-        if ( ! isset($get_test['branch']))
+        // Reset to master branch if there is no branch specified
+        if ( ! isset($test['branch']))
         {
-            $get_test['branch'] = 'master';
+            $test['branch'] = 'master';
         }
 
+        // Pass the project and output variables into the application.
+        // This allows for a consistant output, and makes it easier to
+        // reference the project details
         $this->getApplication()->setProject($project);
         $this->getApplication()->setOutput($output);
 
-        $output->writeln('<question>Running "setup" commands</question>');
-        $original_dir = getcwd();
+        // Switch to the project directory, and clone the repo into it.
         chdir($project_folder);
-        $git_clone = $this->getApplication()->executeAndLog(sprintf('git clone -b %s --depth=1 %s %s', $get_test['branch'], $project['repo'], $test_id));
 
+        $git_clone = $this->getApplication()->executeAndLog(sprintf('git clone -b %s --depth=1 %s %s', $test['branch'], $project['repo'], (string) $test_id));
         if ($git_clone['response'] != 0)
         {
             return $this->getApplication()->testFailed($git_clone);
         }
 
-        chdir($project_folder . '/' . $test_id);
+        // Switch into the test directory we just cloned, so we can
+        // run all future commands from here
+        chdir($test_folder);
 
-        exec("git --no-pager show -s --format='%h'", $short_hash);
-        $commit['hash']['short'] = $short_hash[0];
+        // Fetch the commit info from the commit helper
+        $commit = \Criterion\Helper\Commit::getInfo($project['repo'], $test['branch']);
 
-        exec("git --no-pager show -s --format='%H'", $long_hash);
-        $commit['hash']['long'] = $long_hash[0];
-
-        exec("git --no-pager show -s --format='%an' " . $commit['hash']['long'], $author_name);
-        $commit['author']['name'] = $author_name[0];
-
-        exec("git --no-pager show -s --format='%ae' " . $commit['hash']['long'], $author_email);
-        $commit['author']['email'] = $author_email[0];
-
-        exec("git --no-pager show -s --format='%s' " . $commit['hash']['long'], $message);
-        $commit['message'] = $message[0];
-
-        exec("git show --format='%ci' " . $commit['hash']['long'], $date);
-        $commit['date'] = new \MongoDate(strtotime($date[0]));
-
-        $commit['url'] = \Criterion\Helper\Commit::getUrl($commit, $project['repo']);
-
-        $commit['branch']['name'] = $get_test['branch'];
-        $commit['branch']['url'] = \Criterion\Helper\Commit::getBranchUrl($get_test['branch'], $project['repo']);
+        // Detect the test type. E.G. if .criterion.yml file does
+        // not exist, it may be a PHPUnit project
+        $test_type = \Criterion\Helper\Test::detectType($test_folder);
+        $this->getApplication()->log('Detecting test type', $test_type ?: 'Not Found', $test_type ? '0' : '1');
 
         $this->getApplication()->db->tests->update(array(
-            '_id' => new \MongoId($test_id),
+            '_id' => $test_id,
             'project_id' => $project_id,
         ), array(
             '$set' => array(
                 'commit' => $commit,
-                'repo' => $project['repo']
+                'repo' => $project['repo'],
+                'type' => $test_type
             )
         ));
-
-        $test_folder = $project_folder . '/' . $test_id;
-        $test_type = \Criterion\Helper\Test::detectType($test_folder);
-
-        $this->getApplication()->log('Detecting test type', $test_type ?: 'Not Found', $test_type ? '0' : '1');
 
         if ($test_type === 'criterion')
         {
             // Check the config file
-            $config_file = $test_folder . '.criterion.yml';
+            $config_file = realpath($test_folder . '/.criterion.yml');
             $project_config = $this->getApplication()->parseConfig($config_file);
-
             if ( ! $project_config)
             {
                 return $this->getApplication()->testFailed('Config file invalid.');
             }
 
+            // Append the project file into the project array in Application
             $project = $project + $project_config;
             $this->getApplication()->setProject($project);
 
+            // Run any setup commands that we have
+            $output->writeln('<question>Running "setup" commands</question>');
             if (count($project['setup']))
             {
                 foreach ($project['setup'] as $setup)
@@ -162,8 +149,8 @@ class TestCommand extends Command
                 }
             }
 
+            // Run any test commands we have
             $output->writeln('<question>Running "test" commands</question>');
-
             if (count($project['test']))
             {
                 foreach ($project['test'] as $test)
@@ -178,8 +165,9 @@ class TestCommand extends Command
         }
         elseif ($test_type === 'phpunit')
         {
+            // Check to see if a composer.json file exists, if it does then
+            // we need to run "composer install" to get all dependancies
             $is_composer = \Criterion\Helper\Test::isComposer($test_folder);
-
             if ($is_composer)
             {
                 $response = $this->getApplication()->executeAndLog('composer install');
@@ -189,6 +177,9 @@ class TestCommand extends Command
                 }
             }
 
+            // Because there are a few ways of running phpunit, we need to
+            // check them. First we check the vendor dir incase composer
+            // has installed it.
             if (file_exists($test_folder . '/vendor/bin/phpunit'))
             {
                 $response = $this->getApplication()->executeAndLog('vendor/bin/phpunit');
@@ -197,6 +188,8 @@ class TestCommand extends Command
                     return $this->getApplication()->testFailed($response);
                 }
             }
+            // If composer has not installed phpunit, then we can run the bin
+            // command instead.
             else
             {
                 $response = $this->getApplication()->executeAndLog('phpunit');
@@ -211,6 +204,7 @@ class TestCommand extends Command
             return $this->getApplication()->testFailed('Could not detect test type.');
         }
 
+        // The test has passed, update the test status, and project status
         return $this->getApplication()->testPassed();
     }
 }
