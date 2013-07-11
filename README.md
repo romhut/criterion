@@ -10,9 +10,11 @@ You can add GIT repos from any provider, and run any commands you wish against i
 
 ### Dependencies
 - PHP >=5.3.3
-- MongoDB
+- PHP Mongo Driver >= 1.3.0
+- MongoDB >= 2.2.0
+- Git >= 1.7.0
 
-### Example criterion.yaml
+### Example criterion.yml
 ```yml
 setup:
     - composer install --dev
