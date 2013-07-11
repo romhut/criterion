@@ -48,6 +48,9 @@ class TestCommand extends Command
         // Pass the test into the application for future use
         $this->getApplication()->setTest($test_id);
 
+        // Check to see if the current status is not already "running".
+        // The reason for this is that the worker sets it to 3 atomically,
+        // however, these tests can be run manually via the console.
         if ($test['status']['code'] !== '3')
         {
             $data = array(
@@ -110,6 +113,8 @@ class TestCommand extends Command
         $test_type = \Criterion\Helper\Test::detectType($test_folder);
         $this->getApplication()->log('Detecting test type', $test_type ?: 'Not Found', $test_type ? '0' : '1');
 
+        // Update the current test with some details we just gathered
+        // such as: repo, commit info, and test type
         $this->getApplication()->db->tests->update(array(
             '_id' => $test_id,
             'project_id' => $project_id,
@@ -128,7 +133,7 @@ class TestCommand extends Command
             $project = $this->getApplication()->parseConfig($config_file);
             if ( ! $project)
             {
-                return $this->getApplication()->testFailed('Config file invalid.');
+                return $this->getApplication()->testFailed();
             }
 
             // Run any setup commands that we have
@@ -197,7 +202,7 @@ class TestCommand extends Command
         }
         else
         {
-            return $this->getApplication()->testFailed('Could not detect test type.');
+            return $this->getApplication()->testFailed();
         }
 
         // The test has passed, update the test status, and project status
