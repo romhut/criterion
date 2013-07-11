@@ -11,16 +11,20 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/marcqualie/hoard-php-client.git",
-                "reference": "89a798b74e39d7f36745b09b63c32f12a7afda66"
+                "reference": "1c1695ec7ddb5b66075c603cf1de2d1350c94176"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marcqualie/hoard-php-client/zipball/89a798b74e39d7f36745b09b63c32f12a7afda66",
-                "reference": "89a798b74e39d7f36745b09b63c32f12a7afda66",
+                "url": "https://api.github.com/repos/marcqualie/hoard-php-client/zipball/1c1695ec7ddb5b66075c603cf1de2d1350c94176",
+                "reference": "1c1695ec7ddb5b66075c603cf1de2d1350c94176",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0"
+            },
+            "suggest": {
+                "ext-curl": "*",
+                "ext-gearman": "*"
             },
             "type": "library",
             "autoload": {
@@ -35,13 +39,13 @@
             "authors": [
                 {
                     "name": "Marc Qualie",
-                    "email": "hoard@marcqualie.com",
+                    "email": "marc@marcqualie.com",
                     "homepage": "http://marcqualie.com",
                     "role": "Developer"
                 }
             ],
             "description": "Hoard client library for PHP",
-            "homepage": "http://github.com/marcqualie/hoard-php-client",
+            "homepage": "https://github.com/marcqualie/hoard-php-client",
             "keywords": [
                 "analytics",
                 "log",
@@ -49,20 +53,20 @@
                 "mongodb",
                 "stats"
             ],
-            "time": "2013-07-03 19:37:44"
+            "time": "2013-07-08 12:05:40"
         },
         {
             "name": "marcqualie/mongominify",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marcqualie/mongominify.git",
-                "reference": "v1.0.0"
+                "reference": "v1.0.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marcqualie/mongominify/zipball/v1.0.0",
-                "reference": "v1.0.0",
+                "url": "https://api.github.com/repos/marcqualie/mongominify/zipball/v1.0.1",
+                "reference": "v1.0.1",
                 "shasum": ""
             },
             "require": {
@@ -70,19 +74,27 @@
                 "php": ">=5.3.3"
             },
             "require-dev": {
-                "phpunit/php-code-coverage": "1.2.*",
-                "phpunit/phpunit": "3.7.*",
-                "silex/silex": "1.0.*"
+                "phpunit/php-code-coverage": "~1.2",
+                "phpunit/phpunit": "~3.7",
+                "silex/silex": "~1.0"
             },
             "type": "library",
             "autoload": {
                 "psr-0": {
-                    "MongoMinify": "lib/"
+                    "MongoMinify": "lib"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marc Qualie",
+                    "email": "marc@marcqualie.com",
+                    "homepage": "http://marcqualie.com",
+                    "role": "Developer"
+                }
             ],
             "description": "A drop-in library which acts as a transparent filter to MongoDB documents and compresses/decompresses data on the fly",
             "keywords": [
@@ -91,7 +103,7 @@
                 "library",
                 "mongodb"
             ],
-            "time": "2013-06-25 15:39:55"
+            "time": "2013-07-09 18:03:02"
         },
         {
             "name": "pimple/pimple",
