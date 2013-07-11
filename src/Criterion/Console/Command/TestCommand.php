@@ -131,7 +131,7 @@ class TestCommand extends Command
             )
         ));
 
-        $test_folder = $project_folder . '/' . $test_id . '/';
+        $test_folder = $project_folder . '/' . $test_id;
         $test_type = \Criterion\Helper\Test::detectType($test_folder);
 
         $this->getApplication()->log('Detecting test type', $test_type ?: 'Not Found', $test_type ? '0' : '1');
@@ -189,7 +189,7 @@ class TestCommand extends Command
                 }
             }
 
-            if (file_exists($test_folder . 'vendor/bin/phpunit'))
+            if (file_exists($test_folder . '/vendor/bin/phpunit'))
             {
                 $response = $this->getApplication()->executeAndLog('vendor/bin/phpunit');
                 if ($response['response'] !== '0')

@@ -22,16 +22,16 @@ class Test
 
     public static function isCriterion($folder)
     {
-        return file_exists($folder . '.criterion.yml');
+        return file_exists($folder . '/.criterion.yml');
     }
 
     public static function isComposer($folder)
     {
-        return file_exists($folder . 'composer.json');
+        return file_exists($folder . '/composer.json');
     }
 
     public static function isPHPUnit($folder)
     {
-        return file_exists($folder . 'phpunit.xml') || file_exists($folder . 'phpunit.xml.dist');
+        return file_exists($folder . '/phpunit.xml') || file_exists($folder . '/phpunit.xml.dist');
     }
 }
