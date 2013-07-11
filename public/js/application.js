@@ -88,14 +88,11 @@ var criterion = {
 
                         if (val.status == '1') {
                             if (val.response == '0') {
-                                var hide_class = 'hide';
                                 var alert = 'success';
                             } else {
-                                var hide_class = false;
                                 var alert = 'error';
                             }
                         } else {
-                            var hide_class = false;
                             var alert = 'warning';
                         }
 
@@ -110,7 +107,7 @@ var criterion = {
                                     '<span class="dollar">$</span> ' + val.command +
                                 '</p>' +
                             '</a>' +
-                            '<div class="output ' + hide_class + '">' +
+                            '<div class="output">' +
                                 nl2br(val.output) +
                             '</div>' +
                         '</div>');
