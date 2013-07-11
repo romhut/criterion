@@ -125,15 +125,11 @@ class TestCommand extends Command
         {
             // Check the config file
             $config_file = realpath($test_folder . '/.criterion.yml');
-            $project_config = $this->getApplication()->parseConfig($config_file);
-            if ( ! $project_config)
+            $project = $this->getApplication()->parseConfig($config_file);
+            if ( ! $project)
             {
                 return $this->getApplication()->testFailed('Config file invalid.');
             }
-
-            // Append the project file into the project array in Application
-            $project = $project + $project_config;
-            $this->getApplication()->setProject($project);
 
             // Run any setup commands that we have
             $output->writeln('<question>Running "setup" commands</question>');

@@ -187,25 +187,21 @@ class Application extends SymfonyApplication
         return false;
     }
 
+    // Parse a criterion.yml file, and log the results
     public function parseConfig($config)
     {
         $project = Yaml::parse($config);
 
+        $command = 'Parsing .criterion.yml file';
+        $prelog = $this->prelog($command);
+
         if( ! isset($project) || ! is_array($project))
         {
-            $data = array(
-                'output' => 'The .criterion.yml file does not seem valid, or does not exist',
-                'response' => '1',
-                'command' => 'Checking .criterion.yml',
-                'test_id' => $this->test,
-                'project_id' => $this->project['_id'],
-                'time' => new \MongoDate()
-            );
-
-            $this->db->logs->save($data);
-
+            $this->log($command, 'The .criterion.yml file does not seem valid, or does not exist', '1', $prelog);
             return false;
         }
+
+        $this->log($command, 'Successfully parsed .criterion.yml file', '0', $prelog);
 
         foreach (array('setup', 'test', 'fail', 'pass') as $section)
         {
@@ -223,6 +219,8 @@ class Application extends SymfonyApplication
             )
         ));
 
-        return $project;
+        $this->project = array_merge($this->project, $project);
+
+        return $this->project;
     }
 }
