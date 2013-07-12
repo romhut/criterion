@@ -22,7 +22,6 @@ class TestCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $test_id = new \MongoId($input->getArgument('test_id'));
-
         $test = $this->getApplication()->db->tests->findOne(array(
             '_id' => $test_id
         ));
