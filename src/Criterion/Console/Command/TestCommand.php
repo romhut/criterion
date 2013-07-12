@@ -12,7 +12,7 @@ class TestCommand extends Command
     {
         $this
             ->setName('test')
-            ->setDescription('Run a test')
+            ->setDescription('Run a test using the test ID.')
              ->setDefinition(array(
                 new InputArgument('test_id', InputArgument::REQUIRED, 'test ID', null),
              ))
