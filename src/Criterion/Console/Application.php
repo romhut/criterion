@@ -127,6 +127,14 @@ class Application extends SymfonyApplication
         $this->output->writeln('');
         $this->output->writeln('<question>Running "fail" commands</question>');
 
+        $provider = \Criterion\Helper\Repo::provider($this->project['repo']);
+        if ($provider === 'github' && $this->project['github']['token'])
+        {
+            $test = $this->db->tests->findOne(array('_id' => $this->test));
+            \Criterion\Helper\Github::updateStatus('error', $test, $this->project);
+            $this->log('Posting to Github Statuses API', 'Success');
+        }
+
         if (isset($this->project['fail']) && count($this->project['fail']))
         {
             foreach ($this->project['fail'] as $fail)
@@ -171,6 +179,14 @@ class Application extends SymfonyApplication
 
         $this->output->writeln('');
         $this->output->writeln('<question>Running "pass" commands</question>');
+
+        $provider = \Criterion\Helper\Repo::provider($this->project['repo']);
+        if ($provider === 'github' && $this->project['github']['token'])
+        {
+            $test = $this->db->tests->findOne(array('_id' => $this->test));
+            \Criterion\Helper\Github::updateStatus('success', $test, $this->project);
+            $this->log('Posting to Github Statuses API', 'Success');
+        }
 
         if (isset($this->project['pass']) && count($this->project['pass']))
         {

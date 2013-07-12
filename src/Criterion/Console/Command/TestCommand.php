@@ -14,7 +14,6 @@ class TestCommand extends Command
             ->setName('test')
             ->setDescription('Run a test')
              ->setDefinition(array(
-                new InputArgument('project_id', InputArgument::REQUIRED, 'Project ID', null),
                 new InputArgument('test_id', InputArgument::REQUIRED, 'test ID', null),
              ))
             ;
@@ -22,8 +21,19 @@ class TestCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $project_id = new \MongoId($input->getArgument('project_id'));
         $test_id = new \MongoId($input->getArgument('test_id'));
+
+        $test = $this->getApplication()->db->tests->findOne(array(
+            '_id' => $test_id
+        ));
+
+        if ( ! $test)
+        {
+            $output->writeln('<error>No test found</error>');
+            return false;
+        }
+
+        $project_id = $test['project_id'];
 
         $project = $this->getApplication()->db->projects->findOne(array(
             '_id' => $project_id
@@ -35,15 +45,6 @@ class TestCommand extends Command
             return false;
         }
 
-        $test = $this->getApplication()->db->tests->findOne(array(
-            '_id' => $test_id
-        ));
-
-        if ( ! $test)
-        {
-            $output->writeln('<error>No test found</error>');
-            return false;
-        }
 
         // Pass the test into the application for future use
         $this->getApplication()->setTest($test_id);

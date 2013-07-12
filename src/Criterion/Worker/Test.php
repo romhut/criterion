@@ -26,7 +26,7 @@ while (true)
         $test = (string)  $test['_id'];
 
         echo 'Testing Project: ' . $project . "\n";
-        exec("php $root/console.php test $project $test", $output);
+        exec("php $root/console.php test $test", $output);
         echo 'Done' . "\n\n";
     }
 

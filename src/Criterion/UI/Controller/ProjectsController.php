@@ -29,6 +29,8 @@ class ProjectsController
     public function create(\Silex\Application $app)
     {
         $project = \Criterion\Helper\Project::fromRepo($app['request']->get('repo'));
+        $project['github']['token'] = $app['request']->get('github_token');
+
         $app['mongo']->projects->save($project);
 
         $ssh_key_file = KEY_DIR . '/' . (string) $project['_id'];
@@ -158,6 +160,8 @@ class ProjectsController
             $update_data['provider'] = \Criterion\Helper\Repo::provider($update_data['repo']);
             $update_data['ssh_key']['public'] = $app['request']->get('ssh_key_public');
             $update_data['ssh_key']['private'] = $app['request']->get('ssh_key_private');
+            $update_data['github']['token'] = $app['request']->get('github_token');
+
 
             $update = $app['mongo']->projects->update($data['project'], array(
                 '$set' => $update_data
