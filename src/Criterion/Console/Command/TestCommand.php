@@ -46,14 +46,6 @@ class TestCommand extends Command
         // Pass the test into the application for future use
         $this->getApplication()->setTest($test_id);
 
-        // Push pending status to github
-        if ($project['provider'] === 'github' && $project['github']['token'])
-        {
-            $test = $this->getApplication()->db->tests->findOne(array('_id' => $this->test));
-            $github_status = \Criterion\Helper\Github::updateStatus('pending', $test, $project);
-            $this->getApplication()->log('Posting to Github Statuses API', $github_status ? 'Success' : 'Failed');
-        }
-
         // Check to see if the current status is not already "running".
         // The reason for this is that the worker sets it to 3 atomically,
         // however, these tests can be run manually via the console.
@@ -105,6 +97,14 @@ class TestCommand extends Command
         if ($git_clone['response'] != 0)
         {
             return $this->getApplication()->testFailed($git_clone);
+        }
+
+        // Push pending status to github
+        if ($project['provider'] === 'github' && $project['github']['token'])
+        {
+            $test = $this->getApplication()->db->tests->findOne(array('_id' => $this->test));
+            $github_status = \Criterion\Helper\Github::updateStatus('pending', $test, $project);
+            $this->getApplication()->log('Posting to Github Statuses API', $github_status ? 'Success' : 'Failed');
         }
 
         // Switch into the test directory we just cloned, so we can
