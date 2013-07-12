@@ -43,15 +43,15 @@ class TestCommand extends Command
             return false;
         }
 
+        // Pass the test into the application for future use
+        $this->getApplication()->setTest($test_id);
+
         if ($project['provider'] === 'github' && $project['github']['token'])
         {
             $test = $this->getApplication()->db->tests->findOne(array('_id' => $this->test));
             $github_status = \Criterion\Helper\Github::updateStatus('pending', $test, $project);
             $this->getApplication()->log('Posting to Github Statuses API', $github_status ? 'Success' : 'Failed');
         }
-
-        // Pass the test into the application for future use
-        $this->getApplication()->setTest($test_id);
 
         // Check to see if the current status is not already "running".
         // The reason for this is that the worker sets it to 3 atomically,
