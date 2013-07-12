@@ -33,10 +33,11 @@ class Github
         return str_replace('https://github.com/', null, $https_url);
     }
 
-    public static function updateStatus($state, $target_url, $repo, $hash)
+    public static function updateStatus($state, $test, $project)
     {
-        $shortrepo = self::shortRepo($repo);
-        $url = 'https://api.github.com/repos/' . $shortrepo . '/statuses/' . $hash;
+
+        $shortrepo = self::shortRepo($project['repo']);
+        $url = 'https://api.github.com/repos/' . $shortrepo . '/statuses/' . $test['commit']['hash']['long'];
 
         $description = array(
             'pending' => 'Test is pending',
@@ -46,14 +47,12 @@ class Github
 
         $status = array(
             'state' => $state,
-            'target_url' => $target_url,
             'description' => $description[$state]
         );
 
-
         $headers = array(
             'Content-Type: application/x-www-form-urlencoded',
-            'Authorization: token ' // append token from project
+            'Authorization: token ' . $project['github']['token']
         );
 
         $ch = curl_init();
