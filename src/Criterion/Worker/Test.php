@@ -30,5 +30,5 @@ while (true)
         echo 'Done' . "\n\n";
     }
 
-    sleep(5);
+    sleep(10);
 }
