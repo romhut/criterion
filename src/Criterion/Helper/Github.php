@@ -71,10 +71,6 @@ class Github
         $response = curl_exec($ch);
         curl_close($ch);
 
-        echo $url . "\n";
-
-        echo $response;
-
         return true;
     }
 }
