@@ -102,7 +102,6 @@ class TestCommand extends Command
         // Push pending status to github
         if ($project['provider'] === 'github' && $project['github']['token'])
         {
-            $test = $this->getApplication()->db->tests->findOne(array('_id' => $this->test));
             $github_status = \Criterion\Helper\Github::updateStatus('pending', $test, $project);
             $this->getApplication()->log('Posting to Github Statuses API', $github_status ? 'Success' : 'Failed');
         }
