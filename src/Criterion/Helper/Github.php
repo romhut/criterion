@@ -35,6 +35,10 @@ class Github
 
     public static function updateStatus($state, $test, $project)
     {
+        if ( ! file_exists(CONFIG_FILE))
+        {
+            return false;
+        }
 
         $config = json_decode(file_get_contents(CONFIG_FILE));
 
