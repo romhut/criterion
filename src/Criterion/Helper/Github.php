@@ -68,9 +68,9 @@ class Github
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($status));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        $response = curl_exec($ch);
+        $response = json_decode(curl_exec($ch), true);
         curl_close($ch);
 
-        return true;
+        return isset($response['url']);
     }
 }
