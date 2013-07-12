@@ -50,13 +50,25 @@ class Github
             'description' => $description[$state]
         );
 
+
+        $headers = array(
+            'Content-Type: application/x-www-form-urlencoded',
+            'Authorization: token ' // append token from project
+        );
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_POST, count($status));
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($status));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($status));
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_exec($ch);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        $response = curl_exec($ch);
         curl_close($ch);
+
+        echo $url . "\n";
+
+        echo $response;
+
         return true;
     }
 }

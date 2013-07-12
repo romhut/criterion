@@ -124,6 +124,13 @@ class Application extends SymfonyApplication
             )
         ));
 
+        $provider = \Criterion\Helper\Repo::provider($this->project['repo']);
+        if ($provider === 'github')
+        {
+            $test = $this->db->tests->findOne(array('_id' => $this->test));
+            \Criterion\Helper\Github::updateStatus('error', 'http://criterion.romhut.com', $this->project['repo'], $test['commit']['hash']['long']);
+        }
+
         $this->output->writeln('');
         $this->output->writeln('<question>Running "fail" commands</question>');
 
