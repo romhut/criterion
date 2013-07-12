@@ -12,9 +12,8 @@ class TestCommand extends Command
     {
         $this
             ->setName('test')
-            ->setDescription('Run a test')
+            ->setDescription('Run a test using the test ID.')
              ->setDefinition(array(
-                new InputArgument('project_id', InputArgument::REQUIRED, 'Project ID', null),
                 new InputArgument('test_id', InputArgument::REQUIRED, 'test ID', null),
              ))
             ;
@@ -22,19 +21,7 @@ class TestCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $project_id = new \MongoId($input->getArgument('project_id'));
         $test_id = new \MongoId($input->getArgument('test_id'));
-
-        $project = $this->getApplication()->db->projects->findOne(array(
-            '_id' => $project_id
-        ));
-
-        if ( ! $project)
-        {
-            $output->writeln('<error>No project found</error>');
-            return false;
-        }
-
         $test = $this->getApplication()->db->tests->findOne(array(
             '_id' => $test_id
         ));
@@ -42,6 +29,17 @@ class TestCommand extends Command
         if ( ! $test)
         {
             $output->writeln('<error>No test found</error>');
+            return false;
+        }
+
+        $project_id = $test['project_id'];
+        $project = $this->getApplication()->db->projects->findOne(array(
+            '_id' => $project_id
+        ));
+
+        if ( ! $project)
+        {
+            $output->writeln('<error>No project found</error>');
             return false;
         }
 
@@ -125,6 +123,17 @@ class TestCommand extends Command
                 'type' => $test_type
             )
         ));
+
+        $test['commit'] = $commit;
+        $test['repo'] = $project['repo'];
+        $test['type'] = $test_type;
+
+        // Push pending status to github
+        if ($project['provider'] === 'github' && $project['github']['token'])
+        {
+            $github_status = \Criterion\Helper\Github::updateStatus('pending', $test, $project);
+            $this->getApplication()->log('Posting to Github Statuses API', $github_status ? 'Success' : 'Failed');
+        }
 
         if ($test_type === 'criterion')
         {
