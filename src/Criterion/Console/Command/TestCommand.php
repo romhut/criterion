@@ -34,7 +34,6 @@ class TestCommand extends Command
         }
 
         $project_id = $test['project_id'];
-
         $project = $this->getApplication()->db->projects->findOne(array(
             '_id' => $project_id
         ));
