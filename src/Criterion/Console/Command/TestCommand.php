@@ -99,13 +99,6 @@ class TestCommand extends Command
             return $this->getApplication()->testFailed($git_clone);
         }
 
-        // Push pending status to github
-        if ($project['provider'] === 'github' && $project['github']['token'])
-        {
-            $github_status = \Criterion\Helper\Github::updateStatus('pending', $test, $project);
-            $this->getApplication()->log('Posting to Github Statuses API', $github_status ? 'Success' : 'Failed');
-        }
-
         // Switch into the test directory we just cloned, so we can
         // run all future commands from here
         chdir($test_folder);
@@ -130,6 +123,17 @@ class TestCommand extends Command
                 'type' => $test_type
             )
         ));
+
+        $test['commit'] = $commit;
+        $test['repo'] = $project['repo'];
+        $test['type'] = $test_type;
+
+        // Push pending status to github
+        if ($project['provider'] === 'github' && $project['github']['token'])
+        {
+            $github_status = \Criterion\Helper\Github::updateStatus('pending', $test, $project);
+            $this->getApplication()->log('Posting to Github Statuses API', $github_status ? 'Success' : 'Failed');
+        }
 
         if ($test_type === 'criterion')
         {
