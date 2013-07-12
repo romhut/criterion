@@ -36,6 +36,8 @@ class Github
     public static function updateStatus($state, $test, $project)
     {
 
+        $config = json_decode(file_get_contents(CONFIG_FILE));
+
         $shortrepo = self::shortRepo($project['repo']);
         $url = 'https://api.github.com/repos/' . $shortrepo . '/statuses/' . $test['commit']['hash']['long'];
 
@@ -47,6 +49,7 @@ class Github
 
         $status = array(
             'state' => $state,
+            'target_url' => $config->url . '/test/' . $test['_id'],
             'description' => $description[$state]
         );
 
