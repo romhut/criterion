@@ -22,6 +22,9 @@
         <fieldset>
             <label>Repository</label>
             <input name="repo" class="span11" type="text" value="{{ project.repo }}">
+
+            <label>Github Token</label>
+            <input name="github_token" class="span11" type="text" value="{{ project.github.token }}">
             <p>
                 <a id="show_ssh_keys" href="javascript:void(0)">View SSH Keys</a>
             </p>
