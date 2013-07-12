@@ -46,6 +46,7 @@ class TestCommand extends Command
         // Pass the test into the application for future use
         $this->getApplication()->setTest($test_id);
 
+        // Push pending status to github
         if ($project['provider'] === 'github' && $project['github']['token'])
         {
             $test = $this->getApplication()->db->tests->findOne(array('_id' => $this->test));
