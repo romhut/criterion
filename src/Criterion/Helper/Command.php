@@ -19,7 +19,8 @@ class Command
         $this->response = (string) $response;
 
         $this->output = trim($this->output);
-        $this->output = str_replace(TEST_DIR, null, $this->output);
+        $this->output = str_replace(DATA_DIR, null, $this->output);
+        $this->command = str_replace(DATA_DIR, null, $this->command);
 
         return $this->response === '0';
     }
