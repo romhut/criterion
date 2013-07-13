@@ -93,7 +93,25 @@ class TestCommand extends Command
         // Switch to the project directory, and clone the repo into it.
         chdir($project_folder);
 
-        $git_clone = $this->getApplication()->executeAndLog(sprintf('git clone -b %s --depth=1 %s %s', $test['branch'], $project['repo'], (string) $test_id));
+        // Get a fully formatted clone command, and then run it.
+        $clone_command = \Criterion\Helper\Repo::cloneCommand($test, $project);
+
+        // If the clone type is ssh, then we need to add the SSH keys to the agent
+        if (\Criterion\Helper\Repo::cloneType($project['repo']) === 'ssh')
+        {
+            $clone_command_with_key = sprintf(
+                'eval `ssh-agent -s` && ssh-add "%s" && %s && ssh-agent -k',
+                \Criterion\Helper\Project::sshKeyFile($project),
+                $clone_command
+            );
+
+            $git_clone = $this->getApplication()->executeAndLog($clone_command_with_key);
+        }
+        else
+        {
+            $git_clone = $this->getApplication()->executeAndLog($clone_command);
+        }
+
         if ($git_clone['response'] != 0)
         {
             return $this->getApplication()->testFailed($git_clone);

@@ -18,6 +18,27 @@ class Repo
         return false;
     }
 
+    public static function cloneType($repo)
+    {
+        if (strpos($repo, 'https://'))
+        {
+            return 'https';
+        }
+
+        return 'ssh';
+    }
+
+    public static function cloneCommand($test, $project)
+    {
+        return sprintf(
+            'git clone -b %s --depth=1 %s %s',
+            $test['branch'],
+            $project['repo'],
+            (string) $test['_id']
+        );
+
+    }
+
     public static function username($repo)
     {
         $username = explode('@', $repo);
