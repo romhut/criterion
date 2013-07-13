@@ -13,6 +13,12 @@ class Repo
         return false;
     }
 
+    public static function username($repo)
+    {
+        $username = explode('@', $repo);
+        return str_replace('https://', null, $username[0]);
+    }
+
     public static function short($url)
     {
         if (self::provider($url) == 'github')
