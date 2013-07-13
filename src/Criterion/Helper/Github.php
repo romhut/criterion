@@ -46,7 +46,7 @@ class Github
         $url = 'https://api.github.com/repos/' . $shortrepo . '/statuses/' . $test['commit']['hash']['long'];
 
         $description = array(
-            'pending' => 'Tests are pending.',
+            'pending' => 'Tests are running.',
             'success' => 'Tests has passed.',
             'error' => 'Tests has failed.'
         );

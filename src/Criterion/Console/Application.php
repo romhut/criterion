@@ -132,7 +132,7 @@ class Application extends SymfonyApplication
         {
             $test = $this->db->tests->findOne(array('_id' => $this->test));
             $github_status = \Criterion\Helper\Github::updateStatus('error', $test, $this->project);
-            $this->log('Posting to Github Statuses API', $github_status ? 'Success' : 'Failed');
+            $this->log('Posting "error" status to Github', $github_status ? 'Success' : 'Failed');
         }
 
         if (isset($this->project['fail']) && count($this->project['fail']))
@@ -184,7 +184,7 @@ class Application extends SymfonyApplication
         {
             $test = $this->db->tests->findOne(array('_id' => $this->test));
             $github_status = \Criterion\Helper\Github::updateStatus('success', $test, $this->project);
-            $this->log('Posting to Github Statuses API', $github_status ? 'Success' : 'Failed');
+            $this->log('Posting "success" status to Github', $github_status ? 'Success' : 'Failed');
         }
 
         if (isset($this->project['pass']) && count($this->project['pass']))

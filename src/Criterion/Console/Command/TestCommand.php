@@ -135,7 +135,7 @@ class TestCommand extends Command
         if ($project['provider'] === 'github' && $project['github']['token'])
         {
             $github_status = \Criterion\Helper\Github::updateStatus('pending', $test, $project);
-            $this->getApplication()->log('Posting to Github Statuses API', $github_status ? 'Success' : 'Failed');
+            $this->getApplication()->log('Posting "running" status to Github', $github_status ? 'Success' : 'Failed');
         }
 
         if ($test_type === 'criterion')
