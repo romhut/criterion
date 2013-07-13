@@ -30,6 +30,7 @@ class ProjectsController
     {
         $project = \Criterion\Helper\Project::fromRepo($app['request']->get('repo'));
         $project['github']['token'] = $app['request']->get('github_token');
+        $project['email'] = $app['request']->get('email');
 
         $app['mongo']->projects->save($project);
 
@@ -171,6 +172,7 @@ class ProjectsController
             $update_data['ssh_key']['public'] = $app['request']->get('ssh_key_public');
             $update_data['ssh_key']['private'] = $app['request']->get('ssh_key_private');
             $update_data['github']['token'] = $app['request']->get('github_token');
+            $update_data['email'] = $app['request']->get('email');
 
 
             $update = $app['mongo']->projects->update($data['project'], array(

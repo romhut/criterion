@@ -8,6 +8,7 @@ class Project
         $project = array();
         $project['repo'] = $repo;
         $project['github']['token'] = null;
+        $project['email'] = null;
         $project['short_repo'] = Repo::short($project['repo']);
         $project['provider'] = Repo::provider($project['repo']);
         $project['last_run'] = new \MongoDate();
