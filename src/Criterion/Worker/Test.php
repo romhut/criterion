@@ -26,7 +26,8 @@ while (true)
         $test = (string)  $test['_id'];
 
         echo 'Testing Project: ' . $project . "\n";
-        exec("php $root/console.php test $test", $output);
+        $shell_command = in_array('--debug', $argv) ? 'passthru' : 'shell_exec';
+        $shell_command("php $root/bin/cli test $test");
         echo 'Done' . "\n\n";
     }
 

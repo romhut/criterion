@@ -3,34 +3,27 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "8ec46fff171ea0e1a718661755ce0e26",
+    "hash": "6519b03d2d8326c996295dc7ce3d1467",
     "packages": [
         {
-            "name": "marcqualie/hoard",
-            "version": "dev-master",
+            "name": "ircmaxell/password-compat",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/marcqualie/hoard-php-client.git",
-                "reference": "1c1695ec7ddb5b66075c603cf1de2d1350c94176"
+                "url": "https://github.com/ircmaxell/password_compat.git",
+                "reference": "v1.0.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marcqualie/hoard-php-client/zipball/1c1695ec7ddb5b66075c603cf1de2d1350c94176",
-                "reference": "1c1695ec7ddb5b66075c603cf1de2d1350c94176",
+                "url": "https://api.github.com/repos/ircmaxell/password_compat/zipball/v1.0.3",
+                "reference": "v1.0.3",
                 "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "suggest": {
-                "ext-curl": "*",
-                "ext-gearman": "*"
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "": "lib"
-                }
+                "files": [
+                    "lib/password.php"
+                ]
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -38,22 +31,18 @@
             ],
             "authors": [
                 {
-                    "name": "Marc Qualie",
-                    "email": "marc@marcqualie.com",
-                    "homepage": "http://marcqualie.com",
-                    "role": "Developer"
+                    "name": "Anthony Ferrara",
+                    "email": "ircmaxell@php.net",
+                    "homepage": "http://blog.ircmaxell.com"
                 }
             ],
-            "description": "Hoard client library for PHP",
-            "homepage": "https://github.com/marcqualie/hoard-php-client",
+            "description": "A compatibility library for the proposed simplified password hashing algorithm: https://wiki.php.net/rfc/password_hash",
+            "homepage": "https://github.com/ircmaxell/password_compat",
             "keywords": [
-                "analytics",
-                "log",
-                "logging",
-                "mongodb",
-                "stats"
+                "hashing",
+                "password"
             ],
-            "time": "2013-07-08 12:05:40"
+            "time": "2013-04-30 19:58:08"
         },
         {
             "name": "marcqualie/mongominify",
@@ -1186,12 +1175,12 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "marcqualie/hoard": 20
-    },
+    "stability-flags": [
+
+    ],
     "platform": {
-        "ext-mongo": ">=1.3.0",
-        "php": ">=5.3.3"
+        "php": ">=5.3.3",
+        "ext-mongo": ">=1.3.0"
     },
     "platform-dev": [
 
