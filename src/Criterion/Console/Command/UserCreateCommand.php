@@ -18,11 +18,6 @@ class UserCreateCommand extends Command
                 InputArgument::REQUIRED,
                 'Username'
             )
-            ->addArgument(
-                'password',
-                InputArgument::REQUIRED,
-                'Password'
-            )
             ;
     }
 
@@ -30,7 +25,17 @@ class UserCreateCommand extends Command
     {
 
         $username = trim(strtolower($input->getArgument('username')));
-        $password = $input->getArgument('password');
+
+        // Prompt for password
+        $dialog = $this->getHelperSet()->get('dialog');
+        $password = $dialog->askHiddenResponse(
+            $output,
+            'Enter new password: '
+        );
+        if (! $password) {
+            $output->writeln('<error>Cannot set a blank password</error>');
+            exit;
+        }
 
         // Check if user exists
         $user = $this->getApplication()->db->selectCollection('users')->findOne(array(
