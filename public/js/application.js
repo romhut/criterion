@@ -57,8 +57,10 @@ var criterion = {
                 // Stop test, and show "re-test" button
                 if (data.status.code == '1' || data.status.code == '0') {
                     clearInterval(build);
-                    if (typeof data.commit.branch.name != 'undefined') {
+                    if (typeof data.commit != 'undefined') {
                         var branchQuery = 'branch=' + data.commit.branch.name + '&';
+                    } else {
+                        var branchQuery = '';
                     }
                     $('.test_id').prepend('<a href="/project/run/'+data.project._id+'?'+branchQuery+'test_id='+data._id+'" class="btn btn-success btn-mini" href="#">Re-test</a>');
                 }
