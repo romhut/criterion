@@ -20,6 +20,7 @@ class Notifications
 
     private static function email($to, $from, $subject, $message)
     {
-        return mail($to, $subject, $message);
+        $headers = "From:" . $from;
+        return mail($to, $subject, $message, $headers);
     }
 }
