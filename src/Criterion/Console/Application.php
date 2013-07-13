@@ -35,13 +35,13 @@ class Application extends SymfonyApplication
         $this->output = $output;
     }
 
-    public function executeAndLog($command_string)
+    public function executeAndLog($command_string, $internal = false)
     {
-        $prelog = $this->preLog($command_string);
+        $prelog = $this->preLog($command_string, $internal);
 
         $command = new \Criterion\Helper\Command();
         $command->execute($command_string);
-        $log = $this->log($command->command, $command->output, $command->response, $prelog);
+        $log = $this->log($command->command, $command->output, $command->response, $prelog, $internal);
 
         $output = $command->response == 0 ? "<info>success</info>" : "<error>failed</error>";
         $this->output->writeln($command->command);
@@ -52,7 +52,7 @@ class Application extends SymfonyApplication
     }
 
     // Add a log item before the command has run
-    public function preLog($command)
+    public function preLog($command, $internal = false)
     {
         $command = str_replace(DATA_DIR, null, $command);
         $log = array(
@@ -62,14 +62,15 @@ class Application extends SymfonyApplication
             'test_id' => new \MongoId($this->test),
             'project_id' => $this->project['_id'],
             'time' => new \MongoDate(),
-            'status' => '0'
+            'status' => '0',
+            'internal' => $internal
         );
 
         $this->db->logs->save($log);
         return $log['_id'];
     }
 
-    public function log($command, $output, $response = '0', $log_id = false)
+    public function log($command, $output, $response = '0', $log_id = false, $internal = false)
     {
         $log = array(
             'output' => $output,
@@ -78,7 +79,8 @@ class Application extends SymfonyApplication
             'test_id' => new \MongoId($this->test),
             'project_id' => $this->project['_id'],
             'time' => new \MongoDate(),
-            'status' => '1'
+            'status' => '1',
+            'internal' => $internal
         );
 
         if ($log_id)
@@ -144,7 +146,7 @@ class Application extends SymfonyApplication
         }
 
         $path = TEST_DIR . '/' . $this->project['_id']  . '/' . (string) $this->test;
-        $this->executeAndLog(sprintf('rm -rf %s', $path));
+        $this->executeAndLog(sprintf('rm -rf %s', $path), true);
 
         $this->output->writeln('<error>test failed</error>');
         return false;
@@ -196,7 +198,7 @@ class Application extends SymfonyApplication
         }
 
         $path = TEST_DIR . '/' . $this->project['_id']  . '/' . (string) $this->test;
-        $this->executeAndLog(sprintf('rm -rf %s', $path));
+        $this->executeAndLog(sprintf('rm -rf %s', $path), true);
 
         $this->output->writeln('<question>test passed</question>');
         return false;

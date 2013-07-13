@@ -11,7 +11,8 @@ class TestController
         ));
 
         $logs = $app['mongo']->logs->find(array(
-            'test_id' => new \MongoId($test['_id'])
+            'test_id' => new \MongoId($test['_id']),
+            'internal' => false
         ))->sort(array(
             'time' => 1
         ));
