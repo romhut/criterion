@@ -27,6 +27,13 @@ class TestController
             return $app->abort(404, 'Test not found.');
         }
 
+        $test['project'] = $app['mongo']->projects->findOne(array(
+            '_id' => $test['project_id']
+        ));
+
+        $test['project']['_id'] = (string) $test['project']['_id'];
+        $test['_id'] = (string) $test['_id'];
+
         return $app->json($test);
     }
 
@@ -85,6 +92,5 @@ class TestController
         ));
 
         return $app->redirect('/project/' . $test['project_id']);
-
     }
 }

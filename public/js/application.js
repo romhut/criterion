@@ -43,15 +43,24 @@ var criterion = {
         getStatus : function(id) {
             $.get('/test/status/' + id, function(data) {
 
+                // Set status_classes
                 if (data.status.code == '1') {
                     var status_class = 'success';
-                    clearInterval(build);
                 } else if (data.status.code == '3') {
                     var status_class = 'warning';
                 } else if (data.status.code == '0') {
                     var status_class = 'important';
                 } else {
                     var status_class = 'info';
+                }
+
+                // Stop test, and show "re-test" button
+                if (data.status.code == '1' || data.status.code == '0') {
+                    clearInterval(build);
+                    if (typeof data.commit.branch.name != 'undefined') {
+                        var branchQuery = 'branch=' + data.commit.branch.name + '&';
+                    }
+                    $('.test_id').prepend('<a href="/project/run/'+data.project._id+'?'+branchQuery+'test_id='+data._id+'" class="btn btn-success btn-mini" href="#">Re-test</a>');
                 }
 
                 $('#status').text(data.status.message);

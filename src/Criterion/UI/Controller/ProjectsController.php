@@ -135,8 +135,18 @@ class ProjectsController
                 'code' => '4',
                 'message' => 'Pending'
             ),
-            'started' => new \MongoDate()
+            'started' => new \MongoDate(),
+            'branch' => $app['request']->get('branch') ?: 'master'
         );
+
+        // If a test ID is specified, then clear out the logs as its a rerun
+        if ($app['request']->get('test_id'))
+        {
+            $app['mongo']->logs->remove(array(
+                'test_id' => new \MongoId($app['request']->get('test_id'))
+            ));
+            $test['_id'] = new \MongoId($app['request']->get('test_id'));
+        }
 
         $app['mongo']->tests->save($test);
         return $app->redirect('/test/' . (string)$test['_id']);
