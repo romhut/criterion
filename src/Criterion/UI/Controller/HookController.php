@@ -56,6 +56,9 @@ class HookController
                     )
                 )
             ));
+
+            exec('rm -rf ' . $ssh_key_file);
+            exec('rm -rf ' . $ssh_key_file . '.pub');
         }
 
         $branch = str_replace('refs/heads/', null, $payload['ref']);
