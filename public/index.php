@@ -22,10 +22,13 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 $app->before(function() use ($app) {
     $authenticated = false;
     if ($app['request']->server->get('PHP_AUTH_USER')) {
-        $username = $app['request']->server->get('PHP_AUTH_USER');
+        $username = strtolower($app['request']->server->get('PHP_AUTH_USER'));
         $password = $app['request']->server->get('PHP_AUTH_PW');
-        if ($username === 'demo' && $password === 'demo') {
-            $authenticated = true;
+        $user = $app['mongo']->selectCollection('users')->findOne(array('_id' => $username));
+        if ($user) {
+            if (password_verify($password, $user['password'])) {
+                $authenticated = true;
+            }
         }
     }
     if (! $authenticated) {
