@@ -10,6 +10,11 @@ class Repo
             return 'github';
         }
 
+        if (strpos($url, 'bitbucket.org'))
+        {
+            return 'bitbucket';
+        }
+
         return false;
     }
 
@@ -21,11 +26,20 @@ class Repo
 
     public static function short($url)
     {
-        if (self::provider($url) == 'github')
-        {
-            return Github::shortRepo($url);
-        }
+        $provider = self::provider($url);
 
-        return $url;
+        switch ($provider) {
+            case 'github':
+                return Github::shortRepo($url);
+                break;
+
+            case 'bitbucket':
+                return Bitbucket::shortRepo($url);
+                break;
+
+            default:
+                return $url;
+                break;
+        }
     }
 }

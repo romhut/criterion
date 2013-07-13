@@ -3,21 +3,41 @@ namespace Criterion\Helper;
 
 class Commit
 {
-    public static function getURL($commit, $repo)
+    public static function getURL($commit, $repo, $username = 'git')
     {
-        if (Repo::provider($repo) == 'github')
-        {
-            return Github::commitUrl($commit, $repo);
-        }
+        $provider = Repo::provider($repo);
 
-        return false;
+        switch ($provider) {
+            case 'github':
+                return Github::commitUrl($commit, $repo, $username);
+                break;
+
+            case 'bitbucket':
+                return Bitbucket::commitUrl($commit, $repo, $username);
+                break;
+
+            default:
+                return false;
+                break;
+        }
     }
 
-    public static function getBranchURL($branch, $repo)
+    public static function getBranchURL($branch, $repo, $username = 'git')
     {
-        if (Repo::provider($repo) == 'github')
-        {
-            return Github::branchUrl($branch, $repo);
+        $provider = Repo::provider($repo);
+
+        switch ($provider) {
+            case 'github':
+                return Github::branchUrl($branch, $repo, $username);
+                break;
+
+            case 'bitbucket':
+                return Bitbucket::branchUrl($branch, $repo, $username);
+                break;
+
+            default:
+                return false;
+                break;
         }
 
         return false;
@@ -50,6 +70,7 @@ class Commit
         $commit['branch']['name'] = $branch;
         $commit['branch']['url'] = self::getBranchUrl($branch, $repo);
 
+        $commit['username'] = Repo::username($repo);
         return $commit;
     }
 }
