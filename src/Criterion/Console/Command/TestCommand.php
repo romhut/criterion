@@ -95,22 +95,7 @@ class TestCommand extends Command
 
         // Get a fully formatted clone command, and then run it.
         $clone_command = \Criterion\Helper\Repo::cloneCommand($test, $project);
-
-        // If the clone type is ssh, then we need to add the SSH keys to the agent
-        if (\Criterion\Helper\Repo::cloneType($project['repo']) === 'ssh')
-        {
-            $clone_command_with_key = sprintf(
-                'eval `ssh-agent -s` && ssh-add "%s" && %s && ssh-agent -k',
-                \Criterion\Helper\Project::sshKeyFile($project),
-                $clone_command
-            );
-
-            $git_clone = $this->getApplication()->executeAndLog($clone_command_with_key);
-        }
-        else
-        {
-            $git_clone = $this->getApplication()->executeAndLog($clone_command);
-        }
+        $git_clone = $this->getApplication()->executeAndLog($clone_command);
 
         if ($git_clone['response'] != 0)
         {
