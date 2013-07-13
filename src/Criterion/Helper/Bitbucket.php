@@ -5,14 +5,14 @@ class Bitbucket
     public static function toSSHUrl($url)
     {
         $username = Repo::username($url);
-        $url = str_replace(array('https://','.org/'), array($username . '@','.org:'), $url);
+        $url = str_replace(array('https://' . $username . '@','.org/'), array('git@','.org:'), $url);
         return $url;
     }
 
     public static function toHTTPSUrl($url)
     {
         $username = Repo::username($url);
-        $url = str_replace(array($username . '@','.org:'), array('https://' . $username . '@','.org/'), $url);
+        $url = str_replace(array($username . '@','.org:'), array('https://','.org/'), $url);
         return $url;
     }
 
@@ -31,9 +31,6 @@ class Bitbucket
     public static function shortRepo($url)
     {
         $https_url = self::toHTTPSUrl($url);
-        $https_url = explode('@bitbucket.org', $https_url);
-        $https_url = str_replace('.git', null, $https_url[1]);
-
-        return substr($https_url, 1);
+        return str_replace(array('https://bitbucket.org/','.git'), array(null, null), $https_url);
     }
 }

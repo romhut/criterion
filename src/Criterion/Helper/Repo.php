@@ -21,7 +21,14 @@ class Repo
     public static function username($repo)
     {
         $username = explode('@', $repo);
-        return str_replace('https://', null, $username[0]);
+        $username = str_replace('https://', null, $username[0]);
+
+        if ( ! $username)
+        {
+            $username = 'git';
+        }
+
+        return $username;
     }
 
     public static function short($url)
