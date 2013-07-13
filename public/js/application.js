@@ -105,20 +105,24 @@ var criterion = {
                             var alert = 'warning';
                         }
 
-                        if (val.output == '') {
-                            val.output = 'There is no output for this command.';
+                        if (val.output) {
+                            var output = '<div class="output">' +
+                                nl2br(val.output) +
+                            '</div>';
+
+                            var output_href = 'href="javascript:void(0)"';
+                        } else {
+                            var output_href = '';
+                            var output = '';
                         }
 
                         $('#logs').append(
                         '<div>' +
-                            '<a href="javascript:void(0)" class="output-log">' +
+                            '<a ' + output_href + ' class="output-log">' +
                                 '<p class="'+alert+' ">' +
                                     '<span class="dollar">$</span> ' + val.command +
                                 '</p>' +
-                            '</a>' +
-                            '<div class="output">' +
-                                nl2br(val.output) +
-                            '</div>' +
+                            '</a>' + output +
                         '</div>');
                     });
 

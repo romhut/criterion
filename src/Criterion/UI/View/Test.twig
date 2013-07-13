@@ -41,8 +41,8 @@
         <tbody>
             <tr>
                 <td>
-                    <span id="status" class="label label-{{ status_label }}">
-                        {{ test.status.message }}
+                    <span id="status" class="label">
+                        ...
                     </span>
                 </td>
                 <td id="commit-hash">
@@ -64,19 +64,13 @@
     </table>
 
     <div id="logs">
-        <span class="none">There are no logs for this test yet</span>
+        <span class="none">There are no logs for this test yet, please wait...</span>
     </div>
 
     <script>
         var build = setInterval(function() {
             criterion.test.getStatus("{{ test._id }}")
         }, 1000);
-        $(document).ready(function() {
-            criterion.test.getStatus("{{ test._id }}");
-            $('.output-log').on('click', function(){
-                $(this).next().toggle();
-            });
-        });
     </script>
 
 {% endblock %}
