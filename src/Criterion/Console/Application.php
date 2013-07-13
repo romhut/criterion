@@ -137,6 +137,8 @@ class Application extends SymfonyApplication
             $this->log('Posting "error" status to Github', $github_status ? 'Success' : 'Failed');
         }
 
+        \Criterion\Helper\Notifications::failedEmail($this->test, $this->project);
+
         if (isset($this->project['fail']) && count($this->project['fail']))
         {
             foreach ($this->project['fail'] as $fail)

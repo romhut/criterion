@@ -1,3 +1,4 @@
 {
-    "url" : "http://example.com"
+    "url" : "http://example.com",
+    "email" : "notifications@example.com"
 }
