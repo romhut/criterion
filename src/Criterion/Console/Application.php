@@ -41,10 +41,10 @@ class Application extends SymfonyApplication
 
         $command = new \Criterion\Helper\Command();
         $command->execute($command_string);
-        $log = $this->log($command_string, $command->output, $command->response, $prelog);
+        $log = $this->log($command->command, $command->output, $command->response, $prelog);
 
         $output = $command->response == 0 ? "<info>success</info>" : "<error>failed</error>";
-        $this->output->writeln($command_string);
+        $this->output->writeln($command->command);
         $this->output->writeln('... ' . $command->output);
         $this->output->writeln('');
 
@@ -54,6 +54,7 @@ class Application extends SymfonyApplication
     // Add a log item before the command has run
     public function preLog($command)
     {
+        $command = str_replace(DATA_DIR, null, $command);
         $log = array(
             'output' => 'Running...',
             'response' => false,

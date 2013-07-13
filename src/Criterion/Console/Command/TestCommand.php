@@ -93,7 +93,10 @@ class TestCommand extends Command
         // Switch to the project directory, and clone the repo into it.
         chdir($project_folder);
 
-        $git_clone = $this->getApplication()->executeAndLog(sprintf('git clone -b %s --depth=1 %s %s', $test['branch'], $project['repo'], (string) $test_id));
+        // Get a fully formatted clone command, and then run it.
+        $clone_command = \Criterion\Helper\Repo::cloneCommand($test, $project);
+        $git_clone = $this->getApplication()->executeAndLog($clone_command);
+
         if ($git_clone['response'] != 0)
         {
             return $this->getApplication()->testFailed($git_clone);
