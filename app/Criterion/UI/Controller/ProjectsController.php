@@ -70,7 +70,10 @@ class ProjectsController
     public function status(\Silex\Application $app)
     {
         $project = $app['mongo']->projects->findOne(array(
-            '_id' => new \MongoId($app['request']->get('id'))
+            'short_repo' => implode('/', array(
+                $app['request']->get('vendor'),
+                $app['request']->get('package')
+            )),
         ));
 
         if ( ! $project)
@@ -83,7 +86,12 @@ class ProjectsController
             1 => 'pass'
         );
 
-        return $app->redirect('/img/status/' . $images[$project['status']['code']] . '.jpg');
+        $file = ROOT . '/public/img/status/' . $images[$project['status']['code']] . '.jpg';
+        $stream = function () use ($file) {
+            readfile($file);
+        };
+
+        return $app->stream($stream, 200, array('Content-Type' => 'image/jpg'));
     }
 
     public function delete(\Silex\Application $app)
