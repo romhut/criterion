@@ -72,6 +72,17 @@ class InstallCommand extends Command
         // Set permissions
         shell_exec('chmod +x ' . ROOT . '/bin/*');
 
+        // Create data folder structure
+        if ( ! is_dir(ROOT . '/data/tests'))
+        {
+            mkdir(ROOT . '/data/tests', 0777, true);
+        }
+
+        if ( ! is_dir(ROOT . '/data/keys'))
+        {
+            mkdir(ROOT . '/data/keys', 0777, true);
+        }
+
         // Save config
         file_put_contents($config_file, json_encode($config));
         $output->writeln('<info>Saved config settings</info>');
