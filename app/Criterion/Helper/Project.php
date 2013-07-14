@@ -3,23 +3,6 @@ namespace Criterion\Helper;
 
 class Project extends \Criterion\Helper
 {
-    public static function fromRepo($repo)
-    {
-        $project = array();
-        $project['repo'] = $repo;
-        $project['github']['token'] = null;
-        $project['email'] = null;
-        $project['short_repo'] = Repo::short($project['repo']);
-        $project['provider'] = Repo::provider($project['repo']);
-        $project['last_run'] = new \MongoDate();
-        $project['status'] = array(
-            'code' => '2',
-            'message' => 'New'
-        );
-
-        return $project;
-    }
-
     public static function sshKeyFile($project)
     {
         $path = KEY_DIR . '/' . $project['_id'];
