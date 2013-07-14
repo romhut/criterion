@@ -28,7 +28,7 @@ bin/cli install
 ### Running Workers
 
 ```shell
-bin/cli worker:start --debug
+bin/cli worker:start --debug --interval=20
 ```
 
 ### Example criterion.yml
