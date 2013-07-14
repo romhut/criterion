@@ -28,7 +28,7 @@ bin/cli install
 ### Running Workers
 
 ```shell
-php app/Criterion/Worker/Test.php --debug
+bin/cli worker:start --debug
 ```
 
 ### Example criterion.yml
