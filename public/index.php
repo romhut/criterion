@@ -6,6 +6,12 @@ define('DATA_DIR', ROOT  . '/data');
 define('TEST_DIR', DATA_DIR . '/tests');
 define('KEY_DIR', DATA_DIR . '/keys');
 
+if ( ! file_exists(CONFIG_FILE))
+{
+    echo 'You must install Criterion first by running: "bin/cli install"';
+    exit;
+}
+
 include dirname(__DIR__) . '/vendor/autoload.php';
 
 $app = new Silex\Application();
