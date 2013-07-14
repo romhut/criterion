@@ -17,6 +17,16 @@
     margin-top: 0px !important;
   }
 }
+@media (max-width: 767px) {
+  .content {
+    margin: -20px !important;
+    border-radius: 0;
+    -moz-box-shadow: 0;
+    -webkit-box-shadow: 0;
+    box-shadow: 0;
+    margin-bottom: 15px !important;
+  }
+}
 footer {
   margin-top: 10px;
   text-align: center;
