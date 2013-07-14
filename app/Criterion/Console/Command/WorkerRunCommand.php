@@ -24,8 +24,8 @@ class WorkerRunCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
-        $output->writeln('<comment>Worker Started</comment>');
+        $worker = uniqid();
+        $output->writeln('<comment>Worker Started: ' . $worker . '</comment>');
         $output->writeln('');
 
         $client = new \MongoMinify\Client('mongodb://127.0.0.1:27017', array('connect' => true));
@@ -37,6 +37,7 @@ class WorkerRunCommand extends Command
                 'status.code' => '4'
             ), array(
                 '$set' => array(
+                    'worker' => $worker,
                     'status' => array(
                         'code' => '3',
                         'message' => 'Running'
