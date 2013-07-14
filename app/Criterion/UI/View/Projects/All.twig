@@ -13,7 +13,7 @@
                 <tr>
                     <th>Repository</th>
                     <th class="hidden-phone">Last Run</th>
-                    <th>Actions</th>
+                    <th class="actions">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -41,7 +41,7 @@
                                 {{ project.last_run.sec|date('jS M Y') }}
                             </span>
                         </td>
-                        <td width="16%">
+                        <td width="16%" class="actions">
                             <a class="btn btn-success btn-mini" href="/project/run/{{ project._id }}">
                                 <i class="icon-play"></i> <span class="hidden-phone">Test</span>
                             </a>
