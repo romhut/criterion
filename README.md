@@ -8,7 +8,7 @@ Criterion is a Continuous Integration app built in PHP using MongoDB. Criterion 
 
 Criterion will auto detect test environments if no .criterion.yml file is provided. This means you can setup CI with no changes to your code at all. For example, below we are testing a few libraries that have never even heard of Criterion, yet they still run.
 
-![Criterion](http://f.cl.ly/items/3c1D2e0H061S3W1Q0e3I/Screen%20Shot%202013-07-14%20at%2012.39.35.png)
+![Criterion](http://f.cl.ly/items/060k000J2q111f3t3l1I/Screen%20Shot%202013-07-14%20at%2014.53.01.png)
 
 Please note: This only works for phpunit testing environments right now, but we will be adding more in the future.
 
