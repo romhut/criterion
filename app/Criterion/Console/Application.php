@@ -91,14 +91,13 @@ class Application extends SymfonyApplication
 
     public function testFailed($command_response = false)
     {
-        $test = new \Criterion\Model\Test($this->test->id);
-        $test->status = array(
+        $this->test->status = array(
             'message' => 'Failed',
             'code' => '0',
             'command' => $command_response
         );
-        $test->finished = new \MongoDate();
-        $test->save();
+        $this->test->finished = new \MongoDate();
+        $this->test->save();
 
         $this->project->status = array(
             'message' => 'Failed',
@@ -113,7 +112,7 @@ class Application extends SymfonyApplication
 
         if ($this->project->provider === 'github' && $this->project->github['token'])
         {
-            $github_status = \Criterion\Helper\Github::updateStatus('error', $test, $this->project);
+            $github_status = \Criterion\Helper\Github::updateStatus('error', $this->test, $this->project);
             $this->log('Posting "error" status to Github', $github_status ? 'Success' : 'Failed');
         }
 
@@ -136,13 +135,12 @@ class Application extends SymfonyApplication
 
     public function testPassed()
     {
-        $test = new \Criterion\Model\Test($this->test->id);
-        $test->status = array(
+        $this->test->status = array(
             'message' => 'Passed',
             'code' => '1'
         );
-        $test->finished = new \MongoDate();
-        $test->save();
+        $this->test->finished = new \MongoDate();
+        $this->test->save();
 
         $this->project->status = array(
             'message' => 'Passed',
@@ -156,7 +154,7 @@ class Application extends SymfonyApplication
 
         if ($this->project->provider === 'github' && $this->project->github['token'])
         {
-            $github_status = \Criterion\Helper\Github::updateStatus('success', $test, $this->project);
+            $github_status = \Criterion\Helper\Github::updateStatus('success', $this->test, $this->project);
             $this->log('Posting "success" status to Github', $github_status ? 'Success' : 'Failed');
         }
 
