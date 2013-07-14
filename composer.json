@@ -1,4 +1,18 @@
 {
+    "name": "romhut/criterion",
+    "description": "Criterion is a Continuous Integration app built in PHP using MongoDB.",
+    "authors": [
+        {
+            "name": "Scott Robertson",
+            "homepage": "https://github.com/scottymeuk",
+            "role": "Developer"
+        },
+        {
+            "name": "Marc Qualie",
+            "homepage": "https://github.com/marcqualie",
+            "role": "Developer"
+        }
+    ],
     "require": {
         "php": ">=5.3.3",
         "ext-mongo": ">=1.3.0",
