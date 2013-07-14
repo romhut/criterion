@@ -7,6 +7,8 @@ Criterion
 Criterion is a Continuous Integration app built in PHP using MongoDB. Criterion is very easy to setup, and you 
 can add GIT repos from any provider, and run any commands you wish against it.
 
+![Criterion](http://f.cl.ly/items/3c1D2e0H061S3W1Q0e3I/Screen%20Shot%202013-07-14%20at%2012.39.35.png)
+
 ### Dependencies
 
 - PHP >=5.3.3
