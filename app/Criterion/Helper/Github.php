@@ -49,8 +49,8 @@ class Github
 
         $description = array(
             'pending' => 'Tests are running.',
-            'success' => 'Tests has passed.',
-            'error' => 'Tests has failed.'
+            'success' => 'Tests have passed.',
+            'error' => 'Tests have failed.'
         );
 
         $status = array(
