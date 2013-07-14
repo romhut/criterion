@@ -1,6 +1,6 @@
 setup:
     - composer install
-test:
+script:
     - vendor/bin/phpunit
 fail:
 pass:

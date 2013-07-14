@@ -176,13 +176,13 @@ class TestCommand extends Command
                 }
             }
 
-            // Run any test commands we have
-            $output->writeln('<question>Running "test" commands</question>');
-            if (count($project['test']))
+            // Run any script commands we have
+            $output->writeln('<question>Running "script" commands</question>');
+            if (count($project['script']))
             {
-                foreach ($project['test'] as $test)
+                foreach ($project['script'] as $script)
                 {
-                    $response = $this->getApplication()->executeAndLog($test);
+                    $response = $this->getApplication()->executeAndLog($script);
                     if ($response['response'] !== '0')
                     {
                         return $this->getApplication()->testFailed($response);
