@@ -28,55 +28,36 @@ class ProjectsController
 
     public function create(\Silex\Application $app)
     {
-        $project = \Criterion\Helper\Project::fromRepo($app['request']->get('repo'));
-        $project['github']['token'] = $app['request']->get('github_token');
-        $project['email'] = $app['request']->get('email');
-
-        $app['criterion']->db->projects->save($project);
-
-        $ssh_key_file = KEY_DIR . '/' . (string) $project['_id'];
-
-        exec('ssh-keygen -t rsa -q -f "' . $ssh_key_file . '" -N "" -C "ci@criterion"', $ssh_key, $response);
-
-        if ((string) $response !== '0')
-        {
-            $app['criterion']->db->projects->remove(array(
-                '_id' => $project['_id']
-            ));
-
-            return $app->json(array(
-                'success' => false
-            ));
-        }
-
-        $app['criterion']->db->projects->update(array(
-            '_id' => $project['_id']
-        ), array(
-            '$set' => array(
-                'ssh_key' => array(
-                    'public' => file_get_contents($ssh_key_file . '.pub'),
-                    'private' => file_get_contents($ssh_key_file),
-                )
-            )
+        $project = new \Criterion\Model\Project(array(
+            'repo' => $app['request']->get('repo')
         ));
 
-        // Remove the SSH files due to permissions issue, let PHP generate them later on.
-        exec('rm ' . $ssh_key_file);
-        exec('rm ' . $ssh_key_file . '.pub');
+        if ($project->exists)
+        {
+            return $app->redirect('/project/' . (string) $project->id);
+        }
 
-        return $app->redirect('/project/' . (string)$project['_id']);
+        $project->github = array('token' => $app['request']->get('github_token'));
+        $project->email = $app['request']->get('email');
+        if ($project->save())
+        {
+            return $app->redirect('/project/' . (string) $project->id);
+        }
+
+        return $app->abort(500, 'Error creating project');
+
     }
 
     public function status(\Silex\Application $app)
     {
-        $project = $app['criterion']->db->projects->findOne(array(
+        $project = new \Criterion\Model\Project(array(
             'short_repo' => implode('/', array(
                 $app['request']->get('vendor'),
                 $app['request']->get('package')
-            )),
+            ))
         ));
 
-        if ( ! $project)
+        if ( ! $project->exists)
         {
             return $app->abort(404, 'Project not found.');
         }
@@ -86,7 +67,7 @@ class ProjectsController
             1 => 'pass'
         );
 
-        $file = ROOT . '/public/img/status/' . $images[$project['status']['code']] . '.jpg';
+        $file = ROOT . '/public/img/status/' . $images[$project->status['code']] . '.jpg';
         $stream = function () use ($file) {
             readfile($file);
         };
@@ -96,114 +77,91 @@ class ProjectsController
 
     public function delete(\Silex\Application $app)
     {
-        $project = $app['criterion']->db->projects->findOne(array(
-            '_id' => new \MongoId($app['request']->get('id'))
-        ));
+        $project = new \Criterion\Model\Project($app['request']->get('id'));
 
-        if ( ! $project)
+        if ( ! $project->exists)
         {
             return $app->abort(404, 'Project not found.');
         }
 
-        $tests = $app['criterion']->db->tests->find(array(
-            'project_id' => new \MongoId($app['request']->get('id'))
-        ));
-
-        foreach ($tests as $test)
+        foreach ($project->getTests() as $test)
         {
-            $app['criterion']->db->logs->remove(array(
-                'test_id' => $test['_id']
-            ));
-
-            $app['criterion']->db->tests->remove(array(
-                '_id' => $test['_id']
-            ));
+            $test->delete();
+            $logs = $test->getLogs();
+            foreach ($logs as $log)
+            {
+                $log->delete();
+            }
         }
 
-        $app['criterion']->db->projects->remove(array(
-            '_id' => new \MongoId($app['request']->get('id'))
-        ));
-
+        $project->delete();
         return $app->redirect('/');
     }
 
     public function run(\Silex\Application $app)
     {
-        $data['project'] = $app['criterion']->db->projects->findOne(array(
-            '_id' => new \MongoId($app['request']->get('id'))
-        ));
-
-        if ( ! $data['project'])
+        $project = new \Criterion\Model\Project($app['request']->get('id'));
+        if ( ! $project->exists)
         {
             return $app->abort(404, 'Project not found.');
         }
 
-        $test = array(
-            'project_id' => new \MongoId($app['request']->get('id')),
-            'status' => array(
-                'code' => '4',
-                'message' => 'Pending'
-            ),
-            'started' => new \MongoDate(),
-            'branch' => $app['request']->get('branch') ?: 'master'
-        );
+        $test = new \Criterion\Model\Test($app['request']->get('test_id'));
 
         // If a test ID is specified, then clear out the logs as its a rerun
-        if ($app['request']->get('test_id'))
+        if ($test->exists)
         {
-            $app['criterion']->db->logs->remove(array(
-                'test_id' => new \MongoId($app['request']->get('test_id'))
-            ));
-            $test['_id'] = new \MongoId($app['request']->get('test_id'));
+            $logs = $test->getLogs();
+            foreach ($logs as $log)
+            {
+                $log->delete();
+            }
+
+            $test->started = new \MongoDate();
+            $test->status = array(
+                'code' => '4',
+                'message' => 'Pending'
+            );
         }
 
-        $app['criterion']->db->tests->save($test);
-        return $app->redirect('/test/' . (string)$test['_id']);
+        $test->project_id = new \MongoId($app['request']->get('id'));
+        $test->branch = $app['request']->get('branch') ?: 'master';
+        $test->save();
+
+        return $app->redirect('/test/' . (string) $test->id);
     }
 
     public function view(\Silex\Application $app)
     {
-        $data['project'] = $app['criterion']->db->projects->findOne(array(
-            '_id' => new \MongoId($app['request']->get('id'))
-        ));
+        $project = new \Criterion\Model\Project($app['request']->get('id'));
 
-        if ( ! $data['project'])
+        if ( ! $project->exists)
         {
             return $app->abort(404, 'Project not found.');
         }
 
         if ($app['request']->getMethod() == 'POST')
         {
-            $update_data['repo'] = $app['request']->get('repo');
-            $update_data['short_repo'] = \Criterion\Helper\Repo::short($update_data['repo']);
-            $update_data['provider'] = \Criterion\Helper\Repo::provider($update_data['repo']);
-            $update_data['ssh_key']['public'] = $app['request']->get('ssh_key_public');
-            $update_data['ssh_key']['private'] = $app['request']->get('ssh_key_private');
-            $update_data['github']['token'] = $app['request']->get('github_token');
-            $update_data['email'] = $app['request']->get('email');
+            $project->repo = $app['request']->get('repo');
+            $project->short_repo = \Criterion\Helper\Repo::short($project->repo);
+            $project->provider = \Criterion\Helper\Repo::provider($project->repo);
+            $project->ssh_key = array(
+                'public' => $app['request']->get('ssh_key_public'),
+                'private' => $app['request']->get('ssh_key_private')
+            );
+            $project->github = array(
+                'token' => $app['request']->get('github_token')
+            );
+            $project->email = $app['request']->get('email');
+            $project->save();
 
-
-            $update = $app['criterion']->db->projects->update($data['project'], array(
-                '$set' => $update_data
-            ));
-
-            return $app->redirect('/project/' . $app['request']->get('id'));
+            return $app->redirect('/project/' . $project->id);
 
         }
 
-        $tests = $app['criterion']->db->tests->find(array(
-            'project_id' => new \MongoId($app['request']->get('id'))
-        ))->sort(array(
-            'started' => -1
-        ));
-
-        $data['tests'] = array();
-        foreach ($tests as $test)
-        {
-            $data['tests'][] = $test;
-        }
-
-        $data['title'] = $data['project']['short_repo'];
+        $data['tests'] = $project->getTests();
+        $data['title'] = $project->short_repo;
+        $data['project'] = $project;
 
         return $app['twig']->render('Project.twig', $data);
     }

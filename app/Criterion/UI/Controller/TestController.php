@@ -6,92 +6,63 @@ class TestController
 
     public function status(\Silex\Application $app)
     {
-        $test = $app['criterion']->db->tests->findOne(array(
-            '_id' => new \MongoId($app['request']->get('id'))
-        ));
-
-        $logs = $app['criterion']->db->logs->find(array(
-            'test_id' => new \MongoId($test['_id']),
-            'internal' => false
-        ))->sort(array(
-            'time' => 1
-        ));
-
-        $test['log'] = array();
-        foreach ($logs as $log)
-        {
-            $test['log'][] = $log;
-        }
-
-        if ( ! $test)
+        $test = new \Criterion\Model\Test($app['request']->get('id'));
+        if ( ! $test->exists)
         {
             return $app->abort(404, 'Test not found.');
         }
 
-        $test['project'] = $app['criterion']->db->projects->findOne(array(
-            '_id' => $test['project_id']
-        ));
+        $data = $test->data;
+        $data['_id'] = (string) $test->id;
 
-        $test['project']['_id'] = (string) $test['project']['_id'];
-        $test['_id'] = (string) $test['_id'];
+        $logs = $test->getLogs();
+        $data['log'] = array();
+        foreach ($logs as $log)
+        {
+            $data['log'][] = $log->data;
+        }
 
-        return $app->json($test);
+        $data['project'] = $test->getProject()->data;
+        $data['project']['_id'] = (string) $data['project']['_id'];
+
+        return $app->json($data);
     }
 
     public function view(\Silex\Application $app)
     {
-        $data['test'] = $app['criterion']->db->tests->findOne(array(
-            '_id' => new \MongoId($app['request']->get('id'))
-        ));
-
-        if ( ! $data['test'])
+        $data['test'] = new \Criterion\Model\Test($app['request']->get('id'));
+        if ( ! $data['test']->exists)
         {
             return $app->abort(404, 'Test not found.');
         }
 
-        $data['project'] = $app['criterion']->db->projects->findOne(array(
-            '_id' => $data['test']['project_id']
-        ));
+        $data['logs'] = $data['test']->getLogs();
+        $data['project'] = $data['test']->getProject();
 
-        if ( ! $data['project'])
+        if ( ! $data['project']->exists)
         {
             return $app->abort(404, 'Project not found.');
         }
 
-        $logs = $app['criterion']->db->logs->find(array(
-            'test_id' => new \MongoId($app['request']->get('id'))
-        ));
-
-        $data['log'] = array();
-        foreach ($logs as $log)
-        {
-            $data['log'][] = $log;
-        }
-
-        $data['title'] = $data['test']['_id'] . ' | ' . $data['project']['short_repo'];
+        $data['title'] = $data['test']->id . ' | ' . $data['project']->short_repo;
 
         return $app['twig']->render('Test.twig', $data);
     }
 
     public function delete(\Silex\Application $app)
     {
-        $test = $app['criterion']->db->tests->findOne(array(
-            '_id' => new \MongoId($app['request']->get('id'))
-        ));
-
-        if ( ! $test)
+        $test = new \Criterion\Model\Test($app['request']->get('id'));
+        if ( ! $test->exists)
         {
             return $app->abort(404, 'Test not found.');
         }
 
-        $app['criterion']->db->tests->remove(array(
-            '_id' => new \MongoId($app['request']->get('id'))
-        ));
+        $test->delete();
+        foreach ($test->getLogs() as $log)
+        {
+            $log->delete();
+        }
 
-        $app['criterion']->db->logs->remove(array(
-            'test_id' => new \MongoId($app['request']->get('id'))
-        ));
-
-        return $app->redirect('/project/' . $test['project_id']);
+        return $app->redirect('/project/' . $test->project_id);
     }
 }
