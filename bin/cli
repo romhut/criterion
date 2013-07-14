@@ -24,6 +24,7 @@ $cli->setMongo($mongo);
 $cli->addCommands(array(
     new Criterion\Console\Command\TestCommand(),
     new Criterion\Console\Command\UserCreateCommand(),
-    new Criterion\Console\Command\UserPasswordCommand()
+    new Criterion\Console\Command\UserPasswordCommand(),
+    new Criterion\Console\Command\UserDeleteCommand(),
 ));
 $cli->run();
