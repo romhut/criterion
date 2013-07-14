@@ -197,6 +197,6 @@ class ProjectsController
 
         $data['title'] = $data['project']['short_repo'];
 
-        return $app['twig']->render('Projects/View.twig', $data);
+        return $app['twig']->render('Project.twig', $data);
     }
 }
