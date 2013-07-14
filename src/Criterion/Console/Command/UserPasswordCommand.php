@@ -46,7 +46,7 @@ class UserPasswordCommand extends Command
             return false;
         }
 
-        // Create User
+        // Change the users password
         $this->getApplication()->db->selectCollection('users')->update(array(
             '_id' => $username
         ), array(
