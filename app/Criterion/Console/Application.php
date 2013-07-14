@@ -71,7 +71,7 @@ class Application extends SymfonyApplication
         return $log->id;
     }
 
-    public function log($command, $output, $response = '0', $log_id = false, $internal = false)
+    public function log($command, $output, $response = '0', $log_id = null, $internal = false)
     {
         $command = str_replace(DATA_DIR, null, $command);
         $output = str_replace(DATA_DIR, null, $output);
