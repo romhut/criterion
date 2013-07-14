@@ -8,14 +8,14 @@ class Notifications extends \Criterion\Helper
         $app = new \Criterion\Application();
         $config = $app->config;
 
-        if (isset($project['email']) && $project['email'] && isset($config['email']))
+        if ($project->email && isset($config['email']))
         {
-            $subject = '['.$project['repo'].'] Tests Failed (' . $test . ')';
+            $subject = '['.$project->repo.'] Tests Failed (' . $test . ')';
             $body = "This is a short email to let you know that the following project's tests are failing: \n\n";
             $body .= $config['url'] . '/test/' . $test . "\n\n";
             $body .= 'Thanks';
 
-            return self::email($project['email'], $config['email'], $subject, $body);
+            return self::email($project->email, $config['email'], $subject, $body);
         }
         return false;
     }
