@@ -3,4 +3,4 @@ data
 composer.phar
 public/less
 public/scss
-src/Config/Config.json
+config.json

@@ -22,8 +22,7 @@ class InstallCommand extends Command
         $dialog = $this->getHelperSet()->get('dialog');
 
         // Create default configuration
-        $config_dir = ROOT . '/src/Config';
-        $config_file = $config_dir . '/config.json';
+        $config_file = ROOT . '/config.json';
         $config = array(
             'url' => 'http://criterion.example.com',
             'email' => array(
