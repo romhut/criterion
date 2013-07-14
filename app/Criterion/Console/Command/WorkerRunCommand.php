@@ -42,7 +42,6 @@ class WorkerRunCommand extends Command
         $output->writeln('');
 
         $tests = $this->getApplication()->db->tests;
-        $projects = $this->getApplication()->db->projects;
 
         while (true)
         {
@@ -58,20 +57,20 @@ class WorkerRunCommand extends Command
                 )
             ));
 
-            if ($test)
+            $test = new \Criterion\Model\Test(null, $test);
+
+            if ($test->exists)
             {
                 $output->writeln('-----------');
-                $project_id = (string) $test['project_id'];
-                $test_id = (string)  $test['_id'];
+                $project_id = (string) $test->project_id;
+                $test_id = (string)  $test->id;
 
-                $project = $projects->findOne(array(
-                    '_id' => $test['project_id']
-                ));
+                $project = $test->getProject();
 
-                if ($project)
+                if ($project->exists)
                 {
                     $output->writeln('<comment>Test Started</comment>');
-                    $output->writeln(' - Project:' . $project['repo']);
+                    $output->writeln(' - Project:' . $project->repo);
                     $output->writeln(' - Test ID:' . $test_id);
 
                     $shell_command = $input->getOption('debug') ? 'passthru' : 'shell_exec';
@@ -82,9 +81,7 @@ class WorkerRunCommand extends Command
                 else
                 {
                     $output->writeln('<error>Project does not exist, removing test.</error>');
-                    $tests->remove(array(
-                        '_id' => $test['_id']
-                    ));
+                    $test->delete();
                 }
 
                 $output->writeln('');

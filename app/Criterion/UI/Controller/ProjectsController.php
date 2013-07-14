@@ -13,7 +13,8 @@ class ProjectsController
         $data['failing'] = 0;
         foreach ($projects as $project)
         {
-            if ($project['status']['code'] === '0')
+            $project = new \Criterion\Model\Project(null, $project);
+            if ($project->status['code'] === '0')
             {
                 $data['failing']++;
             }
@@ -22,6 +23,11 @@ class ProjectsController
         }
 
         $data['title'] = 'Projects';
+
+        if ($data['failing'] > 0)
+        {
+            $data['title'] .= ' (' . $data['failing'] . ')';
+        }
 
         return $app['twig']->render('Projects/All.twig', $data);
     }

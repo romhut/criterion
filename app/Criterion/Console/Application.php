@@ -9,11 +9,11 @@ use Symfony\Component\Yaml\Yaml;
 class Application extends SymfonyApplication
 {
     public $mongo = null;
-    public $project = array();
-    public $test = null;
-    public $output = null;
     public $db = array();
     public $app = array();
+    public $criterion = array();
+
+    public $data = array();
 
     public function __construct($name, $version)
     {
@@ -23,19 +23,19 @@ class Application extends SymfonyApplication
         $this->db = $this->app->db;
     }
 
-    public function setProject($project)
+    public function __set($key, $val)
     {
-        $this->project = $project;
+        $this->data[$key] = $val;
     }
 
-    public function setTest($test)
+    public function __get($key)
     {
-        $this->test = $test;
-    }
+        if (isset($this->data[$key]))
+        {
+            return $this->data[$key];
+        }
 
-    public function setOutput($output)
-    {
-        $this->output = $output;
+        return null;
     }
 
     public function executeAndLog($command_string, $internal = false)
@@ -58,99 +58,76 @@ class Application extends SymfonyApplication
     public function preLog($command, $internal = false)
     {
         $command = str_replace(DATA_DIR, null, $command);
-        $log = array(
-            'output' => 'Running...',
-            'response' => false,
-            'command' => $command,
-            'test_id' => new \MongoId($this->test),
-            'project_id' => $this->project['_id'],
-            'time' => new \MongoDate(),
-            'status' => '0',
-            'internal' => $internal
-        );
 
-        $this->db->logs->save($log);
-        return $log['_id'];
+        $log = new \Criterion\Model\Log();
+        $log->output = 'Running...';
+        $log->response = false;
+        $log->command = $command;
+        $log->test_id = $this->test->id;
+        $log->time = new \MongoDate();
+        $log->status = '0';
+        $log->internal = $internal;
+        $log->save();
+        return $log->id;
     }
 
     public function log($command, $output, $response = '0', $log_id = false, $internal = false)
     {
-        $log = array(
-            'output' => $output,
-            'response' => (string) $response,
-            'command' => $command,
-            'test_id' => new \MongoId($this->test),
-            'project_id' => $this->project['_id'],
-            'time' => new \MongoDate(),
-            'status' => '1',
-            'internal' => $internal
-        );
+        $command = str_replace(DATA_DIR, null, $command);
+        $output = str_replace(DATA_DIR, null, $output);
 
-        if ($log_id)
-        {
-            $this->db->logs->update(array(
-                '_id' => $log_id
-            ), array(
-                '$set' => $log
-            ));
-        }
-        else
-        {
-            $this->db->logs->save($log);
-        }
-
+        $log = new \Criterion\Model\Log($log_id);
+        $log->output = $output;
+        $log->response = (string) $response;
+        $log->command = $command;
+        $log->test_id = $this->test->id;
+        $log->project_id = $this->project->id;
+        $log->time = new \MongoDate();
+        $log->status = '1';
+        $log->internal = $internal;
+        $log->save();
         return $log;
     }
 
     public function testFailed($command_response = false)
     {
-        $this->db->tests->update(array(
-            '_id' => $this->test,
-            'project_id' => $this->project['_id'],
-        ), array(
-            '$set' => array(
-                'status' => array(
-                    'message' => 'Failed',
-                    'code' => '0',
-                    'command' => $command_response
-                ),
-                'finished' => new \MongoDate()
-            )
-        ));
+        $test = new \Criterion\Model\Test($this->test->id);
+        $test->status = array(
+            'message' => 'Failed',
+            'code' => '0',
+            'command' => $command_response
+        );
+        $test->finished = new \MongoDate();
+        $test->save();
 
-        $this->db->projects->update(array(
-            '_id' => $this->project['_id'],
-        ), array(
-            '$set' => array(
-                'status' => array(
-                    'message' => 'Failed',
-                    'code' => '0'
-                ),
-                'last_run' => new \MongoDate()
-            )
-        ));
+        $this->project->status = array(
+            'message' => 'Failed',
+            'code' => '0',
+            'command' => $command_response
+        );
+        $this->project->last_run = new \MongoDate();
+        $this->project->save();
 
         $this->output->writeln('');
         $this->output->writeln('<question>Running "fail" commands</question>');
 
-        if ($this->project['provider'] === 'github' && $this->project['github']['token'])
+        if ($this->project->provider === 'github' && $this->project->github['token'])
         {
-            $test = $this->db->tests->findOne(array('_id' => $this->test));
             $github_status = \Criterion\Helper\Github::updateStatus('error', $test, $this->project);
             $this->log('Posting "error" status to Github', $github_status ? 'Success' : 'Failed');
         }
 
-        \Criterion\Helper\Notifications::failedEmail($this->test, $this->project);
+        \Criterion\Helper\Notifications::failedEmail($this->test->id, $this->project);
 
-        if (isset($this->project['fail']) && count($this->project['fail']))
+        if (isset($this->criterion['fail']) && count($this->criterion['fail']))
         {
-            foreach ($this->project['fail'] as $fail)
+            foreach ($this->criterion['fail'] as $fail)
             {
                 $response = $this->executeAndLog($fail);
             }
         }
 
-        $path = TEST_DIR . '/' . $this->project['_id']  . '/' . (string) $this->test;
+        $path = TEST_DIR . '/' . $this->project->id  . '/' . (string) $this->test->id;
         $this->executeAndLog(sprintf('rm -rf %s', $path), true);
 
         $this->output->writeln('<error>test failed</error>');
@@ -159,50 +136,39 @@ class Application extends SymfonyApplication
 
     public function testPassed()
     {
-        $this->db->tests->update(array(
-            '_id' => $this->test,
-            'project_id' => $this->project['_id'],
-        ), array(
-            '$set' => array(
-                'status' => array(
-                    'message' => 'Passed',
-                    'code' => '1'
-                ),
-                'finished' => new \MongoDate()
-            )
-        ));
+        $test = new \Criterion\Model\Test($this->test->id);
+        $test->status = array(
+            'message' => 'Passed',
+            'code' => '1'
+        );
+        $test->finished = new \MongoDate();
+        $test->save();
 
-        $this->db->projects->update(array(
-            '_id' => $this->project['_id'],
-        ), array(
-            '$set' => array(
-                'status' => array(
-                    'message' => 'Passed',
-                    'code' => '1'
-                ),
-                'last_run' => new \MongoDate()
-            )
-        ));
+        $this->project->status = array(
+            'message' => 'Passed',
+            'code' => '1'
+        );
+        $this->project->last_run = new \MongoDate();
+        $this->project->save();
 
         $this->output->writeln('');
         $this->output->writeln('<question>Running "pass" commands</question>');
 
-        if ($this->project['provider'] === 'github' && $this->project['github']['token'])
+        if ($this->project->provider === 'github' && $this->project->github['token'])
         {
-            $test = $this->db->tests->findOne(array('_id' => $this->test));
             $github_status = \Criterion\Helper\Github::updateStatus('success', $test, $this->project);
             $this->log('Posting "success" status to Github', $github_status ? 'Success' : 'Failed');
         }
 
-        if (isset($this->project['pass']) && count($this->project['pass']))
+        if (isset($this->criterion['pass']) && count($this->criterion['pass']))
         {
-            foreach ($this->project['pass'] as $pass)
+            foreach ($this->criterion['pass'] as $pass)
             {
                 $response = $this->executeAndLog($pass);
             }
         }
 
-        $path = TEST_DIR . '/' . $this->project['_id']  . '/' . (string) $this->test;
+        $path = TEST_DIR . '/' . $this->project->id  . '/' . (string) $this->test->id;
         $this->executeAndLog(sprintf('rm -rf %s', $path), true);
 
         $this->output->writeln('<question>test passed</question>');
@@ -212,12 +178,12 @@ class Application extends SymfonyApplication
     // Parse a criterion.yml file, and log the results
     public function parseConfig($config)
     {
-        $project = Yaml::parse($config);
+        $criterion = Yaml::parse($config);
 
         $command = 'Parsing .criterion.yml file';
         $prelog = $this->prelog($command);
 
-        if( ! isset($project) || ! is_array($project))
+        if( ! isset($criterion) || ! is_array($criterion))
         {
             $this->log($command, 'The .criterion.yml file does not seem valid, or does not exist', '1', $prelog);
             return false;
@@ -227,22 +193,15 @@ class Application extends SymfonyApplication
 
         foreach (array('setup', 'test', 'fail', 'pass') as $section)
         {
-            if ( ! isset($project[$section]) ||  ! is_array($project[$section]))
+            if ( ! isset($criterion[$section]) ||  ! is_array($criterion[$section]))
             {
-                 $project[$section] = array();
+                 $criterion[$section] = array();
             }
         }
 
-        $this->db->tests->update(array(
-            '_id' => $this->test,
-        ), array(
-            '$set' => array(
-                'config' => $project
-            )
-        ));
-
-        $this->project = array_merge($this->project, $project);
-
-        return $this->project;
+        $this->test->config = $criterion;
+        $this->test->save();
+        $this->criterion = $criterion;
+        return $criterion;
     }
 }

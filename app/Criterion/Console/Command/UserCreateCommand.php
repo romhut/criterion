@@ -38,20 +38,17 @@ class UserCreateCommand extends Command
         }
 
         // Check if user exists
-        $user = $this->getApplication()->db->selectCollection('users')->findOne(array(
-            '_id' => $username
-        ));
-        if ($user) {
+        $user = new \Criterion\Model\User($username);
+        if ($user->exists)
+        {
             $output->writeln('<error>User already exists</error>');
             return false;
         }
 
-        // Create User
-        $user = array(
-            '_id' => $username,
-            'password' => password_hash($password, PASSWORD_BCRYPT, array('cost' => 12))
-        );
-        $this->getApplication()->db->selectCollection('users')->save($user);
+        $user->_id = $username;
+        $user->password = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
+        $user->save();
+
         $output->writeln('<info>User created!</info>');
 
     }

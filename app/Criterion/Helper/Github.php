@@ -40,7 +40,7 @@ class Github extends \Criterion\Helper
     {
         $app = new \Criterion\Application();
         $shortrepo = self::shortRepo($project['repo']);
-        $url = 'https://api.github.com/repos/' . $shortrepo . '/statuses/' . $test['commit']['hash']['long'];
+        $url = 'https://api.github.com/repos/' . $shortrepo . '/statuses/' . $test->commit['hash']['long'];
 
         $description = array(
             'pending' => 'Tests are running.',
@@ -50,7 +50,7 @@ class Github extends \Criterion\Helper
 
         $status = array(
             'state' => $state,
-            'target_url' => $app->config['url'] . '/test/' . $test['_id'],
+            'target_url' => $app->config['url'] . '/test/' . $test->id,
             'description' => $description[$state]
         );
 

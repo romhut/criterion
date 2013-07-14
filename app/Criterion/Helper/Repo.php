@@ -31,7 +31,7 @@ class Repo extends \Criterion\Helper
     public static function cloneCommand($test, $project)
     {
         $git_clone = null;
-        if (self::cloneType($project['repo']) === 'ssh')
+        if (self::cloneType($project->repo) === 'ssh')
         {
             $git_clone = 'export GIT_SSH=' . ROOT . '/bin/git; export PKEY=' .  Project::sshKeyFile($project) . ';';
         }
@@ -39,9 +39,9 @@ class Repo extends \Criterion\Helper
         return sprintf(
             '%s git clone -b %s --depth=1 %s %s',
             $git_clone,
-            $test['branch'],
-            $project['repo'],
-            (string) $test['_id']
+            $test->branch,
+            $project->repo,
+            (string) $test->id
         );
 
     }

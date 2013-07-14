@@ -39,18 +39,14 @@ class UserDeleteCommand extends Command
         }
 
         // Check if user exists
-        $user = $this->getApplication()->db->selectCollection('users')->findOne(array(
-            '_id' => $username
-        ));
-        if (! $user) {
+        $user = new \Criterion\Model\User($username);
+        if ( ! $user->exists)
+        {
             $output->writeln('<error>Could not find user</error>');
             return false;
         }
 
-        // Delete the user
-        $this->getApplication()->db->selectCollection('users')->remove(array(
-            '_id' => $username
-        ));
+        $user->delete();
         $output->writeln('<info>User: ' . $username  . ' has been deleted</info>');
 
     }

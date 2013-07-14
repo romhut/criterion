@@ -83,6 +83,7 @@ class Model
                 '_id' => $this->id
             ));
 
+            $this->exists = false;
             return (bool) $delete['ok'];
         }
         return false;
@@ -102,6 +103,7 @@ class Model
         else
         {
             $save = $this->db->insert($this->data);
+            $this->exists = true;
         }
         return (bool) $save['ok'];
     }

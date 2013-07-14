@@ -32,28 +32,23 @@ class UserPasswordCommand extends Command
             $output,
             'Enter new password: '
         );
-        if (! $password) {
+
+        if (! $password)
+        {
             $output->writeln('<error>Cannot set a blank password</error>');
             exit;
         }
 
         // Check if user exists
-        $user = $this->getApplication()->db->selectCollection('users')->findOne(array(
-            '_id' => $username
-        ));
-        if (! $user) {
+        $user = new \Criterion\Model\User($username);
+        if ( ! $user->exists)
+        {
             $output->writeln('<error>Could not find user</error>');
             return false;
         }
+        $user->password = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
+        $user->save();
 
-        // Change the users password
-        $this->getApplication()->db->selectCollection('users')->update(array(
-            '_id' => $username
-        ), array(
-            '$set' => array(
-                'password' => password_hash($password, PASSWORD_BCRYPT, array('cost' => 12))
-            )
-        ));
         $output->writeln('<info>Password updated for ' . $username  . '</info>');
 
     }
