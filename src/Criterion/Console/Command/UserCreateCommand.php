@@ -30,7 +30,7 @@ class UserCreateCommand extends Command
         $dialog = $this->getHelperSet()->get('dialog');
         $password = $dialog->askHiddenResponse(
             $output,
-            'Enter new password: '
+            'Enter password: '
         );
         if (! $password) {
             $output->writeln('<error>Cannot set a blank password</error>');
