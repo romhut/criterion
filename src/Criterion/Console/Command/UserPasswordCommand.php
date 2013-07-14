@@ -41,7 +41,7 @@ class UserPasswordCommand extends Command
         $user = $this->getApplication()->db->selectCollection('users')->findOne(array(
             '_id' => $username
         ));
-        if (! $user){
+        if (! $user) {
             $output->writeln('<error>Could not find user</error>');
             return false;
         }

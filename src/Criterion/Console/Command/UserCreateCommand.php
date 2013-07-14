@@ -41,7 +41,7 @@ class UserCreateCommand extends Command
         $user = $this->getApplication()->db->selectCollection('users')->findOne(array(
             '_id' => $username
         ));
-        if ($user){
+        if ($user) {
             $output->writeln('<error>User already exists</error>');
             return false;
         }

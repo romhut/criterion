@@ -28,15 +28,12 @@ class UserDeleteCommand extends Command
 
         // Prompt for confirm
         $dialog = $this->getHelperSet()->get('dialog');
-
         $confirm = $dialog->askConfirmation(
             $output,
             '<question>Are you sure? (y/N)</question>',
             false
         );
-
-        if ( ! $confirm)
-        {
+        if (! $confirm) {
             $output->writeln('<error>User not deleted</error>');
             exit;
         }
@@ -45,7 +42,7 @@ class UserDeleteCommand extends Command
         $user = $this->getApplication()->db->selectCollection('users')->findOne(array(
             '_id' => $username
         ));
-        if (! $user){
+        if (! $user) {
             $output->writeln('<error>Could not find user</error>');
             return false;
         }
