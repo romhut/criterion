@@ -1,6 +1,7 @@
 <?php
 namespace Criterion\Helper;
-class Github
+
+class Github extends \Criterion\Helper
 {
     public static function toSSHUrl($url)
     {

@@ -1,7 +1,7 @@
 <?php
 namespace Criterion\Helper;
 
-class Notifications
+class Notifications extends \Criterion\Helper
 {
     public static function failedEmail($test, $project)
     {

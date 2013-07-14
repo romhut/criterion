@@ -1,7 +1,7 @@
 <?php
 namespace Criterion\Helper;
 
-class Command
+class Command extends \Criterion\Helper
 {
     public $response = null;
     public $command = null;

@@ -1,7 +1,7 @@
 <?php
 namespace Criterion\Helper;
 
-class Test
+class Test extends \Criterion\Helper
 {
     public static function detectType($folder)
     {

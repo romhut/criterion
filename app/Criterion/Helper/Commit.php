@@ -1,7 +1,7 @@
 <?php
 namespace Criterion\Helper;
 
-class Commit
+class Commit extends \Criterion\Helper
 {
     public static function getURL($commit, $repo, $username = 'git')
     {

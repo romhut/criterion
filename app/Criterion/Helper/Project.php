@@ -1,7 +1,7 @@
 <?php
 namespace Criterion\Helper;
 
-class Project
+class Project extends \Criterion\Helper
 {
     public static function fromRepo($repo)
     {

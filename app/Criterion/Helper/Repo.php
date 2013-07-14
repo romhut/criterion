@@ -1,7 +1,7 @@
 <?php
 namespace Criterion\Helper;
 
-class Repo
+class Repo extends \Criterion\Helper
 {
     public static function provider($url)
     {
