@@ -61,7 +61,7 @@ $app->post('/project/create', 'Criterion\UI\Controller\ProjectsController::creat
 $app->match('/project/{id}', 'Criterion\UI\Controller\ProjectsController::view')->method('POST|GET');
 $app->get('/project/run/{id}', 'Criterion\UI\Controller\ProjectsController::run');
 $app->get('/project/delete/{id}', 'Criterion\UI\Controller\ProjectsController::delete');
-$app->get('/status/{vendor}/{package}.jpg', 'Criterion\UI\Controller\ProjectsController::status');
+$app->get('/status/{vendor}/{package}.{extension}', 'Criterion\UI\Controller\ProjectsController::status')->assert('extension', '(jpg|png)');
 $app->get('/test/{id}', 'Criterion\UI\Controller\TestController::view');
 $app->get('/test/status/{id}', 'Criterion\UI\Controller\TestController::status');
 $app->get('/test/delete/{id}', 'Criterion\UI\Controller\TestController::delete');
