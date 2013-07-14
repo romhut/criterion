@@ -37,6 +37,16 @@ class InstallCommand extends Command
             $config['url'] = $url;
         }
 
+        // Create a user to login with
+        $output->writeln('<info>You need to create an admin user to login to the web interface</info>');
+        $username = $dialog->ask($output, 'Username [admin]: ', 'admin');
+        $password = $dialog->ask($output, 'Password: [password]', 'password');
+        $user = array(
+            '_id' => $username,
+            'password' => password_hash($password, PASSWORD_BCRYPT, array('cost' => 12))
+        );
+        $this->getApplication()->db->selectCollection('users')->save($user);
+
         // Set permissions
         shell_exec('chmod +x ' . ROOT . '/bin/*');
 
@@ -59,6 +69,10 @@ class InstallCommand extends Command
             }
         }
 
+        // Installation complete
+        $output->writeln(' ');
+        $output->writeln('<info>Installation Complete!</info>');
+        $output->writeln('Visit <info>' . $config['url'] . '</info> and login with <info>' . $username . ':' . $password . '</info>');
 
     }
 }
