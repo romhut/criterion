@@ -30,7 +30,7 @@ $app->before(function() use ($app) {
 
     $path_info = pathinfo($app['request']->getPathInfo());
     $authenticated = false;
-    if (in_array($path_info['extension'], array('png', 'jpg')))
+    if (isset($path_info['extension']) && in_array($path_info['extension'], array('png', 'jpg')))
     {
          $authenticated = true;
     }
