@@ -19,13 +19,26 @@ class WorkerRunCommand extends Command
                InputOption::VALUE_NONE,
                'If set, the worker will run in verbose mode'
             )
+            ->addOption(
+               'interval',
+               null,
+               InputOption::VALUE_NONE,
+               'How often should we poll?'
+            )
             ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        /**
+         * You may think its a bit of a stupid idea polling mongo every
+         * {n} seconds instead of using gearman, or beanstalkd. But the reason
+         * for this is that we want to reduce the dependancies as much as
+         * possible.
+         */
+        $interval = $input->getOption('interval') ?: 10;
         $worker = uniqid();
-        $output->writeln('<comment>Worker Started: ' . $worker . '</comment>');
+        $output->writeln('<comment>Worker Started: ' . $worker . ' (Interval: ' . $interval . ')</comment>');
         $output->writeln('');
 
         $client = new \MongoMinify\Client('mongodb://127.0.0.1:27017', array('connect' => true));
@@ -78,7 +91,7 @@ class WorkerRunCommand extends Command
                 $output->writeln('');
             }
 
-            sleep(10);
+            sleep($interval);
         }
     }
 }
