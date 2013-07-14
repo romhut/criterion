@@ -1,13 +1,11 @@
-Criterion (/krīˈti(ə)rēən/)
+Criterion
 ===
 "A principle or standard by which something may be judged or decided"
 
 ----
 
-Criterion is a simple Continuous Integration tool build in PHP using MongoDB.
-
-You can add GIT repos from any provider, and run any commands you wish against it.
-
+Criterion is a Continuous Integration app built in PHP using MongoDB. Criterion is very easy to setup, and you 
+can add GIT repos from any provider, and run any commands you wish against it.
 
 ### Dependencies
 
