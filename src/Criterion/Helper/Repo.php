@@ -33,7 +33,7 @@ class Repo
         $git_clone = null;
         if (self::cloneType($project['repo']) === 'ssh')
         {
-            $git_clone = 'export GIT_SSH=' . ROOT . '/src/bin/git.sh; export PKEY=' .  Project::sshKeyFile($project) . ';';
+            $git_clone = 'export GIT_SSH=' . ROOT . '/bin/git; export PKEY=' .  Project::sshKeyFile($project) . ';';
         }
 
         return sprintf(
