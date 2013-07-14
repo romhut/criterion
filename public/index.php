@@ -27,17 +27,28 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 
 // Autehntication
 $app->before(function() use ($app) {
+
+    $path_info = $app['request']->getPathInfo();
     $authenticated = false;
-    if ($app['request']->server->get('PHP_AUTH_USER')) {
-        $username = strtolower($app['request']->server->get('PHP_AUTH_USER'));
-        $password = $app['request']->server->get('PHP_AUTH_PW');
-        $user = $app['mongo']->selectCollection('users')->findOne(array('_id' => $username));
-        if ($user) {
-            if (password_verify($password, $user['password'])) {
-                $authenticated = true;
+
+    if (strpos(strrev($path_info), 'gpj.') === 0)
+    {
+         $authenticated = true;
+    }
+    else
+    {
+        if ($app['request']->server->get('PHP_AUTH_USER')) {
+            $username = strtolower($app['request']->server->get('PHP_AUTH_USER'));
+            $password = $app['request']->server->get('PHP_AUTH_PW');
+            $user = $app['mongo']->selectCollection('users')->findOne(array('_id' => $username));
+            if ($user) {
+                if (password_verify($password, $user['password'])) {
+                    $authenticated = true;
+                }
             }
         }
     }
+
     if (! $authenticated) {
         header('WWW-Authenticate: Basic realm="Criterion"');
         header('HTTP/1.0 401 Unauthorized');
@@ -51,7 +62,7 @@ $app->post('/project/create', 'Criterion\UI\Controller\ProjectsController::creat
 $app->match('/project/{id}', 'Criterion\UI\Controller\ProjectsController::view')->method('POST|GET');
 $app->get('/project/run/{id}', 'Criterion\UI\Controller\ProjectsController::run');
 $app->get('/project/delete/{id}', 'Criterion\UI\Controller\ProjectsController::delete');
-$app->get('/project/status/{id}', 'Criterion\UI\Controller\ProjectsController::status');
+$app->get('/status/{vendor}/{package}.jpg', 'Criterion\UI\Controller\ProjectsController::status');
 $app->get('/test/{id}', 'Criterion\UI\Controller\TestController::view');
 $app->get('/test/status/{id}', 'Criterion\UI\Controller\TestController::status');
 $app->get('/test/delete/{id}', 'Criterion\UI\Controller\TestController::delete');
