@@ -20,7 +20,7 @@ class Repo
 
     public static function cloneType($repo)
     {
-        if (strpos($repo, 'https://'))
+        if (strpos($repo, 'https://') !== false)
         {
             return 'https';
         }
