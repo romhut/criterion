@@ -39,6 +39,13 @@ pass:
     - sh deploy.sh
 ```
 
+### Github Service Hook
+You can add a Github WebHook to automatically run the tests on your project when a commit is pushed. For example:
+
+```
+http://hook:password@criterion.example.com/hook/github
+```
+
 ### Authors
 - [Scott Robertson](http://github.com/scottymeuk)
 - [Marc Qualie](http://github.com/marcqualie)
