@@ -26,6 +26,6 @@ $cli->addCommands(array(
     new Criterion\Console\Command\UserCreateCommand(),
     new Criterion\Console\Command\UserPasswordCommand(),
     new Criterion\Console\Command\UserDeleteCommand(),
-    new Criterion\Console\Command\UsersListCommand(),
+    new Criterion\Console\Command\UserListCommand(),
 ));
 $cli->run();

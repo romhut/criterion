@@ -6,12 +6,12 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UsersListCommand extends Command
+class UserListCommand extends Command
 {
     protected function configure()
     {
         $this
-            ->setName('users:list')
+            ->setName('user:list')
             ->setDescription('List all users')
             ;
     }
