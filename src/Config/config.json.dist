@@ -1,4 +1,13 @@
 {
     "url" : "http://example.com",
-    "email" : "notifications@example.com"
+    "email" : {
+        "name" : "Criterion Notifications",
+        "address" : "notifications@criterion.romhut.com",
+        "smtp" : {
+            "server" : "mail.example.com",
+            "port" : 25,
+            "username" : "notifications@example.com",
+            "password" : "password123"
+        }
+    }
 }
