@@ -56,9 +56,15 @@ class InstallCommand extends Command
         );
         $this->getApplication()->db->selectCollection('users')->save($user);
 
-        // TODO: Email configuration
         $output->writeln('<info>Email Setup: Used for notifications</info>');
-
+        $use_smtp = strtolower($dialog->ask($output, 'Do you want to setup SMTP? [y/N]: '));
+        if ($use_smtp === 'y')
+        {
+            $config['email']['smtp']['server'] = $dialog->ask($output, 'SMTP Server [localhost]: ', 'localhost');
+            $config['email']['smtp']['port'] = $dialog->ask($output, 'SMTP Port [25]: ', '25');
+            $config['email']['smtp']['username'] = $dialog->ask($output, 'SMTP Username [mail@localhost]: ', 'mail@localhost');
+            $config['email']['smtp']['password'] = $dialog->ask($output, 'SMTP Password [password123]: ', 'password123');
+        }
 
         // Set permissions
         shell_exec('chmod +x ' . ROOT . '/bin/*');
@@ -74,13 +80,16 @@ class InstallCommand extends Command
             'marcqualie/hoard'
         );
         $install_samples = strtolower($dialog->ask($output, 'Do you want to install sample projects? [y/N]: '));
-        if ($install_samples === 'y') {
-            foreach ($samples as $sample) {
+        if ($install_samples === 'y')
+        {
+            foreach ($samples as $sample)
+            {
                 $project = \Criterion\Helper\Project::fromRepo('https://github.com/' . $sample);
                 $this->getApplication()->db->selectCollection('projects')->save($project);
                 $output->writeln('<info>- Installed ' . $sample . '</info>');
             }
         }
+
 
         // Installation complete
         $output->writeln(' ');
