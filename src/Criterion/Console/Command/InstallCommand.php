@@ -57,6 +57,10 @@ class InstallCommand extends Command
         $this->getApplication()->db->selectCollection('users')->save($user);
 
         $output->writeln('<info>Email Setup: Used for notifications</info>');
+
+        $config['email']['address'] = $dialog->ask($output, 'From address [mail@localhost]: ', 'mail@localhost');
+        $config['email']['name'] = $dialog->ask($output, 'From name [Criterion Notifications]: ', 'Criterion Notifications');
+
         $use_smtp = strtolower($dialog->ask($output, 'Do you want to setup SMTP? [y/N]: '));
         if ($use_smtp === 'y')
         {
@@ -89,7 +93,6 @@ class InstallCommand extends Command
                 $output->writeln('<info>- Installed ' . $sample . '</info>');
             }
         }
-
 
         // Installation complete
         $output->writeln(' ');
