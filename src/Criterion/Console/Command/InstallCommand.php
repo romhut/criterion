@@ -44,6 +44,21 @@ class InstallCommand extends Command
         file_put_contents($config_file, json_encode($config));
         $output->writeln('<info>Saved config settings</info>');
 
+        // Offer samples
+        $samples = array(
+            'romhut/criterion',
+            'marcqualie/mongominify',
+            'marcqualie/hoard'
+        );
+        $install_samples = strtolower($dialog->ask($output, 'Do you want to install sample projects? [y/N]: '));
+        if ($install_samples === 'y') {
+            foreach ($samples as $sample) {
+                $project = \Criterion\Helper\Project::fromRepo('https://github.com/' . $sample);
+                $this->getApplication()->db->selectCollection('projects')->save($project);
+                $output->writeln('<info>- Installed ' . $sample . '</info>');
+            }
+        }
+
 
     }
 }
