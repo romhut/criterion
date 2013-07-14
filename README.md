@@ -49,6 +49,7 @@ You can add a Github WebHook to automatically run the tests on your project when
 ```
 http://hook:password@criterion.example.com/hook/github
 ```
+You can even add this hook to your Github repositories, and Criterion will automatically create a project if you have not already done so.
 
 ### Authors
 - [Scott Robertson](http://github.com/scottymeuk)
