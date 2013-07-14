@@ -108,6 +108,7 @@ class InstallCommand extends Command
         $output->writeln(' ');
         $output->writeln('<info>Installation Complete!</info>');
         $output->writeln('Visit <info>' . $config['url'] . '</info> and login with <info>' . $username . ':' . $password . '</info>');
+        $output->writeln('Remember to start the worker: <info>bin/cli worker:start</info>');
 
     }
 }
