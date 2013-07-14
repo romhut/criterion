@@ -6,21 +6,16 @@ define('DATA_DIR', ROOT  . '/data');
 define('TEST_DIR', DATA_DIR . '/tests');
 define('KEY_DIR', DATA_DIR . '/keys');
 
-if ( ! file_exists(CONFIG_FILE))
+include dirname(__DIR__) . '/vendor/autoload.php';
+$app = new Silex\Application();
+$app['criterion'] = new Criterion\Application();
+
+if ( ! $app['criterion']->config)
 {
     echo 'You must install Criterion first by running: "bin/cli install"';
     exit;
 }
-
-include dirname(__DIR__) . '/vendor/autoload.php';
-
-$app = new Silex\Application();
 $app['debug'] = true;
-
-$app->register(new MongoMinify\Silex\ServiceProvider(), array(
-    'mongo.server' => 'mongodb://127.0.0.1:27017/criterion',
-));
-
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => dirname(__DIR__) . '/app/Criterion/UI/View',
 ));
@@ -39,7 +34,7 @@ $app->before(function() use ($app) {
         if ($app['request']->server->get('PHP_AUTH_USER')) {
             $username = strtolower($app['request']->server->get('PHP_AUTH_USER'));
             $password = $app['request']->server->get('PHP_AUTH_PW');
-            $user = $app['mongo']->selectCollection('users')->findOne(array('_id' => $username));
+            $user = $app['criterion']->db->selectCollection('users')->findOne(array('_id' => $username));
             if ($user) {
                 if (password_verify($password, $user['password'])) {
                     $authenticated = true;

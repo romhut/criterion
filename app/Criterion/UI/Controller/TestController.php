@@ -6,11 +6,11 @@ class TestController
 
     public function status(\Silex\Application $app)
     {
-        $test = $app['mongo']->tests->findOne(array(
+        $test = $app['criterion']->db->tests->findOne(array(
             '_id' => new \MongoId($app['request']->get('id'))
         ));
 
-        $logs = $app['mongo']->logs->find(array(
+        $logs = $app['criterion']->db->logs->find(array(
             'test_id' => new \MongoId($test['_id']),
             'internal' => false
         ))->sort(array(
@@ -28,7 +28,7 @@ class TestController
             return $app->abort(404, 'Test not found.');
         }
 
-        $test['project'] = $app['mongo']->projects->findOne(array(
+        $test['project'] = $app['criterion']->db->projects->findOne(array(
             '_id' => $test['project_id']
         ));
 
@@ -40,7 +40,7 @@ class TestController
 
     public function view(\Silex\Application $app)
     {
-        $data['test'] = $app['mongo']->tests->findOne(array(
+        $data['test'] = $app['criterion']->db->tests->findOne(array(
             '_id' => new \MongoId($app['request']->get('id'))
         ));
 
@@ -49,7 +49,7 @@ class TestController
             return $app->abort(404, 'Test not found.');
         }
 
-        $data['project'] = $app['mongo']->projects->findOne(array(
+        $data['project'] = $app['criterion']->db->projects->findOne(array(
             '_id' => $data['test']['project_id']
         ));
 
@@ -58,7 +58,7 @@ class TestController
             return $app->abort(404, 'Project not found.');
         }
 
-        $logs = $app['mongo']->logs->find(array(
+        $logs = $app['criterion']->db->logs->find(array(
             'test_id' => new \MongoId($app['request']->get('id'))
         ));
 
@@ -75,7 +75,7 @@ class TestController
 
     public function delete(\Silex\Application $app)
     {
-        $test = $app['mongo']->tests->findOne(array(
+        $test = $app['criterion']->db->tests->findOne(array(
             '_id' => new \MongoId($app['request']->get('id'))
         ));
 
@@ -84,11 +84,11 @@ class TestController
             return $app->abort(404, 'Test not found.');
         }
 
-        $app['mongo']->tests->remove(array(
+        $app['criterion']->db->tests->remove(array(
             '_id' => new \MongoId($app['request']->get('id'))
         ));
 
-        $app['mongo']->logs->remove(array(
+        $app['criterion']->db->logs->remove(array(
             'test_id' => new \MongoId($app['request']->get('id'))
         ));
 

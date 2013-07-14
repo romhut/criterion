@@ -41,9 +41,8 @@ class WorkerRunCommand extends Command
         $output->writeln('<comment>Worker Started: ' . $worker . ' (Interval: ' . $interval . ')</comment>');
         $output->writeln('');
 
-        $client = new \MongoMinify\Client('mongodb://127.0.0.1:27017', array('connect' => true));
-        $tests = $client->criterion->tests;
-        $projects = $client->criterion->projects;
+        $tests = $this->getApplication()->db->tests;
+        $projects = $this->getApplication()->db->projects;
 
         while (true)
         {

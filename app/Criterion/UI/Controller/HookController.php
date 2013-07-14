@@ -22,14 +22,14 @@ class HookController
             $repo = \Criterion\Helper\Github::toSSHUrl($repo);
         }
 
-        $project = $app['mongo']->projects->findOne(array(
+        $project = $app['criterion']->db->projects->findOne(array(
             'repo' => $repo
         ));
 
         if ( ! $project)
         {
             $project = \Criterion\Helper\Project::fromRepo($repo);
-            $app['mongo']->projects->save($project);
+            $app['criterion']->db->projects->save($project);
 
             $ssh_key_file = KEY_DIR . '/' . (string) $project['_id'];
 
@@ -37,7 +37,7 @@ class HookController
 
             if ((string) $response !== '0')
             {
-                $app['mongo']->projects->remove(array(
+                $app['criterion']->db->projects->remove(array(
                     '_id' => $project['_id']
                 ));
 
@@ -46,7 +46,7 @@ class HookController
                 ));
             }
 
-            $app['mongo']->projects->update(array(
+            $app['criterion']->db->projects->update(array(
                 '_id' => $project['_id']
             ), array(
                 '$set' => array(
@@ -73,7 +73,7 @@ class HookController
             'branch' => $branch
         );
 
-        $app['mongo']->tests->save($test);
+        $app['criterion']->db->tests->save($test);
 
         return $app->json(array(
             'success' => true,

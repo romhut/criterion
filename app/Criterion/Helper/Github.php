@@ -38,13 +38,7 @@ class Github extends \Criterion\Helper
 
     public static function updateStatus($state, $test, $project)
     {
-        if ( ! file_exists(CONFIG_FILE))
-        {
-            return false;
-        }
-
-        $config = json_decode(file_get_contents(CONFIG_FILE));
-
+        $app = new \Criterion\Application();
         $shortrepo = self::shortRepo($project['repo']);
         $url = 'https://api.github.com/repos/' . $shortrepo . '/statuses/' . $test['commit']['hash']['long'];
 
@@ -56,7 +50,7 @@ class Github extends \Criterion\Helper
 
         $status = array(
             'state' => $state,
-            'target_url' => $config->url . '/test/' . $test['_id'],
+            'target_url' => $app->config['url'] . '/test/' . $test['_id'],
             'description' => $description[$state]
         );
 

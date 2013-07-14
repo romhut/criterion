@@ -5,7 +5,7 @@ class ProjectsController
 {
     public function all(\Silex\Application $app)
     {
-        $projects = $app['mongo']->projects->find()->sort(array(
+        $projects = $app['criterion']->db->projects->find()->sort(array(
             'last_run' => -1
         ));
 
@@ -32,7 +32,7 @@ class ProjectsController
         $project['github']['token'] = $app['request']->get('github_token');
         $project['email'] = $app['request']->get('email');
 
-        $app['mongo']->projects->save($project);
+        $app['criterion']->db->projects->save($project);
 
         $ssh_key_file = KEY_DIR . '/' . (string) $project['_id'];
 
@@ -40,7 +40,7 @@ class ProjectsController
 
         if ((string) $response !== '0')
         {
-            $app['mongo']->projects->remove(array(
+            $app['criterion']->db->projects->remove(array(
                 '_id' => $project['_id']
             ));
 
@@ -49,7 +49,7 @@ class ProjectsController
             ));
         }
 
-        $app['mongo']->projects->update(array(
+        $app['criterion']->db->projects->update(array(
             '_id' => $project['_id']
         ), array(
             '$set' => array(
@@ -69,7 +69,7 @@ class ProjectsController
 
     public function status(\Silex\Application $app)
     {
-        $project = $app['mongo']->projects->findOne(array(
+        $project = $app['criterion']->db->projects->findOne(array(
             'short_repo' => implode('/', array(
                 $app['request']->get('vendor'),
                 $app['request']->get('package')
@@ -96,7 +96,7 @@ class ProjectsController
 
     public function delete(\Silex\Application $app)
     {
-        $project = $app['mongo']->projects->findOne(array(
+        $project = $app['criterion']->db->projects->findOne(array(
             '_id' => new \MongoId($app['request']->get('id'))
         ));
 
@@ -105,22 +105,22 @@ class ProjectsController
             return $app->abort(404, 'Project not found.');
         }
 
-        $tests = $app['mongo']->tests->find(array(
+        $tests = $app['criterion']->db->tests->find(array(
             'project_id' => new \MongoId($app['request']->get('id'))
         ));
 
         foreach ($tests as $test)
         {
-            $app['mongo']->logs->remove(array(
+            $app['criterion']->db->logs->remove(array(
                 'test_id' => $test['_id']
             ));
 
-            $app['mongo']->tests->remove(array(
+            $app['criterion']->db->tests->remove(array(
                 '_id' => $test['_id']
             ));
         }
 
-        $app['mongo']->projects->remove(array(
+        $app['criterion']->db->projects->remove(array(
             '_id' => new \MongoId($app['request']->get('id'))
         ));
 
@@ -129,7 +129,7 @@ class ProjectsController
 
     public function run(\Silex\Application $app)
     {
-        $data['project'] = $app['mongo']->projects->findOne(array(
+        $data['project'] = $app['criterion']->db->projects->findOne(array(
             '_id' => new \MongoId($app['request']->get('id'))
         ));
 
@@ -151,19 +151,19 @@ class ProjectsController
         // If a test ID is specified, then clear out the logs as its a rerun
         if ($app['request']->get('test_id'))
         {
-            $app['mongo']->logs->remove(array(
+            $app['criterion']->db->logs->remove(array(
                 'test_id' => new \MongoId($app['request']->get('test_id'))
             ));
             $test['_id'] = new \MongoId($app['request']->get('test_id'));
         }
 
-        $app['mongo']->tests->save($test);
+        $app['criterion']->db->tests->save($test);
         return $app->redirect('/test/' . (string)$test['_id']);
     }
 
     public function view(\Silex\Application $app)
     {
-        $data['project'] = $app['mongo']->projects->findOne(array(
+        $data['project'] = $app['criterion']->db->projects->findOne(array(
             '_id' => new \MongoId($app['request']->get('id'))
         ));
 
@@ -183,7 +183,7 @@ class ProjectsController
             $update_data['email'] = $app['request']->get('email');
 
 
-            $update = $app['mongo']->projects->update($data['project'], array(
+            $update = $app['criterion']->db->projects->update($data['project'], array(
                 '$set' => $update_data
             ));
 
@@ -191,7 +191,7 @@ class ProjectsController
 
         }
 
-        $tests = $app['mongo']->tests->find(array(
+        $tests = $app['criterion']->db->tests->find(array(
             'project_id' => new \MongoId($app['request']->get('id'))
         ))->sort(array(
             'started' => -1
