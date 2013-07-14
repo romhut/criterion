@@ -21,14 +21,29 @@ class InstallCommand extends Command
 
         $dialog = $this->getHelperSet()->get('dialog');
 
-        // Create configuration
+        // Create default configuration
         $config_dir = ROOT . '/src/Config';
         $config_file = $config_dir . '/config.json';
-        if (! file_exists($config_file)) {
-            copy($config_file . '.dist', $config_file);
+        $config = array(
+            'url' => 'http://criterion.example.com',
+            'email' => array(
+                "name" => "Criterion Notifications",
+                "address" => "notifications@criterion.romhut.com",
+                "smtp" => array(
+                    "server" => "mail.example.com",
+                    "port" => 25,
+                    "username" => "notifications@example.com",
+                    "password" => "password"
+                )
+            )
+        );
+
+        // Overwrite default config with current setup
+        if (file_exists($config_file)) {
             $output->writeln('<info>Created config file</info>');
+            $current_config = json_decode(file_get_contents($config_file), true);
+            $config = array_merge($config, $current_config);
         }
-        $config = json_decode(file_get_contents($config_file), true);
 
         // Setup URL
         $default_url = isset($config['url']) ? $config['url'] : 'http://criterion.example.com';
