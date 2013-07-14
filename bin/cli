@@ -22,6 +22,7 @@ $cli = new Criterion\Console\Application('Criterion', '1.0');
 $mongo = new MongoMinify\Client();
 $cli->setMongo($mongo);
 $cli->addCommands(array(
+    new Criterion\Console\Command\InstallCommand(),
     new Criterion\Console\Command\TestCommand(),
     new Criterion\Console\Command\UserCreateCommand(),
     new Criterion\Console\Command\UserPasswordCommand(),
