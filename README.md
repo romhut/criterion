@@ -21,7 +21,7 @@ You can add GIT repos from any provider, and run any commands you wish against i
 ```yml
 setup:
     - composer install --dev
-test:
+script:
     - phpunit
 fail:
     - sh log-fail.sh
