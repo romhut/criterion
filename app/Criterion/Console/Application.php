@@ -91,11 +91,6 @@ class Application extends SymfonyApplication
 
     public function testFailed($command_response = false)
     {
-        if (is_object($command_response))
-        {
-            $command_response = $command_response->data;
-        }
-
         $this->test->status = array(
             'message' => 'Failed',
             'code' => '0',
