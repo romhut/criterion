@@ -29,12 +29,6 @@ class InstallCommand extends Command
             'email' => array(
                 "name" => "Criterion Notifications",
                 "address" => "notifications@criterion.romhut.com",
-                "smtp" => array(
-                    "server" => "mail.example.com",
-                    "port" => 25,
-                    "username" => "notifications@example.com",
-                    "password" => "password"
-                )
             )
         );
 
@@ -55,12 +49,16 @@ class InstallCommand extends Command
         // Create a user to login with
         $output->writeln('<info>You need to create an admin user to login to the web interface</info>');
         $username = $dialog->ask($output, 'Username [admin]: ', 'admin');
-        $password = $dialog->ask($output, 'Password: [password]', 'password');
+        $password = $dialog->ask($output, 'Password: [password]: ', 'password');
         $user = array(
             '_id' => $username,
             'password' => password_hash($password, PASSWORD_BCRYPT, array('cost' => 12))
         );
         $this->getApplication()->db->selectCollection('users')->save($user);
+
+        // TODO: Email configuration
+        $output->writeln('<info>Email Setup: Used for notifications</info>');
+
 
         // Set permissions
         shell_exec('chmod +x ' . ROOT . '/bin/*');
