@@ -28,10 +28,9 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 // Autehntication
 $app->before(function() use ($app) {
 
-    $path_info = $app['request']->getPathInfo();
+    $path_info = pathinfo($app['request']->getPathInfo());
     $authenticated = false;
-
-    if (strpos(strrev($path_info), 'gpj.') === 0)
+    if (in_array($path_info['extension'], array('png', 'jpg')))
     {
          $authenticated = true;
     }
