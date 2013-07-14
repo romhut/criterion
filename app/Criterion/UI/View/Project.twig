@@ -52,10 +52,10 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Commit</th>
                     <th class="hidden-phone">Author</th>
+                    <th>Commit</th>
                     <th>Branch</th>
-                    <th class="hidden-phone">Started</th>
+                    <th class="hidden-phone">Last Run</th>
                     <th></th>
                 </tr>
             </thead>
@@ -73,6 +73,7 @@
                     {% endif %}
 
                     <tr class="{{status_class}}" >
+                        <td class="hidden-phone">{% if test.commit is defined %} {{test.commit.author.name}}  {% else %} N/A {% endif %}</td>
                         <td>
                             {% if test.commit is defined %}
                                 {% if test.commit.url %}
@@ -86,7 +87,6 @@
                                 N/A
                             {% endif %}
                         </td>
-                        <td class="hidden-phone">{% if test.commit is defined %} {{test.commit.author.name}}  {% else %} N/A {% endif %}</td>
                         <td>
                             {% if test.commit is defined %}
                                 {% if test.commit.url %}
