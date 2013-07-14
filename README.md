@@ -29,9 +29,12 @@ pass:
     - sh deploy.sh
 ```
 
-
-# Running Workers
+### Running Workers
 
 ```shell
 php src/Criterion/Worker/test.php
 ```
+
+### Authors
+- [Scott Robertson](http://github.com/scottymeuk)
+- [Marc Qualie](http://github.com/marcqualie)
