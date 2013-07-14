@@ -17,12 +17,14 @@ class Github
     public static function commitUrl($commit, $repo)
     {
         $repo = self::toHTTPSUrl($repo);
+        $repo = str_replace('.git', null, $repo);
         return $repo . '/commit/' . $commit['hash']['long'];
     }
 
     public static function branchUrl($branch, $repo)
     {
         $repo = self::toHTTPSUrl($repo);
+        $repo = str_replace('.git', null, $repo);
         return $repo . '/tree/' . $branch;
     }
 
