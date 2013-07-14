@@ -5,7 +5,9 @@ class Notifications extends \Criterion\Helper
 {
     public static function failedEmail($test, $project)
     {
-        $config = json_decode(file_get_contents(CONFIG_FILE), true);
+        $app = new \Criterion\Application();
+        $config = $app->config;
+
         if (isset($project['email']) && $project['email'] && isset($config['email']))
         {
             $subject = '['.$project['repo'].'] Tests Failed (' . $test . ')';

@@ -13,11 +13,14 @@ class Application extends SymfonyApplication
     public $test = null;
     public $output = null;
     public $db = array();
+    public $app = array();
 
-    public function setMongo($mongo)
+    public function __construct($name, $version)
     {
-        $this->mongo = $mongo;
-        $this->db = $this->mongo->criterion;
+        parent::__construct($name, $version);
+        $this->app = new \Criterion\Application();
+        $this->mongo = $this->app->mongo;
+        $this->db = $this->app->db;
     }
 
     public function setProject($project)

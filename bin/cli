@@ -19,8 +19,6 @@ if (! file_exists(ROOT . '/vendor/autoload.php')) {
 // Create Application
 include ROOT . '/vendor/autoload.php';
 $cli = new Criterion\Console\Application('Criterion', '1.0');
-$mongo = new MongoMinify\Client();
-$cli->setMongo($mongo);
 $cli->addCommands(array(
     new Criterion\Console\Command\InstallCommand(),
     new Criterion\Console\Command\WorkerRunCommand(),

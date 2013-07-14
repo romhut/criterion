@@ -18,11 +18,9 @@ class InstallCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
         $dialog = $this->getHelperSet()->get('dialog');
 
         // Create default configuration
-        $config_file = ROOT . '/config.json';
         $config = array(
             'url' => 'http://criterion.example.com',
             'email' => array(
@@ -32,10 +30,9 @@ class InstallCommand extends Command
         );
 
         // Overwrite default config with current setup
-        if (file_exists($config_file)) {
+        if ($this->getApplication()->app->config) {
             $output->writeln('<info>Created config file</info>');
-            $current_config = json_decode(file_get_contents($config_file), true);
-            $config = array_merge($config, $current_config);
+            $config = array_merge($config, $this->getApplication()->app->config);
         }
 
         // Setup URL
@@ -84,7 +81,7 @@ class InstallCommand extends Command
         }
 
         // Save config
-        file_put_contents($config_file, json_encode($config));
+        file_put_contents($this->getApplication()->app->config_file, json_encode($config));
         $output->writeln('<info>Saved config settings</info>');
 
         // Offer samples
