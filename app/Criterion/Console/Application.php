@@ -91,6 +91,7 @@ class Application extends SymfonyApplication
 
     public function testFailed($command_response = false)
     {
+        unset($command_response['_id']);
         $this->test->status = array(
             'message' => 'Failed',
             'code' => '0',
