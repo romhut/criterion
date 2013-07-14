@@ -16,6 +16,17 @@ You can add GIT repos from any provider, and run any commands you wish against i
 - MongoDB >= 2.2.0
 - Git >= 1.7.0
 
+### Installation
+
+```shell
+bin/cli install
+```
+
+### Running Workers
+
+```shell
+php src/Criterion/Worker/test.php --debug
+```
 
 ### Example criterion.yml
 ```yml
@@ -27,12 +38,6 @@ fail:
     - sh log-fail.sh
 pass:
     - sh deploy.sh
-```
-
-### Running Workers
-
-```shell
-php src/Criterion/Worker/test.php
 ```
 
 ### Authors
