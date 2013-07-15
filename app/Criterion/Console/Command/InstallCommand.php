@@ -99,6 +99,8 @@ class InstallCommand extends Command
             mkdir(ROOT . '/data/keys', 0777, true);
         }
 
+        shell_exec('chmod -R 0777 ' . ROOT . '/data');
+
         // Save config
         file_put_contents($this->getApplication()->app->config_file, json_encode($config));
         $output->writeln('<info>Saved config settings</info>');
