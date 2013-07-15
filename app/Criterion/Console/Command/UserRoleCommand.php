@@ -6,13 +6,13 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UserCreateCommand extends Command
+class UserRoleCommand extends Command
 {
     protected function configure()
     {
         $this
-            ->setName('user:create')
-            ->setDescription('Create a new user')
+            ->setName('user:role')
+            ->setDescription('Change a users role')
             ->addArgument(
                 'username',
                 InputArgument::REQUIRED,
@@ -26,30 +26,18 @@ class UserCreateCommand extends Command
 
         $username = trim(strtolower($input->getArgument('username')));
 
-        // Prompt for password
-        $dialog = $this->getHelperSet()->get('dialog');
-
         // Check if user exists
         $user = new \Criterion\Model\User($username);
-        if ($user->exists)
+        if ( ! $user->exists)
         {
-            $output->writeln('<error>User already exists</error>');
+            $output->writeln('<error>Could not find user</error>');
             return false;
         }
 
-        $user->_id = $username;
-
-        $password = $dialog->askHiddenResponse(
-            $output,
-            'Enter password: '
-        );
-        if (! $password) {
-            $output->writeln('<error>Cannot set a blank password</error>');
-            exit;
-        }
-        $user->password = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
-
+        // Prompt for confirm
+        $dialog = $this->getHelperSet()->get('dialog');
         $admin = strtolower($dialog->ask($output, 'Do you want this user to be an admin? [y/N]: '));
+
         $user->role = 'user';
         if ($admin === 'y')
         {
@@ -57,7 +45,7 @@ class UserCreateCommand extends Command
         }
 
         $user->save();
-        $output->writeln('<info>User created (' . $user->_id . ':' . $user->role . ')</info>');
+        $output->writeln('<info>User: ' . $username  . ' has assigned: '.$user->role.'</info>');
 
     }
 }

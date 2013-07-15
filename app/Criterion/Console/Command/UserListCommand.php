@@ -20,14 +20,16 @@ class UserListCommand extends Command
     {
         // Check for users
         $users = $this->getApplication()->db->selectCollection('users')->find();
-        if ($users->count() < 1) {
+        if ($users->count() < 1)
+        {
             $output->writeln('<error>Could not find any users</error>');
             return false;
         }
 
         $i = 0;
-        foreach ($users as $user) {
-            echo '[' . (++$i) . '] ' . $user['_id'] . "\n";
+        foreach ($users as $user)
+        {
+            echo '[' . (++$i) . '] ' . $user['_id'] . ':' . (isset($user['role']) ? $user['role'] : 'user') . "\n";
         }
     }
 }
