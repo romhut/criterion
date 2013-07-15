@@ -68,9 +68,9 @@
     </div>
 
     <script>
-        var build = setInterval(function() {
-            criterion.test.getStatus("{{ test._id }}")
-        }, 1000);
+        $(document).ready(function() {
+            criterion.test.initPoller("{{test._id}}");
+        });
     </script>
 
 {% endblock %}
