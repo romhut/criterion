@@ -36,15 +36,13 @@ class TestController
             return $app->abort(404, 'Test not found.');
         }
 
+        $data['project'] = $data['test']->getProject();
         if ( ! $data['project']->exists)
         {
             return $app->abort(404, 'Project not found.');
         }
 
         $data['logs'] = $data['test']->getLogs();
-        $data['project'] = $data['test']->getProject();
-
-
         $data['title'] = $data['test']->id . ' | ' . $data['project']->short_repo;
 
         return $app['twig']->render('Test.twig', $data);
