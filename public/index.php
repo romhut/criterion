@@ -71,7 +71,9 @@ $app->error(function(\Exception $e, $code) use($app) {
         header('HTTP/1.0 401 Unauthorized');
     }
 
-    return $app['twig']->render('Error/'.$code.'.twig');
+    return $app['twig']->render('Error/'.$code.'.twig', array(
+        'error' => $e
+    ));
 });
 
 $app->get('/', 'Criterion\UI\Controller\ProjectsController::all');
