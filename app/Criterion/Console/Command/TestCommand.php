@@ -101,7 +101,7 @@ class TestCommand extends Command
         $this->getApplication()->log('Cloning ' . $project->repo, $clone_output, $git_clone->response, $prelog_clone);
         if ($git_clone->response != 0)
         {
-            return $this->getApplication()->testFailed($git_clone);
+            return $this->getApplication()->testFailed();
         }
 
         // Switch into the test directory we just cloned, so we can
@@ -149,7 +149,7 @@ class TestCommand extends Command
                     $response = $this->getApplication()->executeAndLog($setup);
                     if ($response->response !== '0')
                     {
-                        return $this->getApplication()->testFailed($response);
+                        return $this->getApplication()->testFailed();
                     }
                 }
             }
@@ -163,7 +163,7 @@ class TestCommand extends Command
                     $response = $this->getApplication()->executeAndLog($script);
                     if ($response->response !== '0')
                     {
-                        return $this->getApplication()->testFailed($response);
+                        return $this->getApplication()->testFailed();
                     }
                 }
             }
@@ -178,7 +178,7 @@ class TestCommand extends Command
                 $response = $this->getApplication()->executeAndLog('composer install');
                 if ($response->response !== '0')
                 {
-                    return $this->getApplication()->testFailed($response);
+                    return $this->getApplication()->testFailed();
                 }
             }
 
@@ -190,7 +190,7 @@ class TestCommand extends Command
                 $response = $this->getApplication()->executeAndLog('vendor/bin/phpunit');
                 if ($response->response !== '0')
                 {
-                    return $this->getApplication()->testFailed($response);
+                    return $this->getApplication()->testFailed();
                 }
             }
             // If composer has not installed phpunit, then we can run the bin
@@ -200,7 +200,7 @@ class TestCommand extends Command
                 $response = $this->getApplication()->executeAndLog('phpunit');
                 if ($response->response !== '0')
                 {
-                    return $this->getApplication()->testFailed($response);
+                    return $this->getApplication()->testFailed();
                 }
             }
         }

@@ -89,12 +89,11 @@ class Application extends SymfonyApplication
         return $log;
     }
 
-    public function testFailed($command_response = false)
+    public function testFailed()
     {
         $this->test->status = array(
             'message' => 'Failed',
             'code' => '0',
-            'command' => $command_response
         );
         $this->test->finished = new \MongoDate();
         $this->test->save();
@@ -102,7 +101,6 @@ class Application extends SymfonyApplication
         $this->project->status = array(
             'message' => 'Failed',
             'code' => '0',
-            'command' => $command_response
         );
         $this->project->last_run = new \MongoDate();
         $this->project->save();
