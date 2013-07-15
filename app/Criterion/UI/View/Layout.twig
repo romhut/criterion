@@ -17,13 +17,20 @@
     <div class="navbar navbar-fixed-top navbar-inverse">
         <div class="navbar-inner">
             <div class="container">
-                {% if app.user.isAdmin %}
-                    <div class="pull-right">
+                <div class="pull-right">
+                    {% if app.user and app.user.isAdmin %}
                         <a href="#addProject" role="button" data-toggle="modal" class="btn btn-info btn-small">
                             Create Project
                         </a>
-                    </div>
-                {% endif %}
+                    {% endif %}
+
+                    {% if app.user %}
+                        <a class="btn btn-small btn-danger" href="/auth/logout">Logout</a>
+                    {% else %}
+                        <a class="btn btn-small btn-primary" href="/auth/login">Login</a>
+                    {% endif %}
+                </div>
+
                 <a class="brand" href="/">
                     <i class="icon-stethoscope"></i>
                     Criterion
@@ -41,7 +48,7 @@
             <p>Fork Me</p>
         </a>
     </footer>
-    {% if app.user.isAdmin %}
+    {% if app.user and app.user.isAdmin %}
         {% include 'Blocks/AddProject.twig' %}
     {% endif %}
 </body>

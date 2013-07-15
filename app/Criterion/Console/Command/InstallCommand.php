@@ -23,6 +23,7 @@ class InstallCommand extends Command
         // Create default configuration
         $config = array(
             'url' => 'http://criterion.example.com',
+            'visibility' => 'private',
             'email' => array(
                 "name" => "Criterion Notifications",
                 "address" => "notifications@criterion.romhut.com",
@@ -42,18 +43,36 @@ class InstallCommand extends Command
             $config['url'] = $url;
         }
 
+        $output->writeln('');
+        $publically_viewable = strtolower($dialog->ask($output, '<info>Do you wish this installation to be publically viewable?</info> [y/N]: '));
+        if ($publically_viewable === 'y')
+        {
+            $config['visibility'] = 'public';
+        }
+        $output->writeln('');
+
         // Create a user to login with
         $output->writeln('<info>You need to create an admin user to login to the web interface</info>');
         $username = $dialog->ask($output, 'Username [admin]: ', 'admin');
-        $password = $dialog->ask($output, 'Password: [password]: ', 'password');
-        $user = array(
-            '_id' => $username,
-            'password' => password_hash($password, PASSWORD_BCRYPT, array('cost' => 12))
-        );
-        $this->getApplication()->db->selectCollection('users')->save($user);
+
+        $user = new \Criterion\Model\User($username);
+        if ($user->exists)
+        {
+            $password = null;
+            $output->writeln('User already exists, promoting to admin.');
+            $user->role = 'admin';
+        }
+        else
+        {
+            $password = $dialog->ask($output, 'Password: [password]: ', 'password');
+            $user->password = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
+        }
+
+        $user->save();
+        $output->writeln('<info>User saved.</info>');
+        $output->writeln('');
 
         $output->writeln('<info>Email Setup: Used for notifications</info>');
-
         $config['email']['address'] = $dialog->ask($output, 'From address [mail@localhost]: ', 'mail@localhost');
         $config['email']['name'] = $dialog->ask($output, 'From name [Criterion Notifications]: ', 'Criterion Notifications');
 
@@ -83,6 +102,7 @@ class InstallCommand extends Command
         // Save config
         file_put_contents($this->getApplication()->app->config_file, json_encode($config));
         $output->writeln('<info>Saved config settings</info>');
+        $output->writeln('');
 
         // Offer samples
         $samples = array(
@@ -95,8 +115,11 @@ class InstallCommand extends Command
         {
             foreach ($samples as $sample)
             {
-                $project = \Criterion\Helper\Project::fromRepo('https://github.com/' . $sample);
-                $this->getApplication()->db->selectCollection('projects')->save($project);
+                $project = new \Criterion\Model\Project(array(
+                    'repo' => $sample
+                ));
+                $project->save();
+
                 $output->writeln('<info>- Installed ' . $sample . '</info>');
             }
         }
@@ -104,7 +127,7 @@ class InstallCommand extends Command
         // Installation complete
         $output->writeln(' ');
         $output->writeln('<info>Installation Complete!</info>');
-        $output->writeln('Visit <info>' . $config['url'] . '</info> and login with <info>' . $username . ':' . $password . '</info>');
+        $output->writeln('Visit <info>' . $config['url'] . '</info> and login as <info>' . $username . '</info>');
         $output->writeln('Remember to start the worker: <info>bin/cli worker:start</info>');
 
     }

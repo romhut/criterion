@@ -26,34 +26,37 @@ $app->before(function() use ($app) {
     $app['user'] = false;
     $authenticated = false;
 
-    $path_info = pathinfo($app['request']->getPathInfo());
-    if (isset($path_info['extension']) && in_array($path_info['extension'], array('png', 'jpg')))
+    if ($app['request']->server->get('PHP_AUTH_USER') || ! isset($app['criterion']->config['visibility']) || $app['criterion']->config['visibility'] !== 'public')
     {
-         $authenticated = true;
-    }
-    else
-    {
-        if ($app['request']->server->get('PHP_AUTH_USER'))
+        $path_info = pathinfo($app['request']->getPathInfo());
+        if (isset($path_info['extension']) && in_array($path_info['extension'], array('png', 'jpg')))
         {
-            $username = strtolower($app['request']->server->get('PHP_AUTH_USER'));
-            $password = $app['request']->server->get('PHP_AUTH_PW');
-
-            $user = new \Criterion\Model\User($username);
-
-            if ($user->exists)
+             $authenticated = true;
+        }
+        else
+        {
+            if ($app['request']->server->get('PHP_AUTH_USER'))
             {
-                if (password_verify($password, $user->password))
+                $username = strtolower($app['request']->server->get('PHP_AUTH_USER'));
+                $password = $app['request']->server->get('PHP_AUTH_PW');
+
+                $user = new \Criterion\Model\User($username);
+
+                if ($user->exists)
                 {
-                    $app['user'] = $user;
-                    $authenticated = true;
+                    if (password_verify($password, $user->password))
+                    {
+                        $app['user'] = $user;
+                        $authenticated = true;
+                    }
                 }
             }
         }
-    }
 
-    if (! $authenticated)
-    {
-        return $app->abort(401, 'You need to be authenticated to access Criterion');
+        if (! $authenticated)
+        {
+            return $app->abort(401, 'You need to be authenticated to access Criterion');
+        }
     }
 });
 
@@ -71,20 +74,28 @@ $app->error(function(\Exception $e, $code) use($app) {
         header('HTTP/1.0 401 Unauthorized');
     }
 
+    $app['user'] = false;
+
     return $app['twig']->render('Error/'.$code.'.twig', array(
         'error' => $e
     ));
 });
 
 $app->get('/', 'Criterion\UI\Controller\ProjectsController::all');
+
+$app->get('/auth/login', 'Criterion\UI\Controller\AuthController::login');
+$app->get('/auth/logout', 'Criterion\UI\Controller\AuthController::logout');
+
 $app->post('/project/create', 'Criterion\UI\Controller\ProjectsController::create');
 $app->match('/project/{id}', 'Criterion\UI\Controller\ProjectsController::view')->method('POST|GET');
 $app->get('/project/run/{id}', 'Criterion\UI\Controller\ProjectsController::run');
 $app->get('/project/delete/{id}', 'Criterion\UI\Controller\ProjectsController::delete');
 $app->get('/status/{vendor}/{package}.{extension}', 'Criterion\UI\Controller\ProjectsController::status')->assert('extension', '(jpg|png)');
+
 $app->get('/test/{id}', 'Criterion\UI\Controller\TestController::view');
 $app->get('/test/status/{id}', 'Criterion\UI\Controller\TestController::status');
 $app->get('/test/delete/{id}', 'Criterion\UI\Controller\TestController::delete');
+
 $app->post('/hook/github', 'Criterion\UI\Controller\HookController::github');
 
 $app->run();
