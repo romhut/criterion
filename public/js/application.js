@@ -1,62 +1,99 @@
 $(document).ready(function() {
-    $('.timeago').timeago();
-
-    $('#addProject').on('shown', function () {
-        $('#repo_url').focus();
-    });
-
-    $('.delete_project').on('click', function() {
-        criterion.project.delete(this);
-    });
-
-    $('#show_ssh_keys').on('click', function() {
-        $(this).parent().hide();
-        $('#ssh_keys').show();
-    });
-
-    $('#edit_project').on('click', function() {
-        $('#edit_project_form').toggle();
-    });
+    criterion.init();
 });
 
-function nl2br (str, is_xhtml) {
-    var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
-    return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ breakTag +'$2');
-}
+var criterion = new function()
+{
+    var self = this;
+    var poller = false;
+    var pollerInterval = 5000;
 
-var criterion = {
-    project : {
-        delete : function(el) {
+    // Text variables
+    var text = {
+        project_delete: 'Are you sure you wish to delete this project?'
+    }
+
+    // Routing variables
+    var routes = {
+        project_delete: '/project/delete/',
+        test_status: '/test/status/'
+    }
+
+    // Element variables
+
+    // Get on it
+    this.init = function()
+    {
+        $('.timeago').timeago();
+
+        $('#addProject').on('shown', function () 
+        {
+            $('#repo_url').focus();
+        });
+
+        $('.delete_project').on('click', function() 
+        {
+            self.project.delete(this);
+        });
+
+        $('#show_ssh_keys').on('click', function() 
+        {
+            $(this).parent().hide();
+            $('#ssh_keys').show();
+        });
+
+        $('#edit_project').on('click', function() 
+        {
+            $('#edit_project_form').toggle();
+        });
+    }
+
+    // Project functions
+    this.project = {
+        delete : function(el) 
+        {
             var el = $(el);
             el.attr('disabled', true);
+
             var id = el.data('id');
-            var sure = confirm('Are you sure you wish to delete this project?');
+            var sure = confirm(text.project_delete);
+
             if (sure) {
-                window.location.href = '/project/delete/' + id;
+                window.location.href = routes.project_delete + id;
             } else {
                 el.removeAttr('disabled');
                 return false;
             }
         }
-    },
-    test : {
-        getStatus : function(id) {
-            $.get('/test/status/' + id, function(data) {
+    }
 
-                // Set status_classes
+    // Test functions
+    this.test = {
+        initPoller: function(id)
+        {
+            poller = setInterval(function()
+            {
+                self.test.getStatus(id)
+            }, pollerInterval);
+        },
+
+        getStatus: function(id)
+        {
+            self.request(routes.test_status + id, 'get', '', function(data) 
+            {
+                var status_class = 'info';
+                
                 if (data.status.code == '1') {
-                    var status_class = 'success';
+                    status_class = 'success';
                 } else if (data.status.code == '3') {
-                    var status_class = 'warning';
+                    status_class = 'warning';
                 } else if (data.status.code == '0') {
-                    var status_class = 'important';
-                } else {
-                    var status_class = 'info';
+                    status_class = 'important';
                 }
 
                 // Stop test, and show "re-test" button
                 if (data.status.code == '1' || data.status.code == '0') {
-                    clearInterval(build);
+                    clearInterval(self.poller);
                     if (typeof data.commit != 'undefined') {
                         var branchQuery = 'branch=' + data.commit.branch.name + '&';
                     } else {
@@ -79,7 +116,6 @@ var criterion = {
                         $('#commit-hash').text(data.commit.hash.short);
                     }
 
-
                     $('#commit-author').text(data.commit.author.name);
 
                     if (data.commit.branch.url) {
@@ -95,8 +131,8 @@ var criterion = {
 
                 if (data.log.length > 0) {
                     $('#logs').html('');
-                    $.each(data.log, function(key, val) {
-
+                    $.each(data.log, function(key, val) 
+                    {
                         if (val.status == '1') {
                             if (val.response == '0') {
                                 var alert = 'success';
@@ -132,9 +168,29 @@ var criterion = {
                         $(this).next().toggle();
                     });
                 }
-
             });
         }
     }
-}
 
+    // Request function
+    this.request = function(url, method, data, func)
+    {
+        $.ajax({
+            url: url,
+            data: data,
+            method: method
+        }).done(function(data) 
+        {
+            func(data);
+        }).fail(function(jqXHR, textStatus, textError) 
+        { 
+             throw new Error(textStatus + " " + textError);
+        })
+    }
+
+    this.nl2br = function(str, is_xhtml) 
+    {
+        var breakTag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';
+        return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ breakTag +'$2');
+    }
+}
