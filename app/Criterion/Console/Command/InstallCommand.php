@@ -118,7 +118,7 @@ class InstallCommand extends Command
             foreach ($samples as $sample)
             {
                 $project = new \Criterion\Model\Project(array(
-                    'repo' => $sample
+                    'repo' => 'https://github.com/' . $sample
                 ));
                 $project->save();
 
