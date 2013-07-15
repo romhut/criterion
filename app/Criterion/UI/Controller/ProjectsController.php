@@ -85,7 +85,11 @@ class ProjectsController
             readfile($file);
         };
 
-        return $app->stream($stream, 200, array('Content-Type' => 'image/jpg'));
+        return $app->stream($stream, 200, array(
+            'Content-Type' => 'image/jpg',
+            'Cache-Control' => 'no-cache, must-revalidate',
+            'Expires' => 'Sat, 26 Jul 1997 05:00:00 GMT'
+        ));
     }
 
     public function delete(\Silex\Application $app)
