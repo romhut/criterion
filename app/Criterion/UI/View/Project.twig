@@ -8,19 +8,20 @@
         {% endif %}
         {{ project.short_repo }}
     </h1>
-    <div class="pull-right">
-        <a href="/project/run/{{ project._id }}" class="btn btn-success btn-mini">
-            <i class="icon-play"></i> Run Test
-        </a>
-        {% if app.user.isAdmin %}
-        <a class="btn btn-primary btn-mini" id="edit_project" href="javascript::void(0)">
-            <i class="icon-cog"></i> Edit Project
-        </a>
-        {% endif %}
-    </div>
+    {% if app.user and app.user.isAdmin %}
+        <div class="pull-right">
+            <a href="/project/run/{{ project._id }}" class="btn btn-success btn-mini">
+                <i class="icon-play"></i> Run Test
+            </a>
+
+            <a class="btn btn-primary btn-mini" id="edit_project" href="javascript::void(0)">
+                <i class="icon-cog"></i> Edit Project
+            </a>
+        </div>
+    {% endif %}
     <div style="clear:both"></div>
 
-    {% if app.user.isAdmin %}
+    {% if app.user and app.user.isAdmin %}
         <form method="post" action="" class="well hide" id="edit_project_form">
             <fieldset>
                 <label>Repository</label>
@@ -109,17 +110,18 @@
                                 {{ test.started.sec|date('jS M Y') }}
                             </span>
                         </td>
+
                         <td width="16%" class="actions">
-                            {% if app.user.isAdmin %}
+                            {% if app.user and app.user.isAdmin %}
                                 <a class="btn btn-danger btn-mini hidden-phone" href="/test/delete/{{ test._id }}">
                                     <i class="icon-remove"></i> Delete
                                 </a>
                             {% endif %}
-
                             <a class="btn btn-success btn-mini" href="/test/{{ test._id }}">
                                 <i class="icon-zoom-in"></i> <span class="hidden-phone">View</span>
                             </a>
                         </td>
+
                     </tr>
                 {% endfor %}
             </tbody>

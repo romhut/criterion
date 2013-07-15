@@ -127,6 +127,11 @@ class ProjectsController
 
     public function run(\Silex\Application $app)
     {
+        if ( ! $app['user']->isAdmin())
+        {
+            return $app->abort(403, 'You do not have permission to do this');
+        }
+
         $project = new \Criterion\Model\Project($app['request']->get('id'));
         if ( ! $project->exists)
         {
