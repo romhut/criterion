@@ -55,7 +55,7 @@ var criterion = {
                 }
 
                 // Stop test, and show "re-test" button
-                if (data.status.code == '1' || data.status.code == '0') {
+                if (data.test_again !== false) {
                     clearInterval(build);
                     if (typeof data.commit != 'undefined') {
                         var branchQuery = 'branch=' + data.commit.branch.name + '&';

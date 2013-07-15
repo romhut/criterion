@@ -14,6 +14,12 @@ class TestController
 
         $data = $test->data;
         $data['_id'] = (string) $test->id;
+        $data['test_again'] = false;
+
+        if ($data['status']['code'] === '1' && $app['user'] && $app['user']->isAdmin())
+        {
+            $data['test_again'] = true;
+        }
 
         $logs = $test->getLogs();
         $data['log'] = array();
