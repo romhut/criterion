@@ -70,10 +70,17 @@ class ProjectsController
 
         $images = array(
             0 => 'fail',
-            1 => 'pass'
+            1 => 'pass',
+            2 => 'pending'
         );
 
-        $file = ROOT . '/public/img/status/' . $images[$project->status['code']] . '.jpg';
+        $status = $project->status['code'];
+        if ( ! isset($images[$status]))
+        {
+            $status = 0;
+        }
+
+        $file = ROOT . '/public/img/status/' . $images[$status] . '.jpg';
         $stream = function () use ($file) {
             readfile($file);
         };
