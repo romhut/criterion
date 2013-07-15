@@ -23,32 +23,55 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 // Autehntication
 $app->before(function() use ($app) {
 
-    $path_info = pathinfo($app['request']->getPathInfo());
+    $app['user'] = false;
     $authenticated = false;
+
+    $path_info = pathinfo($app['request']->getPathInfo());
     if (isset($path_info['extension']) && in_array($path_info['extension'], array('png', 'jpg')))
     {
          $authenticated = true;
     }
     else
     {
-        if ($app['request']->server->get('PHP_AUTH_USER')) {
+        if ($app['request']->server->get('PHP_AUTH_USER'))
+        {
             $username = strtolower($app['request']->server->get('PHP_AUTH_USER'));
             $password = $app['request']->server->get('PHP_AUTH_PW');
-            $user = $app['criterion']->db->selectCollection('users')->findOne(array('_id' => $username));
-            if ($user) {
-                if (password_verify($password, $user['password'])) {
+
+            $user = new \Criterion\Model\User($username);
+
+            if ($user->exists)
+            {
+                if (password_verify($password, $user->password))
+                {
+                    $app['user'] = $user;
                     $authenticated = true;
                 }
             }
         }
     }
 
-    if (! $authenticated) {
+    if (! $authenticated)
+    {
+        return $app->abort(401, 'You need to be authenticated to access Criterion');
+    }
+});
+
+$app->error(function(\Exception $e, $code) use($app) {
+
+    $allowed_codes = array(401, 404, 403);
+    if ( ! in_array($code, $allowed_codes))
+    {
+        $code = 404;
+    }
+
+    if ($code === 401)
+    {
         header('WWW-Authenticate: Basic realm="Criterion"');
         header('HTTP/1.0 401 Unauthorized');
-        echo $app['twig']->render('Error/401.twig');
-        exit;
     }
+
+    return $app['twig']->render('Error/'.$code.'.twig');
 });
 
 $app->get('/', 'Criterion\UI\Controller\ProjectsController::all');
