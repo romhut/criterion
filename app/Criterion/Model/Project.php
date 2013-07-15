@@ -13,9 +13,9 @@ class Project extends \Criterion\Model
         {
             $this->repo = $query['repo'];
             $this->github = array(
-                'token' => null
+                'token' => ''
             );
-            $this->email = null;
+            $this->email = '';
             $this->short_repo = \Criterion\Helper\Repo::short($this->repo);
             $this->provider = \Criterion\Helper\Repo::provider($this->repo);
             $this->last_run = new \MongoDate();
