@@ -32,7 +32,14 @@ class Model
             {
                 if ( ! is_object($query))
                 {
-                    $query = new \MongoId($query);
+                    try
+                    {
+                        $query = new \MongoId($query);
+                    }
+                    catch (\MongoException $e)
+                    {
+                        // leave as _id
+                    }
                 }
 
                 $query = array(
