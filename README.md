@@ -53,6 +53,10 @@ http://hook:password@criterion.example.com/hook/github
 ```
 You can even add this hook to your Github repositories, and Criterion will automatically create a project if you have not already done so.
 
+### Limitations (Some of these may come in the future)
+ - Multiple PHP Versions
+ - Virtualization (A VM per Test)
+
 ### Authors
 - [Scott Robertson](http://github.com/scottymeuk)
 - [Marc Qualie](http://github.com/marcqualie)
