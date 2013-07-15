@@ -82,6 +82,11 @@ class Model
         $this->data[$key] = $value;
     }
 
+    public function __toString()
+    {
+        return (string) $this->id;
+    }
+
     public function delete()
     {
         if ($this->exists)
