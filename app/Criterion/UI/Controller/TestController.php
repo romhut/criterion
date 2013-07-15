@@ -36,13 +36,14 @@ class TestController
             return $app->abort(404, 'Test not found.');
         }
 
-        $data['logs'] = $data['test']->getLogs();
-        $data['project'] = $data['test']->getProject();
-
         if ( ! $data['project']->exists)
         {
             return $app->abort(404, 'Project not found.');
         }
+
+        $data['logs'] = $data['test']->getLogs();
+        $data['project'] = $data['test']->getProject();
+
 
         $data['title'] = $data['test']->id . ' | ' . $data['project']->short_repo;
 
@@ -51,6 +52,11 @@ class TestController
 
     public function delete(\Silex\Application $app)
     {
+        if ( ! $app['user']->isAdmin())
+        {
+            return $app->abort(403, 'You do not have permission to do this');
+        }
+
         $test = new \Criterion\Model\Test($app['request']->get('id'));
         if ( ! $test->exists)
         {

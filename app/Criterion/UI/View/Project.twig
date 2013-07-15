@@ -12,34 +12,38 @@
         <a href="/project/run/{{ project._id }}" class="btn btn-success btn-mini">
             <i class="icon-play"></i> Run Test
         </a>
+        {% if app.user.isAdmin %}
         <a class="btn btn-primary btn-mini" id="edit_project" href="javascript::void(0)">
             <i class="icon-cog"></i> Edit Project
         </a>
+        {% endif %}
     </div>
     <div style="clear:both"></div>
 
-    <form method="post" action="" class="well hide" id="edit_project_form">
-        <fieldset>
-            <label>Repository</label>
-            <input name="repo" class="span11" type="text" value="{{ project.repo }}">
+    {% if app.user.isAdmin %}
+        <form method="post" action="" class="well hide" id="edit_project_form">
+            <fieldset>
+                <label>Repository</label>
+                <input name="repo" class="span11" type="text" value="{{ project.repo }}">
 
-            <label for="email">Notifications Email</label>
-            <input id="email" name="email" class="span12" type="email" value="{{ project.email }}">
+                <label for="email">Notifications Email</label>
+                <input id="email" name="email" class="span12" type="email" value="{{ project.email }}">
 
-            <label>Github Token</label>
-            <input name="github_token" class="span11" type="text" value="{{ project.github.token }}">
-            <p>
-                <a id="show_ssh_keys" href="javascript:void(0)">View SSH Keys</a>
-            </p>
-            <div class="hide" id="ssh_keys">
-                <label>Public SSH Key</label>
-                <textarea class="span11" rows="5" name="ssh_key.public">{{ project.ssh_key.public }}</textarea>
-                <label>Private SSH Key</label>
-                <textarea class="span11" rows="5" name="ssh_key.private">{{ project.ssh_key.private }}</textarea>
-            </div>
-        </fieldset>
-        <button type="submit" class="btn btn-small btn-info">Save</button>
-    </form>
+                <label>Github Token</label>
+                <input name="github_token" class="span11" type="text" value="{{ project.github.token }}">
+                <p>
+                    <a id="show_ssh_keys" href="javascript:void(0)">View SSH Keys</a>
+                </p>
+                <div class="hide" id="ssh_keys">
+                    <label>Public SSH Key</label>
+                    <textarea class="span11" rows="5" name="ssh_key.public">{{ project.ssh_key.public }}</textarea>
+                    <label>Private SSH Key</label>
+                    <textarea class="span11" rows="5" name="ssh_key.private">{{ project.ssh_key.private }}</textarea>
+                </div>
+            </fieldset>
+            <button type="submit" class="btn btn-small btn-info">Save</button>
+        </form>
+    {% endif %}
 
     {% if project.status.code == '0' and tests|length != 0 %}
         <p class="alert alert-danger">
@@ -106,9 +110,11 @@
                             </span>
                         </td>
                         <td width="16%" class="actions">
-                            <a class="btn btn-danger btn-mini hidden-phone" href="/test/delete/{{ test._id }}">
-                                <i class="icon-remove"></i> Delete
-                            </a>
+                            {% if app.user.isAdmin %}
+                                <a class="btn btn-danger btn-mini hidden-phone" href="/test/delete/{{ test._id }}">
+                                    <i class="icon-remove"></i> Delete
+                                </a>
+                            {% endif %}
 
                             <a class="btn btn-success btn-mini" href="/test/{{ test._id }}">
                                 <i class="icon-zoom-in"></i> <span class="hidden-phone">View</span>

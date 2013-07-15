@@ -45,9 +45,11 @@
                             <a class="btn btn-success btn-mini" href="/project/run/{{ project._id }}">
                                 <i class="icon-play"></i> <span class="hidden-phone">Test</span>
                             </a>
-                            <a class="btn btn-danger btn-mini hidden-phone delete_project" data-id="{{ project._id }}" >
-                                <i class="icon-remove"></i> Delete
-                            </a>
+                            {% if app.user.isAdmin %}
+                                <a class="btn btn-danger btn-mini hidden-phone delete_project" data-id="{{ project._id }}" >
+                                    <i class="icon-remove"></i> Delete
+                                </a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}

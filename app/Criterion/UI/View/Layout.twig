@@ -17,11 +17,13 @@
     <div class="navbar navbar-fixed-top navbar-inverse">
         <div class="navbar-inner">
             <div class="container">
-                <div class="pull-right">
-                    <a href="#addProject" role="button" data-toggle="modal" class="btn btn-info btn-small">
-                        Create Project
-                    </a>
-                </div>
+                {% if app.user.isAdmin %}
+                    <div class="pull-right">
+                        <a href="#addProject" role="button" data-toggle="modal" class="btn btn-info btn-small">
+                            Create Project
+                        </a>
+                    </div>
+                {% endif %}
                 <a class="brand" href="/">
                     <i class="icon-stethoscope"></i>
                     Criterion
@@ -39,7 +41,8 @@
             <p>Fork Me</p>
         </a>
     </footer>
-
-    {% include 'Blocks/AddProject.twig' %}
+    {% if app.user.isAdmin %}
+        {% include 'Blocks/AddProject.twig' %}
+    {% endif %}
 </body>
 </html>

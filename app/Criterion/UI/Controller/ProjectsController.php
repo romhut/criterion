@@ -34,6 +34,11 @@ class ProjectsController
 
     public function create(\Silex\Application $app)
     {
+        if ( ! $app['user']->isAdmin())
+        {
+            return $app->abort(403, 'You do not have permission to do this');
+        }
+
         $project = new \Criterion\Model\Project(array(
             'repo' => $app['request']->get('repo')
         ));
@@ -94,6 +99,11 @@ class ProjectsController
 
     public function delete(\Silex\Application $app)
     {
+        if ( ! $app['user']->isAdmin())
+        {
+            return $app->abort(403, 'You do not have permission to do this');
+        }
+
         $project = new \Criterion\Model\Project($app['request']->get('id'));
 
         if ( ! $project->exists)
@@ -159,6 +169,11 @@ class ProjectsController
 
         if ($app['request']->getMethod() == 'POST')
         {
+            if ( ! $app['user']->isAdmin())
+            {
+                return $app->abort(403, 'You do not have permission to do this');
+            }
+
             $project->repo = $app['request']->get('repo');
             $project->short_repo = \Criterion\Helper\Repo::short($project->repo);
             $project->provider = \Criterion\Helper\Repo::provider($project->repo);
