@@ -5,15 +5,35 @@ class AuthController
 {
     public function login(\Silex\Application $app)
     {
-        if ($app['user'])
+        $data = array();
+        if ($app['request']->getMethod() === 'POST')
         {
-            return $app->redirect('/');
+            $username = strtolower($app['request']->get('username'));
+            $password = $app['request']->get('password');
+
+            $user = new \Criterion\Model\User(array(
+                'username' => $username
+            ));
+
+            if ($user->exists && $user->password($password))
+            {
+                $app['session']->set('user', array(
+                    'username' => $username
+                ));
+                return $app->redirect('/');
+            }
+            else
+            {
+                $data['error'] = 'Account could not be found, please try again.';
+            }
         }
-        return $app->abort(401, 'Please login');
+
+        return $app['twig']->render('Auth/Login.twig', $data);
     }
 
     public function logout(\Silex\Application $app)
     {
-        return $app->abort(401, 'You have been logged out.');
+        $app['session']->clear();
+        return $app->redirect('/');
     }
 }
