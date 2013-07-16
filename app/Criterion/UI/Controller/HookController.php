@@ -5,6 +5,16 @@ class HookController
 {
     public function github(\Silex\Application $app)
     {
+        $query_token = $app['request']->query->get('token');
+
+        $token = new \Criterion\Model\Token($query_token);
+
+        if ( ! $token->exists)
+        {
+            return $app->abort(404, 'Page does not exist');
+        }
+
+
         $payload = json_decode($app['request']->get('payload'), true);
         if ( ! isset($payload['repository']['url']))
         {
