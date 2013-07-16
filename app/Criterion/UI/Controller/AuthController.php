@@ -31,6 +31,30 @@ class AuthController
         return $app['twig']->render('Auth/Login.twig', $data);
     }
 
+    public function tokens(\Silex\Application $app)
+    {
+        if ( ! $app['user']->isAdmin())
+        {
+            return $app->abort(403, 'You do not have permission to do this');
+        }
+
+        $data = array();
+        if ($app['request']->getMethod() === 'POST')
+        {
+            $token = new \Criterion\Model\Token();
+            $token->user_id = $app['user']->id;
+            $token->generated = new \MongoDate();
+            $token->save();
+        }
+
+        $data['tokens'] = $app['criterion']->db->tokens->find(array(
+            'user_id' => $app['user']->id
+        ))->asArray();
+
+        return $app['twig']->render('Auth/Tokens.twig', $data);
+
+    }
+
     public function logout(\Silex\Application $app)
     {
         $app['session']->clear();
