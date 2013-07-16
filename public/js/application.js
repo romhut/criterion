@@ -145,7 +145,7 @@ var criterion = new function()
 
                         if (val.output) {
                             var output = '<div class="output">' +
-                                criterion.nl2br(val.output) +
+                                self.nl2br(val.output) +
                             '</div>';
 
                             var output_href = 'href="javascript:void(0)"';
