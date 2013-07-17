@@ -5,7 +5,7 @@
     <div>
 
         <form method="post">
-            <button name="generate" class="btn btn-info">Generate</button>
+            <button name="generate" class="btn btn-primary">Generate</button>
         </form>
 
         {% if error is defined %}
@@ -16,8 +16,9 @@
             <div class="alert alert-block alert-success">{{ success }}</div>
         {% endif %}
 
-        {% if tokens|length > 0 %}
+        <div class="alert alert-block alert-info">Currently, these tokens are used for Github Hooks, but they will eventually have access your full account, so be careful what you do with them.</div>
 
+        {% if tokens|length > 0 %}
             <table class="table table-stripped">
                 <thead>
                     <tr>
