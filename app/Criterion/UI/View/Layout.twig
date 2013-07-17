@@ -18,17 +18,17 @@
         <div class="navbar-inner">
             <div class="container">
                 <div class="pull-right">
-
                     {% if app.user %}
-
                         <ul class="nav pull-right">
                             <li class="dropdown"><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ app.user.username }} <b class="caret"></b></a>
                                 <ul class="dropdown-menu">
-                                    <li>
-                                        <a href="#addProject" role="button" data-toggle="modal" class=" visible-phone">
-                                            <i class="icon-plus"></i> Create Project
-                                        </a>
-                                    </li>
+                                    {% if app.user.isAdmin %}
+                                        <li>
+                                            <a href="#addProject" role="button" data-toggle="modal" class=" visible-phone">
+                                                <i class="icon-plus"></i> Create Project
+                                            </a>
+                                        </li>
+                                    {% endif %}
                                     <li>
                                         <a href="/auth/tokens"><i class="icon-lock"></i> Auth Tokens</a>
                                     </li>
@@ -37,16 +37,16 @@
                                 </ul>
                             </li>
                         </ul>
+
+                        {% if app.user.isAdmin %}
+                            <ul class="nav pull-right">
+                                <a href="#addProject" role="button" data-toggle="modal" class="btn btn-info btn-small hidden-phone">
+                                    Create Project
+                                </a>
+                            </ul>
+                        {% endif %}
                     {% else %}
                         <a class="btn btn-small btn-primary" href="/auth/login">Login</a>
-                    {% endif %}
-
-                    {% if app.user and app.user.isAdmin %}
-                    <ul class="nav pull-right">
-                        <a href="#addProject" role="button" data-toggle="modal" class="btn btn-info btn-small hidden-phone">
-                            Create Project
-                        </a>
-                    </ul>
                     {% endif %}
                 </div>
 
