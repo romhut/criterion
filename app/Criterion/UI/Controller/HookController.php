@@ -11,16 +11,14 @@ class HookController
 
         if ( ! $token->exists)
         {
-            return $app->abort(404, 'Page does not exist');
+            return $app->abort(403, 'Token is invalid');
         }
 
 
         $payload = json_decode($app['request']->get('payload'), true);
         if ( ! isset($payload['repository']['url']))
         {
-            return $app->json(array(
-                'success' => false
-            ));
+            return $app->abort(404, 'Page does not exist');
         }
 
         $repo = $payload['repository']['url'];
