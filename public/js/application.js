@@ -93,7 +93,7 @@ var criterion = new function()
 
                 // Stop test, and show "re-test" button
                 if (data.test_again !== false) {
-                    clearInterval(self.poller);
+                    clearInterval(poller);
                     if (typeof data.commit != 'undefined') {
                         var branchQuery = 'branch=' + data.commit.branch.name + '&';
                     } else {
