@@ -96,6 +96,6 @@ $app->get('/test/{id}', 'Criterion\UI\Controller\TestController::view');
 $app->get('/test/status/{id}', 'Criterion\UI\Controller\TestController::status');
 $app->get('/test/delete/{id}', 'Criterion\UI\Controller\TestController::delete');
 
-$app->post('/hook/github', 'Criterion\UI\Controller\HookController::github');
+$app->post('/hook/github/{token}', 'Criterion\UI\Controller\HookController::github');
 
 $app->run();

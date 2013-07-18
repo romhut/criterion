@@ -5,7 +5,7 @@ class HookController
 {
     public function github(\Silex\Application $app)
     {
-        $query_token = $app['request']->query->get('token');
+        $query_token = $app['request']->get('token');
 
         $token = new \Criterion\Model\Token($query_token);
 
