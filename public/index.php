@@ -20,42 +20,44 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => dirname(__DIR__) . '/app/Criterion/UI/View',
 ));
 
+$app->register(new Silex\Provider\SessionServiceProvider());
+
+
 // Autehntication
 $app->before(function() use ($app) {
 
-    $app['user'] = false;
     $authenticated = false;
+    $app['user'] = false;
 
-    if ($app['request']->server->get('PHP_AUTH_USER') || ! isset($app['criterion']->config['visibility']) || $app['criterion']->config['visibility'] !== 'public')
+    if ($app['session']->get('user') || ! isset($app['criterion']->config['visibility']) || $app['criterion']->config['visibility'] !== 'public')
     {
         $path_info = pathinfo($app['request']->getPathInfo());
-        if (isset($path_info['extension']) && in_array($path_info['extension'], array('png', 'jpg')))
+        $uri = $app['request']->server->get('REQUEST_URI');
+
+        if (strpos($uri, '/hook/github') === 0 || (isset($path_info['extension']) && in_array($path_info['extension'], array('png', 'jpg'))))
         {
              $authenticated = true;
         }
         else
         {
-            if ($app['request']->server->get('PHP_AUTH_USER'))
+            if ($app['session']->get('user'))
             {
-                $username = strtolower($app['request']->server->get('PHP_AUTH_USER'));
-                $password = $app['request']->server->get('PHP_AUTH_PW');
-
-                $user = new \Criterion\Model\User($username);
+                $session = $app['session']->get('user');
+                $user = new \Criterion\Model\User(array(
+                    'username' => $session['username']
+                ));
 
                 if ($user->exists)
                 {
-                    if (password_verify($password, $user->password))
-                    {
-                        $app['user'] = $user;
-                        $authenticated = true;
-                    }
+                    $app['user'] = $user;
+                    $authenticated = true;
                 }
             }
         }
 
         if (! $authenticated)
         {
-            return $app->abort(401, 'You need to be authenticated to access Criterion');
+            return $app->abort(403, 'You need to be authenticated to access Criterion');
         }
     }
 });
@@ -68,13 +70,8 @@ $app->error(function(\Exception $e, $code) use($app) {
         $code = 404;
     }
 
-    if ($code === 401)
-    {
-        header('WWW-Authenticate: Basic realm="Criterion"');
-        header('HTTP/1.0 401 Unauthorized');
-    }
-
     $app['user'] = false;
+    $app['token'] = false;
 
     return $app['twig']->render('Error/'.$code.'.twig', array(
         'error' => $e
@@ -83,7 +80,8 @@ $app->error(function(\Exception $e, $code) use($app) {
 
 $app->get('/', 'Criterion\UI\Controller\ProjectsController::all');
 
-$app->get('/auth/login', 'Criterion\UI\Controller\AuthController::login');
+$app->match('/auth/login', 'Criterion\UI\Controller\AuthController::login')->method('POST|GET');
+$app->match('/auth/tokens', 'Criterion\UI\Controller\AuthController::tokens')->method('POST|GET');
 $app->get('/auth/logout', 'Criterion\UI\Controller\AuthController::logout');
 
 $app->post('/project/create', 'Criterion\UI\Controller\ProjectsController::create');
@@ -96,6 +94,6 @@ $app->get('/test/{id}', 'Criterion\UI\Controller\TestController::view');
 $app->get('/test/status/{id}', 'Criterion\UI\Controller\TestController::status');
 $app->get('/test/delete/{id}', 'Criterion\UI\Controller\TestController::delete');
 
-$app->post('/hook/github', 'Criterion\UI\Controller\HookController::github');
+$app->post('/hook/github/{token}', 'Criterion\UI\Controller\HookController::github');
 
 $app->run();

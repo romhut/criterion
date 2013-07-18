@@ -26,27 +26,31 @@ class UserPasswordCommand extends Command
 
         $username = trim(strtolower($input->getArgument('username')));
 
-        // Prompt for password
-        $dialog = $this->getHelperSet()->get('dialog');
-        $password = $dialog->askHiddenResponse(
-            $output,
-            'Enter new password: '
-        );
+         // Check if user exists
+        $user = new \Criterion\Model\User(array(
+            'username' => $username
+        ));
 
-        if (! $password)
-        {
-            $output->writeln('<error>Cannot set a blank password</error>');
-            exit;
-        }
-
-        // Check if user exists
-        $user = new \Criterion\Model\User($username);
         if ( ! $user->exists)
         {
             $output->writeln('<error>Could not find user</error>');
             return false;
         }
-        $user->password = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
+
+        // Prompt for password
+        $dialog = $this->getHelperSet()->get('dialog');
+        $user->password = $dialog->askHiddenResponse(
+            $output,
+            'Enter new password: '
+        );
+
+        if (! $user->password)
+        {
+            $output->writeln('<error>Cannot set a blank password</error>');
+            exit;
+        }
+
+        $user->password = $user->password();
         $user->save();
 
         $output->writeln('<info>Password updated for ' . $username  . '</info>');

@@ -27,7 +27,10 @@ class UserRoleCommand extends Command
         $username = trim(strtolower($input->getArgument('username')));
 
         // Check if user exists
-        $user = new \Criterion\Model\User($username);
+        $user = new \Criterion\Model\User(array(
+            'username' => $username
+        ));
+
         if ( ! $user->exists)
         {
             $output->writeln('<error>Could not find user</error>');
