@@ -34,7 +34,9 @@ $app->before(function() use ($app) {
         $path_info = pathinfo($app['request']->getPathInfo());
         $uri = $app['request']->server->get('REQUEST_URI');
 
-        if (strpos($uri, '/hook/github') === 0 || (isset($path_info['extension']) && in_array($path_info['extension'], array('png', 'jpg'))))
+        $allowed_urls = array('/auth/login');
+
+        if (strpos($uri, '/hook/github') === 0 || in_array($uri, $allowed_urls) || (isset($path_info['extension']) && in_array($path_info['extension'], array('png', 'jpg'))))
         {
              $authenticated = true;
         }
