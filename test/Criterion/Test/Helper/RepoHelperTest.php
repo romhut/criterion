@@ -1,8 +1,8 @@
 <?php
 
-namespace Criterion\Test;
+namespace Criterion\Test\Helper;
 
-class RepoHelperTest extends TestCase
+class RepoHelperTest extends \Criterion\Test\TestCase
 {
     public function testShortRepoUrl()
     {

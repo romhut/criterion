@@ -1,8 +1,8 @@
 <?php
 
-namespace Criterion\Test;
+namespace Criterion\Test\Helper;
 
-class CommitHelperTest extends TestCase
+class CommitHelperTest extends \Criterion\Test\TestCase
 {
     public function testCommitUrl()
     {

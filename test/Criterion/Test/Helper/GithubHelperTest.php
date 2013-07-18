@@ -1,8 +1,8 @@
 <?php
 
-namespace Criterion\Test;
+namespace Criterion\Test\Helper;
 
-class GithubHelperTest extends TestCase
+class GithubHelperTest extends \Criterion\Test\TestCase
 {
 
     public function testSSHUrl()

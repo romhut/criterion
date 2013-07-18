@@ -1,8 +1,8 @@
 <?php
 
-namespace Criterion\Test;
+namespace Criterion\Test\Helper;
 
-class BitbucketHelperTest extends TestCase
+class BitbucketHelperTest extends \Criterion\Test\TestCase
 {
 
     public function testSSHUrl()
