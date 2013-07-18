@@ -18,8 +18,9 @@ class Application
             $this->config = json_decode(file_get_contents($this->config_file), true);
         }
 
+        $db = getenv('APP_ENV') ? 'criterion_testing' : 'criterion';
         $this->mongo = new \MongoMinify\Client();
-        $this->db = $this->mongo->criterion;
+        $this->db = $this->mongo->{$db};
         return $this;
     }
 }
