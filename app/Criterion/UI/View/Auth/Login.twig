@@ -1,0 +1,18 @@
+{% extends 'Layout.twig' %}
+
+{% block content %}
+
+    <div>
+
+        {% if error is defined %}
+            <div class="alert alert-block alert-danger">{{ error }}</div>
+        {% endif %}
+
+        <form method="post">
+            <input type="text" class="span12" placeholder="Username" required name="username">
+            <input type="password" class="span12" placeholder="Password" required name="password">
+            <button class="btn btn-success">Login</button>
+        </form>
+    </div>
+
+{% endblock %}

@@ -41,6 +41,8 @@ class Project extends \Criterion\Model
     {
         $tests = $this->app->db->tests->find(array(
             'project_id' => $this->id
+        ))->sort(array(
+            'started' => -1
         ));
 
         $test_models = array();

@@ -33,13 +33,18 @@ class UserDeleteCommand extends Command
             '<question>Are you sure? (y/N)</question>',
             false
         );
-        if (! $confirm) {
+
+        if (! $confirm)
+        {
             $output->writeln('<error>User not deleted</error>');
             exit;
         }
 
         // Check if user exists
-        $user = new \Criterion\Model\User($username);
+        $user = new \Criterion\Model\User(array(
+            'username' => $username
+        ));
+
         if ( ! $user->exists)
         {
             $output->writeln('<error>Could not find user</error>');

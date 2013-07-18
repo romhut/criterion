@@ -1,0 +1,50 @@
+{% extends 'Layout.twig' %}
+
+{% block content %}
+
+    <div>
+
+        <form method="post">
+            <button name="generate" class="btn btn-primary">Generate</button>
+        </form>
+
+        {% if error is defined %}
+            <div class="alert alert-block alert-danger">{{ error }}</div>
+        {% endif %}
+
+        {% if success is defined %}
+            <div class="alert alert-block alert-success">{{ success }}</div>
+        {% endif %}
+
+        <div class="alert alert-block alert-info">Currently, these tokens are used for Github Hooks, but they will eventually have access your full account, so be careful what you do with them.</div>
+
+        {% if tokens|length > 0 %}
+            <table class="table table-stripped">
+                <thead>
+                    <tr>
+                        <th>Token</th>
+                        <th>Generated</th>
+                    </tr>
+                </thead>
+
+                {% for token in tokens %}
+                    <tr>
+                        <td>{{ token._id }}</td>
+                        <td>
+                            <span class="timeago" title="{{ token.generated.sec|date('c') }}">
+                                {{ token.generated.sec|date('jS M Y') }}
+                            </span>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+        {% else %}
+            <hr />
+            <div class="alert alert-block alert-danger">No tokens found.</div>
+        {% endif %}
+
+
+    </div>
+
+{% endblock %}

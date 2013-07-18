@@ -4,7 +4,7 @@ namespace Criterion;
 class Model
 {
     public $collection = null;
-    public $data = [];
+    public $data = array();
     public $id = null;
     public $exists = false;
     public $db = null;

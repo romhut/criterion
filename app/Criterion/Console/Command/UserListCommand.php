@@ -29,7 +29,7 @@ class UserListCommand extends Command
         $i = 0;
         foreach ($users as $user)
         {
-            echo '[' . (++$i) . '] ' . $user['_id'] . ':' . (isset($user['role']) ? $user['role'] : 'user') . "\n";
+            echo '[' . (++$i) . '] ' . $user['username'] . ':' . (isset($user['role']) ? $user['role'] : 'user') . "\n";
         }
     }
 }
