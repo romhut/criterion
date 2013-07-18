@@ -2,10 +2,10 @@
 
 namespace Criterion\Test;
 
-class TestCase extends \PHPUnit_Framework_TestCase
+class TestCase extends \Silex\WebTestCase
 {
 
-    public function setUp()
+    public function createApplication()
     {
         putenv('APP_ENV=testing');
 
