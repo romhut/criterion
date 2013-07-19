@@ -2,6 +2,6 @@ setup:
     - composer install
     - mkdir -p data/keys
     - mkdir -p data/tests
-    - chmod -R -0777 data/
+    - chmod -R 0777 data/
 script:
     - vendor/bin/phpunit
