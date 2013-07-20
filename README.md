@@ -57,6 +57,7 @@ You can even add this hook to your Github repositories, and Criterion will autom
  - Multiple PHP Versions
  - Virtualization (A VM per Test)
 
-### Authors
+### Contributors
 - [Scott Robertson](http://github.com/scottymeuk)
 - [Marc Qualie](http://github.com/marcqualie)
+- [Chris Roach](https://github.com/outrunthewolf)
