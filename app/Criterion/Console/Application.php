@@ -42,6 +42,8 @@ class Application extends SymfonyApplication
     {
         $prelog = $this->preLog($command_string, $internal);
 
+        $command_string = str_replace('{path}', $this->test->path, $command_string);
+
         $command = new \Criterion\Helper\Command();
         $command->execute($command_string);
         $log = $this->log($command->command, $command->output, $command->response, $prelog, $internal);
