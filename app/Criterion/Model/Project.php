@@ -7,11 +7,12 @@ class Project extends \Criterion\Model
 
     public function __construct($query = null, $existing = null)
     {
+        $raw_query = $query;
         parent::__construct($query, $existing);
 
-        if ( ! $this->exists && isset($query['repo']))
+        if ( ! $this->exists && isset($raw_query['repo']))
         {
-            $this->repo = $query['repo'];
+            $this->repo = $raw_query['repo'];
             $this->github = array(
                 'token' => ''
             );
