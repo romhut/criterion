@@ -14,6 +14,11 @@ class HookController
             return $app->abort(403, 'Token is invalid');
         }
 
+        $user = new \Criterion\Model\User($token->user_id);
+        if ( ! $user->isAdmin())
+        {
+            return $app->abort(403, 'User does not have permission to do this.');
+        }
 
         $payload = json_decode($app['request']->get('payload'), true);
         if ( ! isset($payload['repository']['url']))
