@@ -82,6 +82,7 @@ class ModelTest extends TestCase
         $model->testing = 'test';
         $this->assertTrue($model->save());
         $this->assertTrue($model->delete());
+        $this->assertFalse($model->exists);
     }
 
     public function testDeleteFail()

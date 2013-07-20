@@ -69,11 +69,15 @@ var criterion = new function()
 
     // Test functions
     this.test = {
-        initPoller: function(id)
+        initPoller: function(id, interval)
         {
+            if (interval) {
+                pollerInterval = interval;
+            }
+
             poller = setInterval(function()
             {
-                self.test.getStatus(id)
+                self.test.getStatus(id);
             }, pollerInterval);
         },
 
@@ -185,7 +189,7 @@ var criterion = new function()
         }).fail(function(jqXHR, textStatus, textError)
         {
              throw new Error(textStatus + " " + textError);
-        })
+        });
     }
 
     this.nl2br = function(str, is_xhtml)
