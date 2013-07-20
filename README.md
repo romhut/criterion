@@ -22,9 +22,10 @@ Please note: This only works for phpunit testing environments right now, but we 
 - Git >= 1.7.0
 
 ### Installation
+To install criterion you must use [Composer](http://getcomposer.org/)
 
 ```shell
-bin/cli install
+composer install && bin/cli install
 ```
 
 ### Running Workers
