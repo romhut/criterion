@@ -39,9 +39,6 @@ class TestCommand extends Command
             return false;
         }
 
-        // Pass the test into the application for future use
-        $this->getApplication()->test = $test;
-
         // Check to see if the current status is not already "running".
         // The reason for this is that the worker sets it to 3 atomically,
         // however, these tests can be run manually via the console.
@@ -72,6 +69,11 @@ class TestCommand extends Command
         {
             $test->branch = 'master';
         }
+
+        $test->path = $test_folder;
+
+        // Pass the test into the application for future use
+        $this->getApplication()->test = $test;
 
         // Pass the project and output variables into the application.
         // This allows for a consistant output, and makes it easier to
