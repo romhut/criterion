@@ -15,18 +15,21 @@ class Notifications extends \Criterion\Helper
             $body .= $config['url'] . '/test/' . $test . "\n\n";
             $body .= 'Thanks';
 
-            return self::email($project->email, $config['email'], $subject, $body);
+            return self::email($project->email, $subject, $body);
         }
         return false;
     }
 
-    private static function email($to, $from, $subject, $body)
+    private static function email($to, $subject, $body)
     {
-        if (isset($from['smtp']))
+        $app = new \Criterion\Application();
+        $config = $app->config;
+
+        if (isset($config['email']['smtp']))
         {
-            $transport = \Swift_SmtpTransport::newInstance($from['smtp']['server'], $from['smtp']['port'])
-                ->setUsername($from['smtp']['username'])
-                ->setPassword($from['smtp']['password'])
+            $transport = \Swift_SmtpTransport::newInstance($config['email']['smtp']['server'], $config['email']['smtp']['port'])
+                ->setUsername($config['email']['smtp']['username'])
+                ->setPassword($config['email']['smtp']['password'])
                 ;
         }
         else
@@ -37,7 +40,7 @@ class Notifications extends \Criterion\Helper
         $mailer = \Swift_Mailer::newInstance($transport);
         $message = \Swift_Message::newInstance()
                     ->setSubject($subject)
-                    ->setFrom(array($from['address'] => $from['name']))
+                    ->setFrom(array($config['email']['address'] => $config['email']['name']))
                     ->setTo($to)
                     ->setBody($body)
                     ;
