@@ -47,7 +47,7 @@ class Notifications extends \Criterion\Helper
 
         try
         {
-            return $mailer->send($message);
+            return (bool) $mailer->send($message);
         }
         catch (\Swift_TransportException $e)
         {
