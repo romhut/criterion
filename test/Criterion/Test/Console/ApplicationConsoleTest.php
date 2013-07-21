@@ -59,4 +59,39 @@ class ApplicationConsoleTest extends \Criterion\Test\TestCase
         $this->assertNotNull($log->id);
     }
 
+    public function testParseConfig()
+    {
+        $config = ROOT . '/.criterion.yml';
+        $app = new \Criterion\Console\Application('Criterion Testing', '0.1');
+
+        $project = new \Criterion\Model\Project();
+        $test = new \Criterion\Model\Test();
+
+        $app->project = $project;
+        $app->test = $test;
+
+        $parse = $app->parseConfig($config);
+
+        $this->assertArrayHasKey('setup', $parse);
+        $this->assertArrayHasKey('script', $parse);
+        $this->assertArrayHasKey('pass', $parse);
+        $this->assertArrayHasKey('fail', $parse);
+    }
+
+    public function testParseConfigFail()
+    {
+        $config = ROOT . '/.criterionfail.yml';
+        $app = new \Criterion\Console\Application('Criterion Testing', '0.1');
+
+        $project = new \Criterion\Model\Project();
+        $test = new \Criterion\Model\Test();
+
+        $app->project = $project;
+        $app->test = $test;
+
+        $parse = $app->parseConfig($config);
+
+        $this->assertFalse($parse);
+    }
+
 }
