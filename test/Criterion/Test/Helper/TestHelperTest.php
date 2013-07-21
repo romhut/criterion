@@ -6,29 +6,37 @@ class TestHelperTest extends \Criterion\Test\TestCase
 {
     public function testDetectType()
     {
-        $dir = dirname(dirname(dirname(dirname(__DIR__))));
-        $type = \Criterion\Helper\Test::detectType($dir);
+        $type = \Criterion\Helper\Test::detectType(ROOT);
         $this->assertEquals('criterion', $type);
+    }
+
+    public function testDetectTypeSilex()
+    {
+        $type = \Criterion\Helper\Test::detectType(ROOT . '/vendor/silex/silex');
+        $this->assertEquals('phpunit', $type);
+    }
+
+    public function testDetectTypeFail()
+    {
+        $type = \Criterion\Helper\Test::detectType(ROOT . '/vendor/silex');
+        $this->assertFalse($type);
     }
 
     public function testIsCriterion()
     {
-        $dir = dirname(dirname(dirname(dirname(__DIR__))));
-        $type = \Criterion\Helper\Test::isCriterion($dir);
+        $type = \Criterion\Helper\Test::isCriterion(ROOT);
         $this->assertTrue($type);
     }
 
     public function testIsComposer()
     {
-        $dir = dirname(dirname(dirname(dirname(__DIR__))));
-        $type = \Criterion\Helper\Test::isComposer($dir);
+        $type = \Criterion\Helper\Test::isComposer(ROOT);
         $this->assertTrue($type);
     }
 
     public function testIsPHPUnit()
     {
-        $dir = dirname(dirname(dirname(dirname(__DIR__))));
-        $type = \Criterion\Helper\Test::isPHPUnit($dir);
+        $type = \Criterion\Helper\Test::isPHPUnit(ROOT);
         $this->assertTrue($type);
     }
 }
