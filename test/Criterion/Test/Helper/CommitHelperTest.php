@@ -63,4 +63,25 @@ class CommitHelperTest extends \Criterion\Test\TestCase
         $commit_url = \Criterion\Helper\Commit::getBranchURL('master', $repo);
         $this->assertEquals(false, $commit_url);
     }
+
+    public function testCommitInfo()
+    {
+        $commit = \Criterion\Helper\Commit::getInfo('git@github.com:romhut/criterion', 'master', ROOT);
+
+        $this->assertArrayHasKey('hash', $commit);
+        $this->assertArrayHasKey('short', $commit['hash']);
+        $this->assertArrayHasKey('long', $commit['hash']);
+
+        $this->assertArrayHasKey('author', $commit);
+        $this->assertArrayHasKey('name', $commit['author']);
+        $this->assertArrayHasKey('email', $commit['author']);
+
+        $this->assertArrayHasKey('message', $commit);
+        $this->assertArrayHasKey('date', $commit);
+        $this->assertArrayHasKey('url', $commit);
+
+        $this->assertArrayHasKey('branch', $commit);
+        $this->assertArrayHasKey('name', $commit['branch']);
+        $this->assertArrayHasKey('url', $commit['branch']);
+    }
 }
