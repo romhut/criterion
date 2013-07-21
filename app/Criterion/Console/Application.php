@@ -179,7 +179,7 @@ class Application extends SymfonyApplication
         $criterion = Yaml::parse($config);
 
         $command = 'Parsing .criterion.yml file';
-        $prelog = $this->prelog($command);
+        $prelog = $this->preLog($command);
 
         if( ! isset($criterion) || ! is_array($criterion))
         {
