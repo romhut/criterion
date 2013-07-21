@@ -11,6 +11,27 @@ class UserModelTest extends \Criterion\Test\TestCase
         $this->assertTrue(is_object($user));
     }
 
+    public function testPasswordFail()
+    {
+        $user = new \Criterion\Model\User();
+        $this->assertTrue(is_object($user));
+
+        $this->assertFalse($user->password('testing'));
+    }
+
+    public function testPassword()
+    {
+        $user = new \Criterion\Model\User();
+        $this->assertTrue(is_object($user));
+
+        $password = 'criterion';
+
+        $user->password = $password;
+        $user->password = $user->password();
+
+        $this->assertTrue($user->password($password));
+    }
+
     public function testIsAdminFalse()
     {
         $user = new \Criterion\Model\User();
