@@ -46,4 +46,31 @@ class GithubHelperTest extends \Criterion\Test\TestCase
         $this->assertEquals($commit_url, 'romhut/criterion');
     }
 
+    /**
+     * All we can really do here is check that there are no syntax errors.
+     * To be able to test this properly we would need a github token, which
+     * would leave an account very insecure.
+     */
+    public function testUpdateStatus()
+    {
+        $project = new \Criterion\Model\Project(array(
+            'repo' => 'git@github.com:romhut/criterion'
+        ));
+
+        $project->github = array(
+            'token' => 'invalidtoken'
+        );
+
+        $test = new \Criterion\Model\Test();
+        $test->commit = array(
+            'hash' => array(
+                'long' => 'notreallyahash'
+            )
+        );
+
+        $update = \Criterion\Helper\Github::updateStatus('success', $test, $project);
+        $this->assertFalse($update); // HACK: this will be true in a real use case. See comment above.
+
+    }
+
 }
