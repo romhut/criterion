@@ -20,7 +20,7 @@ class Notifications extends \Criterion\Helper
         return false;
     }
 
-    private static function email($to, $subject, $body)
+    public static function email($to, $subject, $body)
     {
         $app = new \Criterion\Application();
         $config = $app->config;
