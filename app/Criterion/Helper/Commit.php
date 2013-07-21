@@ -43,8 +43,15 @@ class Commit extends \Criterion\Helper
         return false;
     }
 
-    public static function getInfo($repo, $branch = 'master')
+    public static function getInfo($repo, $branch = 'master', $folder = false)
     {
+
+        if ($folder)
+        {
+            $current_folder = getcwd();
+            chdir($folder);
+        }
+
         $commit = array();
 
         exec("git --no-pager show -s --format='%h'", $short_hash);
@@ -71,6 +78,12 @@ class Commit extends \Criterion\Helper
         $commit['branch']['url'] = self::getBranchUrl($branch, $repo);
 
         $commit['username'] = Repo::username($repo);
+
+        if ($folder)
+        {
+            chdir($current_folder);
+        }
+
         return $commit;
     }
 }
