@@ -50,13 +50,7 @@ class Repo extends \Criterion\Helper
     {
         $username = explode('@', $repo);
         $username = str_replace('https://', null, $username[0]);
-
-        if ( ! $username)
-        {
-            $username = 'git';
-        }
-
-        return $username;
+        return $username ?: false;
     }
 
     public static function short($url)
