@@ -32,6 +32,7 @@ class TestModelTest extends \Criterion\Test\TestCase
 
         $log = new \Criterion\Model\Log();
         $log->test_id = $test->id;
+        $log->internal = false;
         $log->save();
 
         $this->assertTrue(is_array($test->getLogs()));
