@@ -22,7 +22,7 @@ class WorkerRunCommand extends Command
             ->addOption(
                'interval',
                null,
-               InputOption::VALUE_NONE,
+               InputOption::VALUE_OPTIONAL,
                'How often should we poll?'
             )
             ;
@@ -36,7 +36,7 @@ class WorkerRunCommand extends Command
          * for this is that we want to reduce the dependancies as much as
          * possible.
          */
-        $interval = $input->getOption('interval') ?: 10;
+        $interval = (int) $input->getOption('interval') ?: 10;
         $worker = uniqid();
         $output->writeln('<comment>Worker Started: ' . $worker . ' (Interval: ' . $interval . ')</comment>');
         $output->writeln('');
