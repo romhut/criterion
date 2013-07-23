@@ -55,7 +55,12 @@ class InstallCommand extends Command
         $output->writeln('<info>You need to create an admin user to login to the web interface</info>');
         $username = $dialog->ask($output, 'Username [admin]: ', 'admin');
 
-        $user = new \Criterion\Model\User($username);
+        $user = new \Criterion\Model\User(array(
+            'username' => $username
+        ));
+
+        $user->username = $username;
+
         if ($user->exists)
         {
             $password = null;
