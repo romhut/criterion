@@ -44,7 +44,18 @@ var criterion = new function()
 
         $('#edit_project').on('click', function()
         {
-            $('#edit_project_form').toggle();
+            $('#edit_project_row').toggle();
+        });
+
+
+        $('.project_nav li').on('click', function() {
+            $('.project_nav li a').removeClass('active');
+            $(this).find('a').addClass('active');
+
+            var content = $(this).find('a').data('content');
+            $('.project_content').hide();
+            $('#' + content).show();
+
         });
     }
 

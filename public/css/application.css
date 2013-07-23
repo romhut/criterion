@@ -27,6 +27,15 @@
     margin-bottom: 15px !important;
   }
 }
+.content .project_nav li a {
+  border-radius: 0 !important;
+}
+.content .project_nav li a:hover {
+  background: #000;
+}
+.content .project_nav li .active {
+  background: #eee !important;
+}
 .btn-warning {
   color: #000 !important;
 }

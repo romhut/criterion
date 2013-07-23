@@ -22,34 +22,48 @@
     <div style="clear:both"></div>
 
     {% if app.user and app.user.isAdmin %}
-        <form method="post" action="" class="well hide" id="edit_project_form">
-            <fieldset>
-                <label>Repository</label>
-                <input name="repo" class="span11" type="text" value="{{ project.repo }}">
 
-                <label for="email">Notifications Email</label>
-                <input id="email" name="email" class="span12" type="email" value="{{ project.email }}">
+        <div class="row-fluid" id="edit_project_row">
+            <ul class="nav span3 nav-tabs nav-stacked project_nav">
+                <li>
+                    <a class="active" href="#" data-content="project_settings">Settings</a>
+                </li>
+                <li>
+                    <a data-content="project_ssh_keys" href="#">SSH Keys</a>
+                </li>
+            </ul>
+            <div class="span9">
 
-                <label>Github Token</label>
-                <input name="github_token" class="span11" type="text" value="{{ project.github.token }}">
-                <p>
-                    <a id="show_ssh_keys" href="javascript:void(0)">View SSH Keys</a>
-                </p>
-                <div class="hide" id="ssh_keys">
-                    <label>Public SSH Key</label>
-                    <textarea class="span11" rows="5" name="ssh_key.public">{{ project.ssh_key.public }}</textarea>
-                    <label>Private SSH Key</label>
-                    <textarea class="span11" rows="5" name="ssh_key.private">{{ project.ssh_key.private }}</textarea>
-                </div>
-            </fieldset>
-            <button type="submit" class="btn btn-small btn-info">Save</button>
-        </form>
-    {% endif %}
+                <form method="post" action="">
+                    <fieldset>
 
-    {% if project.status.code == '0' and tests|length != 0 %}
-        <p class="alert alert-danger">
-            Please be aware that the latest test in this project failed.
-        </p>
+                        <div class="project_content" id="project_settings">
+                            <label>Repository</label>
+                            <input name="repo" class="span11" type="text" value="{{ project.repo }}">
+
+                            <label for="email">Notifications Email</label>
+                            <input id="email" name="email" class="span11" type="email" value="{{ project.email }}">
+
+                            <label>Github Token</label>
+                            <input name="github_token" class="span11" type="text" value="{{ project.github.token }}">
+
+                        </div>
+
+                        <div class="hide project_content" id="project_ssh_keys">
+                            <label>Public SSH Key</label>
+                            <textarea class="span11" rows="5" name="ssh_key.public">{{ project.ssh_key.public }}</textarea>
+                            <label>Private SSH Key</label>
+                            <textarea class="span11" rows="5" name="ssh_key.private">{{ project.ssh_key.private }}</textarea>
+                        </div>
+
+                    </fieldset>
+                    <button type="submit" class="btn btn-small btn-info">Save</button>
+                </form>
+            </div>
+        </div>
+
+
+            <hr />
     {% endif %}
 
     {% if tests|length > 0 %}
