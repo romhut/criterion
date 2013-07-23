@@ -31,6 +31,9 @@
                 <li>
                     <a data-content="project_ssh_keys" href="#">SSH Keys</a>
                 </li>
+                <li>
+                    <a data-content="project_env" href="#">Enviroment Variables</a>
+                </li>
             </ul>
             <div class="span9">
 
@@ -39,21 +42,34 @@
 
                         <div class="project_content" id="project_settings">
                             <label>Repository</label>
-                            <input name="repo" class="span11" type="text" value="{{ project.repo }}">
+                            <input name="repo" class="span12" type="text" value="{{ project.repo }}">
 
                             <label for="email">Notifications Email</label>
-                            <input id="email" name="email" class="span11" type="email" value="{{ project.email }}">
+                            <input id="email" name="email" class="span12" type="email" value="{{ project.email }}">
 
                             <label>Github Token</label>
-                            <input name="github_token" class="span11" type="text" value="{{ project.github.token }}">
+                            <input name="github_token" class="span12" type="text" value="{{ project.github.token }}">
 
                         </div>
 
                         <div class="hide project_content" id="project_ssh_keys">
                             <label>Public SSH Key</label>
-                            <textarea class="span11" rows="5" name="ssh_key.public">{{ project.ssh_key.public }}</textarea>
+                            <textarea class="span12" rows="5" name="ssh_key.public">{{ project.ssh_key.public }}</textarea>
                             <label>Private SSH Key</label>
-                            <textarea class="span11" rows="5" name="ssh_key.private">{{ project.ssh_key.private }}</textarea>
+                            <textarea class="span12" rows="5" name="ssh_key.private">{{ project.ssh_key.private }}</textarea>
+                        </div>
+
+                        <div class="hide project_content" id="project_env">
+                            <label>Enviroment Variables</label>
+
+                            {% if project.enviroment_variables is defined and project.enviroment_variables|length > 0 %}
+                                {% for variable in project.enviroment_variables %}
+                                    <input value="{{ variable }}" type="text" class="span12" name="enviroment_variables[]" />
+                                {% endfor %}
+                            {% endif %}
+
+                            <input placeholder="APP=testing" type="text" class="span12" name="enviroment_variables[]" />
+
                         </div>
 
                     </fieldset>

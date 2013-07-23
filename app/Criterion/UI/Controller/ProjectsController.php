@@ -180,6 +180,7 @@ class ProjectsController
             }
 
             $project->repo = $app['request']->get('repo');
+            $project->enviroment_variables = array_filter($app['request']->get('enviroment_variables'));
             $project->short_repo = \Criterion\Helper\Repo::short($project->repo);
             $project->provider = \Criterion\Helper\Repo::provider($project->repo);
             $project->ssh_key = array(

@@ -81,6 +81,19 @@ class TestCommand extends Command
         $this->getApplication()->project = $project;
         $this->getApplication()->output = $output;
 
+        if (is_array($project->enviroment_variables))
+        {
+            $set_env_variables = $this->getApplication()->preLog('Setting enviroment variables');
+
+            $env_variables = array();
+            foreach ($project->enviroment_variables as $env_var)
+            {
+                $env_variables[] = $env_var;
+                putenv($env_var);
+            }
+            $this->getApplication()->log('Setting enviroment variables', implode(', ',$env_variables), 0, $set_env_variables);
+        }
+
         // Switch to the project directory, and clone the repo into it.
         chdir($project_folder);
 
