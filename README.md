@@ -4,7 +4,7 @@ Criterion
 
 ----
 
-![Test Status](http://criterion.romhut.com/status/romhut/criterion.jpg)
+[![Build Status](https://travis-ci.org/romhut/criterion.png?branch=feature/travis)](https://travis-ci.org/romhut/criterion)
 
 Criterion is a Continuous Integration app built in PHP using MongoDB. Criterion is very easy to setup, and you can add GIT repositories from any provider, and run any commands you wish against it.
 
