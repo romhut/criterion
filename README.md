@@ -14,8 +14,6 @@ Criterion will auto detect test environments if no .criterion.yml file is provid
 
 ![Criterion](http://f.cl.ly/items/2k3M0b1c1H353C2w3q06/Screen%20Shot%202013-07-14%20at%2014.54.28.png)
 
-Please note: This only works for phpunit testing environments right now, but we will be adding more in the future.
-
 ### Dependencies
 
 - PHP >=5.3.3
