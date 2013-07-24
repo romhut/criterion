@@ -7,13 +7,23 @@ class TestCase extends \Silex\WebTestCase
 
     public function createApplication()
     {
+
         putenv('APP_ENV=testing');
 
-        $app = new \Criterion\Application();
-        $app->db->drop();
+        // Establish Application instance
+        try {
+            $app = new \Criterion\Application();
+        } catch (\MongoConnectionException $e) {
+            $this->markTestSkipped('Could not connect to MongoDB');
+        }
 
-        if ( ! defined('ROOT'))
-        {
+        // Clean all collections
+        foreach ($app->db->native->getCollectionNames() as $collection) {
+            $app->db->selectCollection($collection)->remove();
+        }
+
+        // Define some core system variables
+        if (! defined('ROOT')) {
             define('ROOT', dirname(dirname(dirname(__DIR__))));
             define('CONFIG_FILE', ROOT . '/config.json');
             define('DATA_DIR', ROOT  . '/data');
