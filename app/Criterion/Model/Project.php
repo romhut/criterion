@@ -26,15 +26,13 @@ class Project extends \Criterion\Model
             );
 
             $ssh_key_file = KEY_DIR . '/' . $this->id;
-            exec('ssh-keygen -t rsa -q -f "' . $ssh_key_file . '" -N "" -C "ci@criterion"', $ssh_key, $response);
+            $ssh_key_helper = new \Criterion\Helper\SshKey();
+            $ssh_key_helper->generate($ssh_key_file);
             $this->ssh_key = array(
-                'public' => file_get_contents($ssh_key_file . '.pub'),
-                'private' => file_get_contents($ssh_key_file)
+                'public' => $ssh_key_helper->getPublicKey(),
+                'private' => $ssh_key_helper->getPrivateKey()
             );
-
-            // Remove the SSH files due to permissions issue, let PHP generate them later on.
-            exec('rm ' . $ssh_key_file);
-            exec('rm ' . $ssh_key_file . '.pub');
+            $ssh_key_helper->destroy();
         }
     }
 
