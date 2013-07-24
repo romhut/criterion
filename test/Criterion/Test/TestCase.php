@@ -16,7 +16,11 @@ class TestCase extends \Silex\WebTestCase
         } catch (\MongoConnectionException $e) {
             $this->markTestSkipped('Could not connect to MongoDB');
         }
-        $app->db->drop();
+
+        // Clean all collections
+        foreach ($app->db->native->getCollectionNames() as $collection) {
+            $app->db->selectCollection($collection)->remove();
+        }
 
         // Define some core system variables
         if (! defined('ROOT')) {
