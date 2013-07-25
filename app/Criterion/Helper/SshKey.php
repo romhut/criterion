@@ -29,7 +29,7 @@ class SshKey extends \Criterion\Helper
         }
         $this->file = $file;
         exec('ssh-keygen -t rsa -q -f "' . $file . '" -N "" -C "ci@criterion"', $ssh_key, $response);
-        if ($response !== 0) {
+        if ($response != 0) {
             throw new \Exception('Could not generate key file');
         }
         return $this->getPrivateKey();
@@ -67,6 +67,8 @@ class SshKey extends \Criterion\Helper
         if (file_exists($this->file . '.pub')) {
             unlink($this->file . '.pub');
         }
+
+        return true;
     }
 
 }
