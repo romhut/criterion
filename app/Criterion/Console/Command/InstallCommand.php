@@ -65,7 +65,6 @@ class InstallCommand extends Command
         {
             $password = null;
             $output->writeln('User already exists, promoting to admin.');
-            $user->role = 'admin';
         }
         else
         {
@@ -73,6 +72,7 @@ class InstallCommand extends Command
             $user->password = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
         }
 
+        $user->role = 'admin';
         $user->save();
         $output->writeln('<info>User saved.</info>');
         $output->writeln('');
