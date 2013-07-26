@@ -15,7 +15,7 @@ class SshKeyHelperTest extends \Criterion\Test\TestCase
         $key = new \Criterion\Helper\SshKey();
         $this->assertTrue(is_object($key));
 
-        $file = '/tmp/criterion_testing' . time();
+        $file =  KEY_DIR . '/criterion_testing' . time();
         $generate = $key->generate($file);
         $this->assertTrue(!empty($generate));
 
@@ -27,7 +27,7 @@ class SshKeyHelperTest extends \Criterion\Test\TestCase
         $key = new \Criterion\Helper\SshKey();
         $this->assertTrue(is_object($key));
 
-        $file = '/tmp/blah/criterion_testing' . time();
+        $file = KEY_DIR . '/blah/criterion_testing' . time();
         $generate = $key->generate($file);
         $this->assertTrue(!empty($generate));
 
@@ -39,7 +39,7 @@ class SshKeyHelperTest extends \Criterion\Test\TestCase
         $key = new \Criterion\Helper\SshKey();
         $this->assertTrue(is_object($key));
 
-        $file = '/tmp/criterion_testing' . time();
+        $file = KEY_DIR . '/criterion_testing' . time();
         $generate = $key->generate($file);
         $this->assertTrue(!empty($generate));
 
@@ -54,7 +54,7 @@ class SshKeyHelperTest extends \Criterion\Test\TestCase
         $key = new \Criterion\Helper\SshKey();
         $this->assertTrue(is_object($key));
 
-        $file = '/tmp/criterion_testing' . time();
+        $file = KEY_DIR . '/criterion_testing' . time();
         $generate = $key->generate($file);
         $this->assertTrue(!empty($generate));
 
@@ -69,7 +69,7 @@ class SshKeyHelperTest extends \Criterion\Test\TestCase
         $key = new \Criterion\Helper\SshKey();
         $this->assertTrue(is_object($key));
 
-        $file = '/tmp/criterion_testing' . time();
+        $file = KEY_DIR . '/criterion_testing' . time();
         $generate = $key->generate($file);
         $this->assertTrue(!empty($generate));
 
