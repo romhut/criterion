@@ -84,4 +84,24 @@ class CommitHelperTest extends \Criterion\Test\TestCase
         $this->assertArrayHasKey('name', $commit['branch']);
         $this->assertArrayHasKey('url', $commit['branch']);
     }
+
+    public function testCommitIsValid()
+    {
+        $commit_data = array(
+            'message' => 'Fine to test'
+        );
+
+        $commit = \Criterion\Helper\Commit::isValid($commit_data);
+        $this->assertTrue($commit);
+    }
+
+    public function testCommitIsValidFail()
+    {
+        $commit_data = array(
+            'message' => '[no ci]'
+        );
+
+        $commit = \Criterion\Helper\Commit::isValid($commit_data);
+        $this->assertFalse($commit);
+    }
 }
