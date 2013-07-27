@@ -98,7 +98,7 @@ class CommitHelperTest extends \Criterion\Test\TestCase
     public function testCommitIsValidFail()
     {
         $commit_data = array(
-            'message' => '[no ci]'
+            'message' => '[ci skip]'
         );
 
         $commit = \Criterion\Helper\Commit::isValid($commit_data);

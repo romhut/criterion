@@ -89,7 +89,7 @@ class Commit extends \Criterion\Helper
 
     public static function isValid(Array $commit)
     {
-        if ( ! isset($commit['message']) || strpos($commit['message'], '[no ci]') !== false)
+        if ( ! isset($commit['message']) || strpos($commit['message'], '[ci skip]') !== false)
         {
             return false;
         }
