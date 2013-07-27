@@ -64,7 +64,6 @@ var criterion = new function()
         delete : function(el)
         {
             var el = $(el);
-            el.attr('disabled', true);
 
             var id = el.data('id');
             var sure = confirm(text.project_delete);
