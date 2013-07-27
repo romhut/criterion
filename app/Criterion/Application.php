@@ -18,9 +18,19 @@ class Application
             $this->config = json_decode(file_get_contents($this->config_file), true);
         }
 
-        $db = getenv('APP_ENV') === 'testing' ? 'criterion_testing' : 'criterion';
-        $this->mongo = new \MongoMinify\Client();
+        $db = getenv('APP_ENV') === 'testing' ? 'criterion_test' : $this->config['mongo']['database'];
+
+        try
+        {
+            $this->mongo = new \MongoMinify\Client($this->config['mongo']['server']);
+        }
+        catch (\MongoConnectionException $e)
+        {
+            throw new \Exception('Could not connect to Mongo. Try running the installer again.');
+        }
+
         $this->db = $this->mongo->{$db};
+
         return $this;
     }
 }
