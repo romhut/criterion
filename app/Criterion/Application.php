@@ -2,6 +2,7 @@
 
 namespace Criterion;
 use Criterion\Exception\ConfigurationException;
+use Utils;
 
 class Application
 {
@@ -36,7 +37,7 @@ class Application
         if (file_exists($this->config_file)) {
             $raw = file_get_contents($this->config_file);
             if ($raw) {
-                $this->config = json_decode($raw, true);
+                $this->config = Utils::array_merge($this->config, json_decode($raw, true));
                 if (! $this->config) {
                     throw new ConfigurationException('Could not parse config file');
                 }
