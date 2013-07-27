@@ -15,6 +15,22 @@ class Application
     public function __construct()
     {
 
+        $this->config = array(
+            'url' => 'http://criterion.example.com',
+            'mongo' => array(
+                'server' => 'mongodb://127.0.0.1',
+                'database' => 'criterion',
+                'options' => array(
+                    'connect' => true
+                ),
+            ),
+            'visibility' => 'private',
+            'email' => array(
+                'name' => 'Criterion Notifications',
+                'address' => 'mail@localhost',
+            )
+        );
+
         // Load configuration if file exists
         $this->config_file = dirname(dirname(__DIR__)) . '/config.json';
         if (file_exists($this->config_file)) {
