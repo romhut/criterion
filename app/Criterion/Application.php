@@ -1,5 +1,8 @@
 <?php
+
 namespace Criterion;
+use Criterion\Exception\ConfigurationException;
+
 class Application
 {
     public static $app;
@@ -11,32 +14,38 @@ class Application
 
     public function __construct()
     {
+
+        // Load configuration if file exists
         $this->config_file = dirname(dirname(__DIR__)) . '/config.json';
-
-        if (file_exists($this->config_file))
-        {
-            $this->config = json_decode(file_get_contents($this->config_file), true);
-
-            if(empty($this->config))
-                return false;
+        if (file_exists($this->config_file)) {
+            $raw = file_get_contents($this->config_file);
+            if ($raw) {
+                $this->config = json_decode($raw, true);
+                if (! $this->config) {
+                    throw new ConfigurationException('Could not parse config file');
+                }
+            }
         }
 
-        $db = getenv('APP_ENV') === 'testing' ? 'criterion_test' : $this->config['mongo']['database'];
+        // Exit if the config is corrupt
+        if (empty($this->config)) {
+            return false;
+        }
 
-        try
-        {
+        // Get a mongo client instance
+        try {
             $this->mongo = new \MongoMinify\Client($this->config['mongo']['server']);
-        }
-        catch (\MongoConnectionException $e)
-        {
+        } catch (\MongoConnectionException $e) {
             throw new \Exception('Could not connect to Mongo. Try running the installer again.');
         }
 
+        // Load a database
         try {
-            $this->db = $this->mongo->{$db};
+            $db = getenv('APP_ENV') === 'testing' ? 'criterion_test' : $this->config['mongo']['database'];
+            $this->db = $this->mongo->selectDb($db);
         } catch (\Exception $e) {
+            throw new \Exception('Invalid Database. [' . $db . ']');
         }
 
-        return $this;
     }
 }
