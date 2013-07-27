@@ -32,6 +32,7 @@ class SshKeyHelperTest extends \Criterion\Test\TestCase
         $this->assertTrue(!empty($generate));
 
         $key->destroy();
+        rmdir(KEY_DIR . '/blah');
     }
 
     public function testGetPrivateKey()

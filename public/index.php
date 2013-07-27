@@ -7,6 +7,9 @@ define('TEST_DIR', DATA_DIR . '/tests');
 define('KEY_DIR', DATA_DIR . '/keys');
 
 include dirname(__DIR__) . '/vendor/autoload.php';
+
+use Whoops\Provider\Silex\WhoopsServiceProvider;
+
 $app = new Silex\Application();
 $app['criterion'] = new Criterion\Application();
 
@@ -15,13 +18,18 @@ if ( ! $app['criterion']->config)
     echo 'You must install Criterion first by running: "bin/cli install"';
     exit;
 }
-$app['debug'] = true;
+
+if (isset($app['criterion']->config['debug']) && $app['criterion']->config['debug'] === true)
+{
+    $app['debug'] = true;
+    $app->register(new WhoopsServiceProvider);
+}
+
 $app->register(new Silex\Provider\TwigServiceProvider(), array(
     'twig.path' => dirname(__DIR__) . '/app/Criterion/UI/View',
 ));
 
 $app->register(new Silex\Provider\SessionServiceProvider());
-
 
 // Autehntication
 $app->before(function() use ($app) {
