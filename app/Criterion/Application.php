@@ -16,7 +16,7 @@ class Application
         if (file_exists($this->config_file))
         {
             $this->config = json_decode(file_get_contents($this->config_file), true);
-            
+
             if(empty($this->config))
                 return false;
         }
@@ -32,7 +32,10 @@ class Application
             throw new \Exception('Could not connect to Mongo. Try running the installer again.');
         }
 
-        $this->db = $this->mongo->{$db};
+        try {
+            $this->db = $this->mongo->{$db};
+        } catch (\Exception $e) {
+        }
 
         return $this;
     }
