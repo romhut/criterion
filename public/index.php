@@ -67,7 +67,7 @@ $app->before(function() use ($app) {
 
         if (! $authenticated)
         {
-            return $app->abort(403, 'You need to be authenticated to access Criterion');
+            return $app->redirect('/auth/login');
         }
     }
 });
