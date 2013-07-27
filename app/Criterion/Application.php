@@ -2,10 +2,11 @@
 
 namespace Criterion;
 use Criterion\Exception\ConfigurationException;
-use Utils;
 
 class Application
 {
+
+    public static $env;
     public static $app;
 
     public $config = false;
@@ -34,13 +35,17 @@ class Application
 
         // Load configuration if file exists
         $this->config_file = dirname(dirname(__DIR__)) . '/config.json';
+        if (defined('CONFIG_FILE')) {
+            $this->config_file = CONFIG_FILE;
+        }
         if (file_exists($this->config_file)) {
             $raw = file_get_contents($this->config_file);
             if ($raw) {
-                $this->config = Utils::array_merge($this->config, json_decode($raw, true));
-                if (! $this->config) {
+                $config = json_decode($raw, true);
+                if (! $config) {
                     throw new ConfigurationException('Could not parse config file');
                 }
+                $this->config = Utils::array_merge($this->config, $config);
             }
         }
 
