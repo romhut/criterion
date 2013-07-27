@@ -95,10 +95,20 @@ class CommitHelperTest extends \Criterion\Test\TestCase
         $this->assertTrue($commit);
     }
 
-    public function testCommitIsValidFail()
+    public function testCommitIsValidSkip1()
     {
         $commit_data = array(
             'message' => '[ci skip]'
+        );
+
+        $commit = \Criterion\Helper\Commit::isValid($commit_data);
+        $this->assertFalse($commit);
+    }
+
+    public function testCommitIsValidSkip2()
+    {
+        $commit_data = array(
+            'message' => '[skip ci]'
         );
 
         $commit = \Criterion\Helper\Commit::isValid($commit_data);
