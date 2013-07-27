@@ -126,6 +126,13 @@ class TestCommand extends Command
         // Fetch the commit info from the commit helper
         $commit = \Criterion\Helper\Commit::getInfo($project->repo, $test->branch);
 
+        // Check to see if the commit is testable
+        if ( ! \Criterion\Helper\Commit::isValid($commit))
+        {
+            $test->delete();
+            return false;
+        }
+
         // Detect the test type. E.G. if .criterion.yml file does
         // not exist, it may be a PHPUnit project
         $test_type = \Criterion\Helper\Test::detectType($test_folder);

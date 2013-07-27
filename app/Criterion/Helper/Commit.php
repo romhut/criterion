@@ -86,4 +86,14 @@ class Commit extends \Criterion\Helper
 
         return $commit;
     }
+
+    public static function isValid(Array $commit)
+    {
+        if ( ! isset($commit['message']) || strpos($commit['message'], '[ci skip]') !== false)
+        {
+            return false;
+        }
+
+        return true;
+    }
 }
