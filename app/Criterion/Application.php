@@ -16,6 +16,9 @@ class Application
         if (file_exists($this->config_file))
         {
             $this->config = json_decode(file_get_contents($this->config_file), true);
+            
+            if(empty($this->config))
+                return false;
         }
 
         $db = getenv('APP_ENV') === 'testing' ? 'criterion_test' : $this->config['mongo']['database'];
