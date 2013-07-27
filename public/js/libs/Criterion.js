@@ -1,8 +1,5 @@
-$(document).ready(function() {
-    criterion.init();
-});
 
-var criterion = new function()
+var Criterion = new function()
 {
     var self = this;
     var poller = false;
@@ -55,8 +52,17 @@ var criterion = new function()
             var content = $(this).find('a').data('content');
             $('.project_content').hide();
             $('#' + content).show();
-
         });
+
+        // Hack to check if we're on a test page
+        if(window.location.href.indexOf("test") > -1) 
+        {
+            var url = window.location.href;
+            url = url.split("/");
+            
+            // get the project ID from the last part of the URL
+            self.test.initPoller(url[url.length - 1], 1000);
+        }
     }
 
     // Project functions
@@ -199,6 +205,9 @@ var criterion = new function()
             func(data);
         }).fail(function(jqXHR, textStatus, textError)
         {
+             if(poller)
+                clearInterval(poller);
+
              throw new Error(textStatus + " " + textError);
         });
     }
@@ -209,3 +218,4 @@ var criterion = new function()
         return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ breakTag +'$2');
     }
 }
+
