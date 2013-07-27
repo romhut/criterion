@@ -23,6 +23,11 @@ class InstallCommand extends Command
         // Create default configuration
         $config = array(
             'url' => 'http://criterion.example.com',
+            'mongo' => array(
+                'server' => 'mongodb://127.0.0.1:27017',
+                'database' => 'criterion',
+                'options' => array()
+            ),
             'visibility' => 'private',
             'email' => array(
                 "name" => "Criterion Notifications",
@@ -32,9 +37,26 @@ class InstallCommand extends Command
 
         // Overwrite default config with current setup
         if ($this->getApplication()->app->config) {
-            $output->writeln('<info>Created config file</info>');
             $config = array_merge($config, $this->getApplication()->app->config);
         }
+
+        $output->writeln('<info>Mongo Config</info>');
+
+        // Setup Mongo Server
+        $default_mongo_server = isset($config['mongo']['server']) ? $config['mongo']['server'] : 'mongodb://127.0.0.1:27017';
+        $mongo_server = $dialog->ask($output, 'Server? [' . $default_mongo_server . ']: ', $default_mongo_server);
+        if ($mongo_server) {
+            $config['mongo']['server'] = $mongo_server;
+        }
+
+        // Setup Mongo Database
+        $default_mongo_database = isset($config['mongo']['database']) ? $config['mongo']['database'] : 'criterion';
+        $mongo_database = $dialog->ask($output, 'Database? [' . $default_mongo_database . ']: ', $default_mongo_database);
+        if ($mongo_database) {
+            $config['mongo']['database'] = $mongo_database;
+        }
+
+        file_put_contents($this->getApplication()->app->config_file, json_encode($config));
 
         // Setup URL
         $default_url = isset($config['url']) ? $config['url'] : 'http://criterion.example.com';
