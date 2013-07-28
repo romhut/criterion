@@ -29,12 +29,19 @@
 }
 .content .project_nav li a {
   border-radius: 0 !important;
+  color: #576153;
 }
 .content .project_nav li a:hover {
-  background: #000;
+  background: #dff0d8 !important;
+  color: #000;
 }
 .content .project_nav li .active {
-  background: #eee !important;
+  background: #dff0d8 !important;
+  color: #000;
+}
+.content .project_nav .delete_project {
+  color: #fff;
+  margin-top: 10px;
 }
 .btn-warning {
   color: #000 !important;
@@ -88,4 +95,14 @@ footer i {
 }
 #logs a .error {
   color: #9c0001;
+}
+.dropdown:hover > ul {
+  display: block !important;
+}
+.dropdown-menu > li > a:hover {
+  background: #dff0d8;
+  color: #000;
+}
+.dropdown-menu > li > a {
+  color: #576153;
 }

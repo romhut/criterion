@@ -54,6 +54,11 @@ var Criterion = new function()
             $('#' + content).show();
         });
 
+        $('.btn-add-project,.close').on('click', function()
+        {
+            $('#addProject').toggle();
+        });
+
         // Hack to check if we're on a test page
         if(window.location.href.indexOf("test") > -1) 
         {
