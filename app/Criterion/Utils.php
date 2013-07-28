@@ -38,7 +38,7 @@ class Utils {
         }
         array_shift($keys);
         self::array_sort_func($keys);
-        usort($array, 'Utils::array_sort_func');
+        usort($array, 'Criterion\\Utils::array_sort_func');
     }
 
 
@@ -75,7 +75,7 @@ class Utils {
         }
         array_shift($keys);
         self::object_sort_func($keys);
-        usort($array, 'Utils::object_sort_func');
+        usort($array, 'Criterion\\Utils::object_sort_func');
     }
 
 
