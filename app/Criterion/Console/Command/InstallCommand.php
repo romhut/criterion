@@ -129,7 +129,8 @@ class InstallCommand extends Command
         shell_exec('chmod -R 0777 ' . ROOT . '/data');
 
         // Save config
-        file_put_contents($this->getApplication()->app->config_file, json_encode($config));
+        $json = defined('JSON_PRETTY_PRINT') ? json_encode($config, JSON_PRETTY_PRINT) : json_encode($config);
+        file_put_contents($this->getApplication()->app->config_file, $json);
         $output->writeln('<info>Saved config settings</info>');
         $output->writeln('');
 

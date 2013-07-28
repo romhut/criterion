@@ -1,10 +1,11 @@
 <?php
+
 namespace Criterion\Console;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
-
+use Criterion\Exception\ConfigurationException;
 
 class Application extends SymfonyApplication
 {
