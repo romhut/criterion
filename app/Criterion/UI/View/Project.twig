@@ -24,19 +24,31 @@
     {% if app.user and app.user.isAdmin %}
 
 
-
-
-        <div class="row-fluid hide" id="edit_project_row">
-            <div class="span12">
-                <form method="post" action="">
-                    <textarea class="span12 project_config" name="config" rows="12">{{ config }} </textarea>
-                    <button type="submit" class="btn btn-small btn-info">Save</button>
-                </form>
-            </div>
+        <div class="row-fluid" id="edit_project_row">
+            <form method="post" action="">
+                <div id="editor" class="span12 project_config">{{ config }}</div>
+                <textarea name="config" id="config" class="hide">{{ config }}</textarea>
+                <small><b>CTRL/CMD + S</b> to save</small>
+            </form>
         </div>
 
+        <script src="/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+        <script>
+            var editor = ace.edit("editor");
+            editor.setTheme("ace/theme/tomorrow_night");
+            editor.getSession().setMode("ace/mode/yaml");
 
-            <hr />
+            editor.commands.addCommand({
+            name: 'save',
+            bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
+            exec: function(editor) {
+                $('#config').val(editor.getValue());
+                $('#config').parent().submit();
+            }
+        });
+        </script>
+
+        <hr />
     {% endif %}
 
     {% if tests|length > 0 %}
