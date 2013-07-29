@@ -91,7 +91,10 @@ class ApplicationConsoleTest extends \Criterion\Test\TestCase
 
         $parse = $app->parseConfig($config);
 
-        $this->assertFalse($parse);
+        $this->assertEmpty($parse['setup']);
+        $this->assertEmpty($parse['script']);
+        $this->assertEmpty($parse['fail']);
+        $this->assertEmpty($parse['pass']);
     }
 
 }
