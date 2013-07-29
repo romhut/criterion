@@ -1,6 +1,6 @@
 <?php
-
 namespace Criterion\Console;
+
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -31,8 +31,7 @@ class Application extends SymfonyApplication
 
     public function __get($key)
     {
-        if (isset($this->data[$key]))
-        {
+        if (isset($this->data[$key])) {
             return $this->data[$key];
         }
 
@@ -111,18 +110,15 @@ class Application extends SymfonyApplication
         $this->output->writeln('');
         $this->output->writeln('<question>Running "fail" commands</question>');
 
-        if ($this->project->provider === 'github' && $this->project->github['token'])
-        {
+        if ($this->project->provider === 'github' && $this->project->github['token']) {
             $github_status = \Criterion\Helper\Github::updateStatus('error', $this->test, $this->project);
             $this->log('Posting "error" status to Github', $github_status ? 'Success' : 'Failed');
         }
 
         \Criterion\Helper\Notifications::failedEmail($this->test->id, $this->project);
 
-        if (isset($this->criterion['fail']) && count($this->criterion['fail']))
-        {
-            foreach ($this->criterion['fail'] as $fail)
-            {
+        if (isset($this->criterion['fail']) && count($this->criterion['fail'])) {
+            foreach ($this->criterion['fail'] as $fail) {
                 $response = $this->executeAndLog($fail);
             }
         }
@@ -153,16 +149,13 @@ class Application extends SymfonyApplication
         $this->output->writeln('');
         $this->output->writeln('<question>Running "pass" commands</question>');
 
-        if ($this->project->provider === 'github' && $this->project->github['token'])
-        {
+        if ($this->project->provider === 'github' && $this->project->github['token']) {
             $github_status = \Criterion\Helper\Github::updateStatus('success', $this->test, $this->project);
             $this->log('Posting "success" status to Github', $github_status ? 'Success' : 'Failed');
         }
 
-        if (isset($this->criterion['pass']) && count($this->criterion['pass']))
-        {
-            foreach ($this->criterion['pass'] as $pass)
-            {
+        if (isset($this->criterion['pass']) && count($this->criterion['pass'])) {
+            foreach ($this->criterion['pass'] as $pass) {
                 $response = $this->executeAndLog($pass);
             }
         }
@@ -182,18 +175,15 @@ class Application extends SymfonyApplication
         $command = 'Parsing .criterion.yml file';
         $prelog = $this->preLog($command);
 
-        if( ! isset($criterion) || ! is_array($criterion))
-        {
+        if (! isset($criterion) ||! is_array($criterion)) {
             $this->log($command, 'The .criterion.yml file does not seem valid, or does not exist', '1', $prelog);
             return false;
         }
 
         $this->log($command, 'Successfully parsed .criterion.yml file', '0', $prelog);
 
-        foreach (array('setup', 'test', 'fail', 'pass') as $section)
-        {
-            if ( ! isset($criterion[$section]) ||  ! is_array($criterion[$section]))
-            {
+        foreach (array('setup', 'test', 'fail', 'pass') as $section) {
+            if (! isset($criterion[$section]) ||! is_array($criterion[$section])) {
                  $criterion[$section] = array();
             }
         }
