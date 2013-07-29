@@ -23,68 +23,32 @@
 
     {% if app.user and app.user.isAdmin %}
 
+
         <div class="row-fluid hide" id="edit_project_row">
-            <ul class="nav span3 nav-tabs nav-stacked project_nav">
-                <li>
-                    <a class="active" href="#" data-content="project_settings">Settings</a>
-                </li>
-                <li>
-                    <a data-content="project_ssh_keys" href="#">SSH Keys</a>
-                </li>
-                <li>
-                    <a data-content="project_env" href="#">Enviroment Variables</a>
-                </li>
-
-                <li>
-                    <a class="btn btn-danger delete_project" data-id="{{ project._id }}">Delete</a>
-                </li>
-
-            </ul>
-            <div class="span9">
-
-                <form method="post" action="">
-                    <fieldset>
-
-                        <div class="project_content" id="project_settings">
-                            <label>Repository</label>
-                            <input name="repo" class="span12" type="text" value="{{ project.repo }}">
-
-                            <label for="email">Notifications Email</label>
-                            <input id="email" name="email" class="span12" type="email" value="{{ project.email }}">
-
-                            <label>Github Token</label>
-                            <input name="github_token" class="span12" type="text" value="{{ project.github.token }}">
-
-                        </div>
-
-                        <div class="hide project_content" id="project_ssh_keys">
-                            <label>Public SSH Key</label>
-                            <textarea class="span12" rows="5" name="ssh_key.public">{{ project.ssh_key.public }}</textarea>
-                            <label>Private SSH Key</label>
-                            <textarea class="span12" rows="5" name="ssh_key.private">{{ project.ssh_key.private }}</textarea>
-                        </div>
-
-                        <div class="hide project_content" id="project_env">
-                            <label>Enviroment Variables</label>
-
-                            {% if project.enviroment_variables is defined and project.enviroment_variables|length > 0 %}
-                                {% for variable in project.enviroment_variables %}
-                                    <input value="{{ variable }}" type="text" class="span12" name="enviroment_variables[]" />
-                                {% endfor %}
-                            {% endif %}
-
-                            <input placeholder="APP=testing" type="text" class="span12" name="enviroment_variables[]" />
-
-                        </div>
-
-                    </fieldset>
-                    <button type="submit" class="btn btn-small btn-info">Save</button>
-                </form>
-            </div>
+            <form method="post" action="">
+                <div id="editor" class="span12 project_config">{{ config }}</div>
+                <textarea name="config" id="config" class="hide">{{ config }}</textarea>
+                <small><b>CTRL/CMD + S</b> to save</small>
+            </form>
+            <hr />
         </div>
 
+        <script src="/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+        <script>
+            var editor = ace.edit("editor");
+            editor.setTheme("ace/theme/tomorrow_night");
+            editor.getSession().setMode("ace/mode/yaml");
 
-            <hr />
+            editor.commands.addCommand({
+            name: 'save',
+            bindKey: {win: 'Ctrl-S',  mac: 'Command-S'},
+            exec: function(editor) {
+                $('#config').val(editor.getValue());
+                $('#config').parent().submit();
+            }
+        });
+        </script>
+
     {% endif %}
 
     {% if tests|length > 0 %}

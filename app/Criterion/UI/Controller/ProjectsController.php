@@ -1,6 +1,8 @@
 <?php
 namespace Criterion\UI\Controller;
 
+use Symfony\Component\Yaml\Yaml;
+
 class ProjectsController
 {
     public function all(\Silex\Application $app)
@@ -179,18 +181,11 @@ class ProjectsController
                 return $app->abort(403, 'You do not have permission to do this');
             }
 
-            $project->repo = $app['request']->get('repo');
-            $project->enviroment_variables = array_filter($app['request']->get('enviroment_variables'));
+            $config = Yaml::parse($app['request']->get('config'));
+            $project->setServerConfig($config);
+
             $project->short_repo = \Criterion\Helper\Repo::short($project->repo);
             $project->provider = \Criterion\Helper\Repo::provider($project->repo);
-            $project->ssh_key = array(
-                'public' => $app['request']->get('ssh_key_public'),
-                'private' => $app['request']->get('ssh_key_private')
-            );
-            $project->github = array(
-                'token' => $app['request']->get('github_token')
-            );
-            $project->email = $app['request']->get('email');
             $project->save();
 
             return $app->redirect('/project/' . $project->id);
@@ -200,6 +195,8 @@ class ProjectsController
         $data['tests'] = $project->getTests();
         $data['title'] = $project->short_repo;
         $data['project'] = $project;
+
+        $data['config'] = Yaml::dump($project->getServerConfig());
 
         return $app['twig']->render('Project.twig', $data);
     }

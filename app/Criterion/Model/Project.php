@@ -4,6 +4,14 @@ namespace Criterion\Model;
 class Project extends \Criterion\Model
 {
     public $collection = 'projects';
+    public $serverConfig = array();
+    public $serverConfigWhitelist = array(
+        'repo' => 0,
+        'email' => 0,
+        'ssh_key' => array(),
+        'enviroment_variables' => array(),
+        'github' => array()
+    );
 
     public function __construct($query = null, $existing = null)
     {
@@ -23,6 +31,9 @@ class Project extends \Criterion\Model
             $this->status = array(
                 'code' => '2',
                 'message' => 'New'
+            );
+            $this->enviroment_variables = array(
+                'APP_ENV=testing'
             );
 
             $ssh_key_file = KEY_DIR . '/' . $this->id;
@@ -51,5 +62,44 @@ class Project extends \Criterion\Model
         }
 
         return $test_models;
+    }
+
+    public function setServerConfig($data)
+    {
+        foreach ($data as $key => $value) {
+            if (array_key_exists($key, $this->serverConfigWhitelist)) {
+                if ($key === 'enviroment_variables' && is_array($value)) {
+                    foreach ($value as $enviroment_variable_key => $enviroment_variable) {
+                        if (preg_match('/^[a-z][a-z0-9_]+=[a-z][a-z0-9_]+$/i', $enviroment_variable)) {
+                            $config_data[$key][$enviroment_variable_key] = $enviroment_variable;
+                        }
+                    }
+
+                    if (is_array($config_data[$key])) {
+                        $config_data[$key] = array_unique($config_data[$key]);
+                    }
+                } else {
+                    $config_data[$key] = $value;
+                }
+            }
+        }
+
+        $this->serverConfig = array_merge($this->serverConfigWhitelist, $config_data);
+        $this->data = array_merge($this->data, $this->serverConfig);
+
+        return $this->serverConfig;
+    }
+
+    public function getServerConfig()
+    {
+        $data = array_merge($this->serverConfigWhitelist, $this->data);
+
+        foreach ($data as $key => $value) {
+            if (array_key_exists($key, $this->serverConfigWhitelist)) {
+                $this->serverConfig[$key] = $value;
+            }
+        }
+
+        return $this->serverConfig;
     }
 }
