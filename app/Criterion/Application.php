@@ -63,7 +63,7 @@ class Application
 
         // Load a database
         try {
-            $db = getenv('APP_ENV') === 'testing' ? 'criterion_test' : $this->config['mongo']['database'];
+            $db = getenv('APP_ENV') === 'criterion_test' ? 'criterion_test' : $this->config['mongo']['database'];
             $this->db = $this->mongo->selectDb($db);
         } catch (\Exception $e) {
             throw new \Exception('Invalid Database. [' . $db . ']');
