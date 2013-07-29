@@ -20,6 +20,31 @@ class ProjectModelTest extends \Criterion\Test\TestCase
         $this->assertTrue(is_object($project));
     }
 
+    public function testSetServerConfig()
+    {
+        $project = new \Criterion\Model\Project(array(
+            'repo' => 'https://github.com/romhut/criterion'
+        ));
+
+        $this->assertTrue(is_object($project));
+
+        $config = array(
+            'repo' => 'test'
+        );
+
+        $this->assertCount(count($project->serverConfigWhitelist), $project->setServerConfig($config));
+    }
+
+    public function testGetServerConfig()
+    {
+        $project = new \Criterion\Model\Project(array(
+            'repo' => 'https://github.com/romhut/criterion'
+        ));
+
+        $this->assertTrue(is_object($project));
+        $this->assertCount(count($project->serverConfigWhitelist), $project->getServerConfig());
+    }
+
     public function testGetTests()
     {
         $project = new \Criterion\Model\Project();
