@@ -6,11 +6,15 @@ class Project extends \Criterion\Model
     public $collection = 'projects';
     public $serverConfig = array();
     public $serverConfigWhitelist = array(
-        'repo' => 0,
-        'email' => 0,
+        'repo' => '',
+        'email' => '',
         'ssh_key' => array(),
         'enviroment_variables' => array(),
-        'github' => array()
+        'github' => array(),
+        'script' => '',
+        'setup' => '',
+        'fail' => '',
+        'pass' => ''
     );
 
     public function __construct($query = null, $existing = null)

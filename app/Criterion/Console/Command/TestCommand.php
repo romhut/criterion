@@ -152,11 +152,12 @@ class TestCommand extends Command
             $this->getApplication()->log('Posting "running" status to Github', $github_status ? 'Success' : 'Failed');
         }
 
+        $config_file = realpath($test_folder . '/.criterion.yml');
+        $criterion = $this->getApplication()->parseConfig($config_file);
+
         if ($test_type === 'criterion')
         {
             // Check the config file
-            $config_file = realpath($test_folder . '/.criterion.yml');
-            $criterion = $this->getApplication()->parseConfig($config_file);
             if ( ! $criterion)
             {
                 return $this->getApplication()->testFailed();
