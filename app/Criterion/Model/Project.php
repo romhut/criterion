@@ -32,6 +32,9 @@ class Project extends \Criterion\Model
                 'code' => '2',
                 'message' => 'New'
             );
+            $this->enviroment_variables = array(
+                'APP_ENV=testing'
+            );
 
             $ssh_key_file = KEY_DIR . '/' . $this->id;
             $ssh_key_helper = new \Criterion\Helper\SshKey();
