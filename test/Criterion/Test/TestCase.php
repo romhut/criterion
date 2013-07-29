@@ -15,11 +15,12 @@ class TestCase extends \Silex\WebTestCase
             define('TEST_DIR', DATA_DIR . '/tests');
             define('KEY_DIR', DATA_DIR . '/keys');
         }
+
+        parent::setUp();
     }
 
     public function createApplication()
     {
-
         putenv('APP_ENV=testing');
 
         // Establish Application instance
