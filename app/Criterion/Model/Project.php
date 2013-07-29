@@ -63,21 +63,32 @@ class Project extends \Criterion\Model
 
     public function setServerConfig($data)
     {
-        $data = array_merge($this->serverConfigWhitelist, $data);
-
         foreach ($data as $key => $value) {
             if (array_key_exists($key, $this->serverConfigWhitelist)) {
-                $this->data[$key] = $value;
-                $this->serverConfig[$key] = $value;
+                if ($key === 'enviroment_variables' && is_array($value)) {
+                    foreach ($value as $enviroment_variable_key => $enviroment_variable) {
+                        if (preg_match('/^[a-z][a-z0-9_]+=[a-z][a-z0-9_]+$/i', $enviroment_variable)) {
+                            $config_data[$key][$enviroment_variable_key] = $enviroment_variable;
+                        }
+                    }
+
+                    if (is_array($config_data[$key])) {
+                        $config_data[$key] = array_unique($config_data[$key]);
+                    }
+                } else {
+                    $config_data[$key] = $value;
+                }
             }
         }
+
+        $this->serverConfig = array_merge($this->serverConfigWhitelist, $config_data);
+        $this->data = array_merge($this->data, $this->serverConfig);
 
         return $this->serverConfig;
     }
 
     public function getServerConfig()
     {
-
         $data = array_merge($this->serverConfigWhitelist, $this->data);
 
         foreach ($data as $key => $value) {
