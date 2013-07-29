@@ -7,8 +7,7 @@ class TestController
     public function status(\Silex\Application $app)
     {
         $test = new \Criterion\Model\Test($app['request']->get('id'));
-        if ( ! $test->exists)
-        {
+        if (! $test->exists) {
             return $app->abort(404, 'Test not found.');
         }
 
@@ -16,15 +15,13 @@ class TestController
         $data['_id'] = (string) $test->id;
         $data['test_again'] = false;
 
-        if ($data['status']['code'] === '1' && $app['user'] && $app['user']->isAdmin())
-        {
+        if ($data['status']['code'] === '1' && $app['user'] && $app['user']->isAdmin()) {
             $data['test_again'] = true;
         }
 
         $logs = $test->getLogs();
         $data['log'] = array();
-        foreach ($logs as $log)
-        {
+        foreach ($logs as $log) {
             $data['log'][] = $log->data;
         }
 
@@ -37,14 +34,12 @@ class TestController
     public function view(\Silex\Application $app)
     {
         $data['test'] = new \Criterion\Model\Test($app['request']->get('id'));
-        if ( ! $data['test']->exists)
-        {
+        if (! $data['test']->exists) {
             return $app->abort(404, 'Test not found.');
         }
 
         $data['project'] = $data['test']->getProject();
-        if ( ! $data['project']->exists)
-        {
+        if (! $data['project']->exists) {
             return $app->abort(404, 'Project not found.');
         }
 
@@ -56,20 +51,17 @@ class TestController
 
     public function delete(\Silex\Application $app)
     {
-        if ( ! $app['user']->isAdmin())
-        {
+        if (! $app['user']->isAdmin()) {
             return $app->abort(403, 'You do not have permission to do this');
         }
 
         $test = new \Criterion\Model\Test($app['request']->get('id'));
-        if ( ! $test->exists)
-        {
+        if (! $test->exists) {
             return $app->abort(404, 'Test not found.');
         }
 
         $test->delete();
-        foreach ($test->getLogs() as $log)
-        {
+        foreach ($test->getLogs() as $log) {
             $log->delete();
         }
 

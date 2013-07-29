@@ -8,16 +8,13 @@ class ProjectsController
     public function all(\Silex\Application $app)
     {
         $projects = $app['criterion']->db->projects->find()->sort(array(
-            'last_run' => -1
-        ));
+            'last_run' => -1));
 
         $data['projects'] = array();
         $data['failing'] = 0;
-        foreach ($projects as $project)
-        {
+        foreach ($projects as $project) {
             $project = new \Criterion\Model\Project(null, $project);
-            if ($project->status['code'] === '0')
-            {
+            if ($project->status['code'] === '0') {
                 $data['failing']++;
             }
 
@@ -26,8 +23,7 @@ class ProjectsController
 
         $data['title'] = 'Projects';
 
-        if ($data['failing'] > 0)
-        {
+        if ($data['failing'] > 0) {
             $data['title'] .= ' (' . $data['failing'] . ')';
         }
 
@@ -36,8 +32,7 @@ class ProjectsController
 
     public function create(\Silex\Application $app)
     {
-        if ( ! $app['user']->isAdmin())
-        {
+        if (! $app['user']->isAdmin()) {
             return $app->abort(403, 'You do not have permission to do this');
         }
 
@@ -45,15 +40,13 @@ class ProjectsController
             'repo' => $app['request']->get('repo')
         ));
 
-        if ($project->exists)
-        {
+        if ($project->exists) {
             return $app->redirect('/project/' . (string) $project->id);
         }
 
         $project->github = array('token' => $app['request']->get('github_token'));
         $project->email = $app['request']->get('email');
-        if ($project->save())
-        {
+        if ($project->save()) {
             return $app->redirect('/project/' . (string) $project->id);
         }
 
@@ -70,8 +63,7 @@ class ProjectsController
             ))
         ));
 
-        if ( ! $project->exists)
-        {
+        if (! $project->exists) {
             return $app->abort(404, 'Project not found.');
         }
 
@@ -82,8 +74,7 @@ class ProjectsController
         );
 
         $status = $project->status['code'];
-        if ( ! isset($images[$status]))
-        {
+        if (! isset($images[$status])) {
             $status = 0;
         }
 
@@ -101,24 +92,20 @@ class ProjectsController
 
     public function delete(\Silex\Application $app)
     {
-        if ( ! $app['user']->isAdmin())
-        {
+        if (! $app['user']->isAdmin()) {
             return $app->abort(403, 'You do not have permission to do this');
         }
 
         $project = new \Criterion\Model\Project($app['request']->get('id'));
 
-        if ( ! $project->exists)
-        {
+        if (! $project->exists) {
             return $app->abort(404, 'Project not found.');
         }
 
-        foreach ($project->getTests() as $test)
-        {
+        foreach ($project->getTests() as $test) {
             $test->delete();
             $logs = $test->getLogs();
-            foreach ($logs as $log)
-            {
+            foreach ($logs as $log) {
                 $log->delete();
             }
         }
@@ -129,25 +116,21 @@ class ProjectsController
 
     public function run(\Silex\Application $app)
     {
-        if ( ! $app['user']->isAdmin())
-        {
+        if (! $app['user']->isAdmin()) {
             return $app->abort(403, 'You do not have permission to do this');
         }
 
         $project = new \Criterion\Model\Project($app['request']->get('id'));
-        if ( ! $project->exists)
-        {
+        if (! $project->exists) {
             return $app->abort(404, 'Project not found.');
         }
 
         $test = new \Criterion\Model\Test($app['request']->get('test_id'));
 
         // If a test ID is specified, then clear out the logs as its a rerun
-        if ($test->exists)
-        {
+        if ($test->exists) {
             $logs = $test->getLogs();
-            foreach ($logs as $log)
-            {
+            foreach ($logs as $log) {
                 $log->delete();
             }
 
@@ -169,15 +152,12 @@ class ProjectsController
     {
         $project = new \Criterion\Model\Project($app['request']->get('id'));
 
-        if ( ! $project->exists)
-        {
+        if (! $project->exists) {
             return $app->abort(404, 'Project not found.');
         }
 
-        if ($app['request']->getMethod() == 'POST')
-        {
-            if ( ! $app['user']->isAdmin())
-            {
+        if ($app['request']->getMethod() == 'POST') {
+            if (! $app['user']->isAdmin()) {
                 return $app->abort(403, 'You do not have permission to do this');
             }
 
