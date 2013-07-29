@@ -4,6 +4,14 @@ namespace Criterion\Model;
 class Project extends \Criterion\Model
 {
     public $collection = 'projects';
+    public $serverConfig = array();
+    public $serverConfigWhitelist = array(
+        'repo' => 0,
+        'email' => 0,
+        'ssh_key' => array(),
+        'enviroment_variables' => array(),
+        'github' => array()
+    );
 
     public function __construct($query = null, $existing = null)
     {
@@ -51,5 +59,33 @@ class Project extends \Criterion\Model
         }
 
         return $test_models;
+    }
+
+    public function setServerConfig($data)
+    {
+        $data = array_merge($this->serverConfigWhitelist, $data);
+
+        foreach ($data as $key => $value) {
+            if (array_key_exists($key, $this->serverConfigWhitelist)) {
+                $this->data[$key] = $value;
+                $this->serverConfig[$key] = $value;
+            }
+        }
+
+        return $this->serverConfig;
+    }
+
+    public function getServerConfig()
+    {
+
+        $data = array_merge($this->serverConfigWhitelist, $this->data);
+
+        foreach ($data as $key => $value) {
+            if (array_key_exists($key, $this->serverConfigWhitelist)) {
+                $this->serverConfig[$key] = $value;
+            }
+        }
+
+        return $this->serverConfig;
     }
 }
