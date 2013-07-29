@@ -24,12 +24,13 @@
     {% if app.user and app.user.isAdmin %}
 
 
-        <div class="row-fluid" id="edit_project_row">
+        <div class="row-fluid hide" id="edit_project_row">
             <form method="post" action="">
                 <div id="editor" class="span12 project_config">{{ config }}</div>
                 <textarea name="config" id="config" class="hide">{{ config }}</textarea>
                 <small><b>CTRL/CMD + S</b> to save</small>
             </form>
+            <hr />
         </div>
 
         <script src="/js/ace/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -48,7 +49,6 @@
         });
         </script>
 
-        <hr />
     {% endif %}
 
     {% if tests|length > 0 %}
