@@ -177,24 +177,33 @@ class Application extends SymfonyApplication
     // Parse a criterion.yml file, and log the results
     public function parseConfig($config)
     {
-        $criterion = Yaml::parse($config);
 
-        $command = 'Parsing .criterion.yml file';
+        if (file_exists($config)) {
+            $criterion = Yaml::parse($config);
+        } else {
+            $criterion = array();
+        }
+
+        $command = 'Parsing Criterion config';
         $prelog = $this->preLog($command);
 
-        if( ! isset($criterion) || ! is_array($criterion))
-        {
+        if(! is_array($criterion)) {
             $this->log($command, 'The .criterion.yml file does not seem valid, or does not exist', '1', $prelog);
             return false;
         }
 
-        $this->log($command, 'Successfully parsed .criterion.yml file', '0', $prelog);
+        $serverConfig = $this->project->getServerConfig();
 
-        foreach (array('setup', 'test', 'fail', 'pass') as $section)
-        {
-            if ( ! isset($criterion[$section]) ||  ! is_array($criterion[$section]))
-            {
-                 $criterion[$section] = array();
+        $this->log($command, 'Successfully parsed Criterion config', '0', $prelog);
+
+        foreach (array('setup', 'script', 'fail', 'pass') as $section) {
+
+            if (! empty($serverConfig[$section])) {
+                $criterion[$section] = $serverConfig[$section];
+            } else {
+                if ( ! isset($criterion[$section]) ||  ! is_array($criterion[$section])) {
+                    $criterion[$section] = array();
+                }
             }
         }
 

@@ -21,7 +21,7 @@ class TestCase extends \Silex\WebTestCase
 
     public function createApplication()
     {
-        putenv('APP_ENV=testing');
+        putenv('APP_ENV=criterion_test');
 
         // Establish Application instance
         try {
