@@ -3,7 +3,6 @@ namespace Criterion\Console\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class UserDeleteCommand extends Command
@@ -34,8 +33,7 @@ class UserDeleteCommand extends Command
             false
         );
 
-        if (! $confirm)
-        {
+        if (! $confirm) {
             $output->writeln('<error>User not deleted</error>');
             exit;
         }
@@ -45,9 +43,9 @@ class UserDeleteCommand extends Command
             'username' => $username
         ));
 
-        if ( ! $user->exists)
-        {
+        if (! $user->exists) {
             $output->writeln('<error>Could not find user</error>');
+
             return false;
         }
 

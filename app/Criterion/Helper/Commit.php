@@ -46,8 +46,7 @@ class Commit extends \Criterion\Helper
     public static function getInfo($repo, $branch = 'master', $folder = false)
     {
 
-        if ($folder)
-        {
+        if ($folder) {
             $current_folder = getcwd();
             chdir($folder);
         }
@@ -79,8 +78,7 @@ class Commit extends \Criterion\Helper
 
         $commit['username'] = Repo::username($repo);
 
-        if ($folder)
-        {
+        if ($folder) {
             chdir($current_folder);
         }
 
@@ -96,6 +94,7 @@ class Commit extends \Criterion\Helper
         ) {
             return false;
         }
+
         return true;
     }
 }

@@ -12,21 +12,19 @@ class User extends \Criterion\Model
 
     public function password($check = false)
     {
-        if ( ! $this->password)
-        {
+        if (! $this->password) {
             return false;
         }
 
-        if ($check)
-        {
+        if ($check) {
             return password_verify($check, $this->password);
         }
 
-        return $this->password_hash($this->password);
+        return $this->passwordHash($this->password);
 
     }
 
-    private function password_hash($password)
+    private function passwordHash($password)
     {
         return password_hash($this->password, PASSWORD_BCRYPT, array(
             'cost' => 12

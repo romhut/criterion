@@ -8,8 +8,7 @@ class Notifications extends \Criterion\Helper
         $app = new \Criterion\Application();
         $config = $app->config;
 
-        if ($project->email && isset($config['email']))
-        {
+        if ($project->email && isset($config['email'])) {
             $subject = '['.$project->repo.'] Tests Failed (' . $test . ')';
             $body = "This is a short email to let you know that the following project's tests are failing: \n\n";
             $body .= $config['url'] . '/test/' . $test . "\n\n";
@@ -17,6 +16,7 @@ class Notifications extends \Criterion\Helper
 
             return self::email($project->email, $subject, $body);
         }
+
         return false;
     }
 
@@ -25,15 +25,12 @@ class Notifications extends \Criterion\Helper
         $app = new \Criterion\Application();
         $config = $app->config;
 
-        if (isset($config['email']['smtp']))
-        {
+        if (isset($config['email']['smtp'])) {
             $transport = \Swift_SmtpTransport::newInstance($config['email']['smtp']['server'], $config['email']['smtp']['port'])
                 ->setUsername($config['email']['smtp']['username'])
                 ->setPassword($config['email']['smtp']['password'])
                 ;
-        }
-        else
-        {
+        } else {
             $transport = \Swift_MailTransport::newInstance();
         }
 
@@ -45,13 +42,11 @@ class Notifications extends \Criterion\Helper
                     ->setBody($body)
                     ;
 
-        try
-        {
+        try {
             return (bool) $mailer->send($message);
-        }
-        catch (\Swift_TransportException $e)
-        {
+        } catch (\Swift_TransportException $e) {
             echo 'Could not connect to SMTP server.' . "\n";
+
             return false;
         }
     }

@@ -10,8 +10,7 @@ class Test extends \Criterion\Model
     {
         parent::__construct($query, $existing);
 
-        if ( ! $this->exists)
-        {
+        if (! $this->exists) {
             $this->status = array(
                 'code' => '4',
                 'message' => 'Pending'
@@ -25,6 +24,7 @@ class Test extends \Criterion\Model
         if (! $this->project) {
             $this->project = new Project($this->project_id);
         }
+
         return $this->project;
     }
 
@@ -32,7 +32,7 @@ class Test extends \Criterion\Model
     {
         if (file_exists($this->path . '/.criterion.yml') || $this->getProject()->hasServerConfig()) {
             return 'criterion';
-        } else if (file_exists($this->path . '/phpunit.xml') || file_exists($this->path . '/phpunit.xml.dist')) {
+        } elseif (file_exists($this->path . '/phpunit.xml') || file_exists($this->path . '/phpunit.xml.dist')) {
             return 'phpunit';
         } else {
             return false;
@@ -49,8 +49,7 @@ class Test extends \Criterion\Model
         ));
 
         $log_models = array();
-        foreach ($logs as $log)
-        {
+        foreach ($logs as $log) {
             $log_models[] = new Log(null, $log);
         }
 

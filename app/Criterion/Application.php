@@ -45,7 +45,7 @@ class Application
                 if (! $config) {
                     throw new ConfigurationException('Could not parse config file');
                 }
-                $this->config = Utils::array_merge($this->config, $config);
+                $this->config = Utils::arrayMerge($this->config, $config);
             }
         }
 

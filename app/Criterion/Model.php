@@ -13,31 +13,22 @@ class Model
     public function __construct($query = null, $existing = false)
     {
         $this->app = new \Criterion\Application();
-        if ( ! $this->collection)
-        {
+        if (! $this->collection) {
             $this->collection = strtolower(get_called_class());
         }
 
         $this->db = $this->app->db->{$this->collection};
 
-        if ($existing && !$query && isset($existing['_id']))
-        {
+        if ($existing && !$query && isset($existing['_id'])) {
             $this->exists = true;
             $this->id = $existing['_id'];
             $this->data = $existing;
-        }
-        else
-        {
-            if ( ! is_array($query))
-            {
-                if ( ! is_object($query))
-                {
-                    try
-                    {
+        } else {
+            if (! is_array($query)) {
+                if (! is_object($query)) {
+                    try {
                         $query = new \MongoId($query);
-                    }
-                    catch (\MongoException $e)
-                    {
+                    } catch (\MongoException $e) {
                         // leave as _id
                     }
                 }
@@ -48,14 +39,11 @@ class Model
             }
 
             $document = $this->db->findOne($query);
-            if ($document)
-            {
+            if ($document) {
                 $this->exists = true;
                 $this->id = $document['_id'];
                 $this->data = $document;
-            }
-            else
-            {
+            } else {
                 $this->id = new \MongoId();
                 $this->data['_id'] = $this->id;
             }
@@ -64,8 +52,7 @@ class Model
 
     public function __get($key)
     {
-        if ( ! isset($this->data[$key]))
-        {
+        if (! isset($this->data[$key])) {
             return null;
         }
 
@@ -89,34 +76,33 @@ class Model
 
     public function delete()
     {
-        if ($this->exists)
-        {
+        if ($this->exists) {
             $delete = $this->db->remove(array(
                 '_id' => $this->id
             ));
 
             $this->exists = false;
+
             return (bool) $delete['ok'];
         }
+
         return false;
     }
 
     public function save()
     {
-        if ($this->exists)
-        {
+        if ($this->exists) {
             unset($this->data['_id']);
             $save = $this->db->update(array(
                 '_id' => $this->id
             ), array(
                 '$set' => $this->data
             ));
-        }
-        else
-        {
+        } else {
             $save = $this->db->insert($this->data);
             $this->exists = true;
         }
+
         return (bool) $save['ok'];
     }
 }

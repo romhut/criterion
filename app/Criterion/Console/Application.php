@@ -2,10 +2,7 @@
 namespace Criterion\Console;
 
 use Symfony\Component\Console\Application as SymfonyApplication;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Yaml\Yaml;
-use Criterion\Exception\ConfigurationException;
 
 class Application extends SymfonyApplication
 {
@@ -70,6 +67,7 @@ class Application extends SymfonyApplication
         $log->status = '0';
         $log->internal = $internal;
         $log->save();
+
         return $log->id;
     }
 
@@ -88,6 +86,7 @@ class Application extends SymfonyApplication
         $log->status = '1';
         $log->internal = $internal;
         $log->save();
+
         return $log;
     }
 
@@ -127,6 +126,7 @@ class Application extends SymfonyApplication
         $this->executeAndLog(sprintf('rm -rf %s', $path), true);
 
         $this->output->writeln('<error>test failed</error>');
+
         return false;
     }
 
@@ -164,6 +164,7 @@ class Application extends SymfonyApplication
         $this->executeAndLog(sprintf('rm -rf %s', $path), true);
 
         $this->output->writeln('<question>test passed</question>');
+
         return false;
     }
 
@@ -179,6 +180,7 @@ class Application extends SymfonyApplication
 
         if (! is_array($criterion)) {
             $this->log($command, 'The .criterion.yml file does not seem valid, or does not exist', '1');
+
             return false;
         }
 
@@ -202,6 +204,7 @@ class Application extends SymfonyApplication
         $this->test->config = $criterion;
         $this->test->save();
         $this->criterion = $criterion;
+
         return $criterion;
     }
 }

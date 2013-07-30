@@ -6,12 +6,14 @@ class Github extends \Criterion\Helper
     public static function toSSHUrl($url)
     {
         $url = str_replace(array('https://','.com/'), array('git@','.com:'), $url);
+
         return $url;
     }
 
     public static function toHTTPSUrl($url)
     {
         $url = str_replace(array('git@','.com:'), array('https://','.com/'), $url);
+
         return $url;
     }
 
@@ -19,6 +21,7 @@ class Github extends \Criterion\Helper
     {
         $repo = self::toHTTPSUrl($repo);
         $repo = str_replace('.git', null, $repo);
+
         return $repo . '/commit/' . $commit['hash']['long'];
     }
 
@@ -26,6 +29,7 @@ class Github extends \Criterion\Helper
     {
         $repo = self::toHTTPSUrl($repo);
         $repo = str_replace('.git', null, $repo);
+
         return $repo . '/tree/' . $branch;
     }
 
@@ -33,6 +37,7 @@ class Github extends \Criterion\Helper
     {
         $https_url = self::toHTTPSUrl($url);
         $https_url = str_replace('.git', null, $https_url);
+
         return str_replace('https://github.com/', null, $https_url);
     }
 
