@@ -1,5 +1,7 @@
 <?php
+
 namespace Criterion\Model;
+use Criterion\Utils;
 
 class Project extends \Criterion\Model
 {
@@ -86,8 +88,8 @@ class Project extends \Criterion\Model
             }
         }
 
-        $this->serverConfig = array_merge($this->serverConfigWhitelist, $config_data);
-        $this->data = array_merge($this->data, $this->serverConfig);
+        $this->serverConfig = Utils::arrayMerge($this->serverConfigWhitelist, $config_data);
+        $this->data = Utils::arrayMerge($this->data, $this->serverConfig);
 
         return $this->serverConfig;
     }
@@ -108,7 +110,7 @@ class Project extends \Criterion\Model
 
     public function getServerConfig()
     {
-        $data = array_merge($this->serverConfigWhitelist, $this->data);
+        $data = Utils::arrayMerge($this->serverConfigWhitelist, $this->data);
 
         foreach ($data as $key => $value) {
             if (array_key_exists($key, $this->serverConfigWhitelist)) {
