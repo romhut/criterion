@@ -8,7 +8,7 @@ class Project extends \Criterion\Model
     public $collection = 'projects';
     public $serverConfig = array();
     public $serverConfigWhitelist = array(
-        'repo' => '',
+        'source' => '',
         'email' => '',
         'ssh_key' => array(),
         'enviroment_variables' => array(),
@@ -24,14 +24,14 @@ class Project extends \Criterion\Model
         $raw_query = $query;
         parent::__construct($query, $existing);
 
-        if (! $this->exists && isset($raw_query['repo'])) {
-            $this->repo = $raw_query['repo'];
+        if (! $this->exists && isset($raw_query['source'])) {
+            $this->source = $raw_query['source'];
             $this->github = array(
                 'token' => ''
             );
             $this->email = '';
-            $this->short_repo = \Criterion\Helper\Repo::short($this->repo);
-            $this->provider = \Criterion\Helper\Repo::provider($this->repo);
+            $this->short_repo = \Criterion\Helper\Repo::short($this->source);
+            $this->provider = \Criterion\Helper\Repo::provider($this->source);
             $this->last_run = new \MongoDate();
             $this->status = array(
                 'code' => '2',
@@ -70,6 +70,7 @@ class Project extends \Criterion\Model
 
     public function setServerConfig($data)
     {
+        $config_data = array();
         foreach ($data as $key => $value) {
             if (array_key_exists($key, $this->serverConfigWhitelist)) {
                 if ($key === 'enviroment_variables' && is_array($value)) {

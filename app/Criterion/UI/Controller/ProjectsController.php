@@ -38,7 +38,7 @@ class ProjectsController
         }
 
         $project = new \Criterion\Model\Project(array(
-            'repo' => $app['request']->get('repo')
+            'source' => $app['request']->get('source')
         ));
 
         if ($project->exists) {
@@ -166,8 +166,8 @@ class ProjectsController
             $config = Yaml::parse($app['request']->get('config'));
             $project->setServerConfig($config);
 
-            $project->short_repo = \Criterion\Helper\Repo::short($project->repo);
-            $project->provider = \Criterion\Helper\Repo::provider($project->repo);
+            $project->short_repo = \Criterion\Helper\Repo::short($project->source);
+            $project->provider = \Criterion\Helper\Repo::provider($project->source);
             $project->save();
 
             return $app->redirect('/project/' . $project->id);

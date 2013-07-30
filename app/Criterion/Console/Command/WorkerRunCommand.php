@@ -66,7 +66,7 @@ class WorkerRunCommand extends Command
 
                 if ($project->exists) {
                     $output->writeln('<comment>Test Started</comment>');
-                    $output->writeln(' - Project:' . $project->repo);
+                    $output->writeln(' - Project:' . $project->source);
                     $output->writeln(' - Test ID:' . $test_id);
 
                     $shell_command = $input->getOption('debug') ? 'passthru' : 'shell_exec';

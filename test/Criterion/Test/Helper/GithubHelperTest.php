@@ -54,7 +54,7 @@ class GithubHelperTest extends \Criterion\Test\TestCase
     public function testUpdateStatus()
     {
         $project = new \Criterion\Model\Project(array(
-            'repo' => 'git@github.com:romhut/criterion'
+            'source' => 'git@github.com:romhut/criterion'
         ));
 
         $project->github = array(
