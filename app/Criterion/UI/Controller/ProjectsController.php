@@ -37,13 +37,9 @@ class ProjectsController
             return $app->abort(403, 'You do not have permission to do this');
         }
 
-
-
         $project = new \Criterion\Model\Project(array(
             'repo' => $app['request']->get('repo')
         ));
-
-
 
         if ($project->exists) {
             return $app->redirect('/project/' . (string) $project->id);
@@ -116,6 +112,7 @@ class ProjectsController
         }
 
         $project->delete();
+
         return $app->redirect('/');
     }
 

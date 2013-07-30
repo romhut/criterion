@@ -1,9 +1,7 @@
 <?php
 namespace Criterion\Console\Command;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class InstallCommand extends Command
@@ -67,8 +65,7 @@ class InstallCommand extends Command
 
         $output->writeln('');
         $publically_viewable = strtolower($dialog->ask($output, '<info>Do you wish this installation to be publically viewable?</info> [y/N]: '));
-        if ($publically_viewable === 'y')
-        {
+        if ($publically_viewable === 'y') {
             $config['visibility'] = 'public';
         }
         $output->writeln('');
@@ -83,13 +80,10 @@ class InstallCommand extends Command
 
         $user->username = $username;
 
-        if ($user->exists)
-        {
+        if ($user->exists) {
             $password = null;
             $output->writeln('User already exists, promoting to admin.');
-        }
-        else
-        {
+        } else {
             $password = $dialog->ask($output, 'Password: [password]: ', 'password');
             $user->password = password_hash($password, PASSWORD_BCRYPT, array('cost' => 12));
         }
@@ -104,8 +98,7 @@ class InstallCommand extends Command
         $config['email']['name'] = $dialog->ask($output, 'From name [Criterion Notifications]: ', 'Criterion Notifications');
 
         $use_smtp = strtolower($dialog->ask($output, 'Do you want to setup SMTP? [y/N]: '));
-        if ($use_smtp === 'y')
-        {
+        if ($use_smtp === 'y') {
             $config['email']['smtp']['server'] = $dialog->ask($output, 'SMTP Server [localhost]: ', 'localhost');
             $config['email']['smtp']['port'] = $dialog->ask($output, 'SMTP Port [25]: ', '25');
             $config['email']['smtp']['username'] = $dialog->ask($output, 'SMTP Username [mail@localhost]: ', 'mail@localhost');
@@ -116,13 +109,11 @@ class InstallCommand extends Command
         shell_exec('chmod +x ' . ROOT . '/bin/*');
 
         // Create data folder structure
-        if ( ! is_dir(ROOT . '/data/tests'))
-        {
+        if (! is_dir(ROOT . '/data/tests')) {
             mkdir(ROOT . '/data/tests', 0777, true);
         }
 
-        if ( ! is_dir(ROOT . '/data/keys'))
-        {
+        if (! is_dir(ROOT . '/data/keys')) {
             mkdir(ROOT . '/data/keys', 0777, true);
         }
 
@@ -141,10 +132,8 @@ class InstallCommand extends Command
             'marcqualie/hoard'
         );
         $install_samples = strtolower($dialog->ask($output, 'Do you want to install sample projects? [y/N]: '));
-        if ($install_samples === 'y')
-        {
-            foreach ($samples as $sample)
-            {
+        if ($install_samples === 'y') {
+            foreach ($samples as $sample) {
                 $project = new \Criterion\Model\Project(array(
                     'repo' => 'https://github.com/' . $sample
                 ));

@@ -13,14 +13,12 @@ use Whoops\Provider\Silex\WhoopsServiceProvider;
 $app = new Silex\Application();
 $app['criterion'] = new Criterion\Application();
 
-if ( ! $app['criterion']->config)
-{
+if (! $app['criterion']->config) {
     echo 'You must install Criterion first by running: "bin/cli install"';
     exit;
 }
 
-if (isset($app['criterion']->config['debug']) && $app['criterion']->config['debug'] === true)
-{
+if (isset($app['criterion']->config['debug']) && $app['criterion']->config['debug'] === true) {
     $app['debug'] = true;
     $app->register(new WhoopsServiceProvider);
 }
@@ -37,46 +35,38 @@ $app->before(function() use ($app) {
     $authenticated = false;
     $app['user'] = false;
 
-    if ($app['session']->get('user') || ! isset($app['criterion']->config['visibility']) || $app['criterion']->config['visibility'] !== 'public')
-    {
+    if ($app['session']->get('user') || ! isset($app['criterion']->config['visibility']) || $app['criterion']->config['visibility'] !== 'public') {
         $path_info = pathinfo($app['request']->getPathInfo());
         $uri = $app['request']->server->get('REQUEST_URI');
 
         $allowed_urls = array('/auth/login');
 
-        if (strpos($uri, '/hook/github') === 0 || in_array($uri, $allowed_urls) || (isset($path_info['extension']) && in_array($path_info['extension'], array('png', 'jpg'))))
-        {
+        if (strpos($uri, '/hook/github') === 0 || in_array($uri, $allowed_urls) || (isset($path_info['extension']) && in_array($path_info['extension'], array('png', 'jpg')))) {
              $authenticated = true;
-        }
-        else
-        {
-            if ($app['session']->get('user'))
-            {
+        } else {
+            if ($app['session']->get('user')) {
                 $session = $app['session']->get('user');
                 $user = new \Criterion\Model\User(array(
                     'username' => $session['username']
                 ));
 
-                if ($user->exists)
-                {
+                if ($user->exists) {
                     $app['user'] = $user;
                     $authenticated = true;
                 }
             }
         }
 
-        if (! $authenticated)
-        {
+        if (! $authenticated) {
             return $app->redirect('/auth/login');
         }
     }
 });
 
-$app->error(function(\Exception $e, $code) use($app) {
+$app->error(function(\Exception $e, $code) use ($app) {
 
     $allowed_codes = array(401, 404, 403);
-    if ( ! in_array($code, $allowed_codes))
-    {
+    if (! in_array($code, $allowed_codes)) {
         $code = 404;
     }
 

@@ -5,13 +5,11 @@ class Repo extends \Criterion\Helper
 {
     public static function provider($url)
     {
-        if (strpos($url, 'github.com'))
-        {
+        if (strpos($url, 'github.com')) {
             return 'github';
         }
 
-        if (strpos($url, 'bitbucket.org'))
-        {
+        if (strpos($url, 'bitbucket.org')) {
             return 'bitbucket';
         }
 
@@ -20,8 +18,7 @@ class Repo extends \Criterion\Helper
 
     public static function cloneType($repo)
     {
-        if (strpos($repo, 'https://') !== false)
-        {
+        if (strpos($repo, 'https://') !== false) {
             return 'https';
         }
 
@@ -31,8 +28,7 @@ class Repo extends \Criterion\Helper
     public static function cloneCommand($test, $project)
     {
         $git_clone = null;
-        if (self::cloneType($project->repo) === 'ssh')
-        {
+        if (self::cloneType($project->repo) === 'ssh') {
             $git_clone = 'export GIT_SSH=' . ROOT . '/bin/git; export PKEY=' .  Project::sshKeyFile($project) . ';';
         }
 
@@ -50,6 +46,7 @@ class Repo extends \Criterion\Helper
     {
         $username = explode('@', $repo);
         $username = str_replace('https://', null, $username[0]);
+
         return $username ?: false;
     }
 
