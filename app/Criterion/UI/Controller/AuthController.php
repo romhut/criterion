@@ -30,7 +30,7 @@ class AuthController
 
     public function tokens(\Silex\Application $app)
     {
-        if ( ! $app['user']->isAdmin()) {
+        if (! $app['user']->isAdmin()) {
             return $app->abort(403, 'You do not have permission to do this');
         }
 

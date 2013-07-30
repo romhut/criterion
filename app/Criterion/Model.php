@@ -24,8 +24,8 @@ class Model
             $this->id = $existing['_id'];
             $this->data = $existing;
         } else {
-            if ( ! is_array($query)) {
-                if ( ! is_object($query)) {
+            if (! is_array($query)) {
+                if (! is_object($query)) {
                     try {
                         $query = new \MongoId($query);
                     } catch (\MongoException $e) {
@@ -52,7 +52,7 @@ class Model
 
     public function __get($key)
     {
-        if ( ! isset($this->data[$key])) {
+        if (! isset($this->data[$key])) {
             return null;
         }
 

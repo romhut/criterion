@@ -66,7 +66,7 @@ $app->before(function() use ($app) {
 $app->error(function(\Exception $e, $code) use ($app) {
 
     $allowed_codes = array(401, 404, 403);
-    if ( ! in_array($code, $allowed_codes)) {
+    if (! in_array($code, $allowed_codes)) {
         $code = 404;
     }
 

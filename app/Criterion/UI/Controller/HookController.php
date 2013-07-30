@@ -14,12 +14,12 @@ class HookController
         }
 
         $user = new \Criterion\Model\User($token->user_id);
-        if ( ! $user->isAdmin()) {
+        if (! $user->isAdmin()) {
             return $app->abort(403, 'User does not have permission to do this.');
         }
 
         $payload = json_decode($app['request']->get('payload'), true);
-        if ( ! isset($payload['repository']['url'])) {
+        if (! isset($payload['repository']['url'])) {
             return $app->abort(404, 'Page does not exist');
         }
 

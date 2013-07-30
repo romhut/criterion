@@ -109,11 +109,11 @@ class InstallCommand extends Command
         shell_exec('chmod +x ' . ROOT . '/bin/*');
 
         // Create data folder structure
-        if ( ! is_dir(ROOT . '/data/tests')) {
+        if (! is_dir(ROOT . '/data/tests')) {
             mkdir(ROOT . '/data/tests', 0777, true);
         }
 
-        if ( ! is_dir(ROOT . '/data/keys')) {
+        if (! is_dir(ROOT . '/data/keys')) {
             mkdir(ROOT . '/data/keys', 0777, true);
         }
 
