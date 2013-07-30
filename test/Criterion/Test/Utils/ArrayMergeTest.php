@@ -16,7 +16,7 @@ class ArrayMergeTest extends TestCase
             'key2' => 'two',
             'key3' => 'three'
         );
-        $array3 = Utils::array_merge($array1, $array2);
+        $array3 = Utils::arrayMerge($array1, $array2);
         $this->assertEquals($array3, array(
             'key1' => 1,
             'key2' => 'two',
@@ -41,7 +41,7 @@ class ArrayMergeTest extends TestCase
                 'nested3' => 3
             )
         );
-        $array3 = Utils::array_merge($array1, $array2);
+        $array3 = Utils::arrayMerge($array1, $array2);
         $this->assertEquals($array3, array(
             'key1' => 1,
             'key2' => array(
