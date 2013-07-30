@@ -192,7 +192,11 @@ class Application extends SymfonyApplication
         foreach (array('setup', 'script', 'fail', 'pass') as $section) {
 
             if (! empty($serverConfig[$section])) {
-                $criterion[$section] = $serverConfig[$section];
+                if (! is_array($serverConfig[$section])) {
+                    $criterion[$section] = array($serverConfig[$section]);
+                } else {
+                    $criterion[$section] = $serverConfig[$section];
+                }
             } else {
                 if (! isset($criterion[$section]) || ! is_array($criterion[$section])) {
                     $criterion[$section] = array();

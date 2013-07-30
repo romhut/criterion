@@ -126,7 +126,7 @@ class TestCommand extends Command
 
         // Detect the test type. E.G. if .criterion.yml file does
         // not exist, it may be a PHPUnit project
-        $test_type = \Criterion\Helper\Test::detectType($test_folder);
+        $test_type = $test->getType();
         $this->getApplication()->log('Detecting test type', $test_type ?: 'Not Found', $test_type ? '0' : '1');
 
         // Update the current test with some details we just gathered

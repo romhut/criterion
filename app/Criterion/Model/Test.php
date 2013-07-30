@@ -4,6 +4,7 @@ namespace Criterion\Model;
 class Test extends \Criterion\Model
 {
     public $collection = 'tests';
+    public $project = false;
 
     public function __construct($query = null, $existing = null)
     {
@@ -21,7 +22,21 @@ class Test extends \Criterion\Model
 
     public function getProject()
     {
-        return new Project($this->project_id);
+        if (! $this->project) {
+            $this->project = new Project($this->project_id);
+        }
+        return $this->project;
+    }
+
+    public function getType()
+    {
+        if (file_exists($this->path . '.criterion.yml') || $this->getProject()->hasServerConfig()) {
+            return 'criterion';
+        } else if (file_exists($this->path . 'phpunit.xml') || file_exists($this->path . 'phpunit.xml')) {
+            return 'phpunit';
+        } else {
+            return false;
+        }
     }
 
     public function getLogs($internal = false)
