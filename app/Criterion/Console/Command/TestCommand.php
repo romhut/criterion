@@ -72,7 +72,7 @@ class TestCommand extends Command
         $this->getApplication()->test = $test;
 
         // Pass the project and output variables into the application.
-        // This allows for a consistant output, and makes it easier to
+        // This allows for a consistent output, and makes it easier to
         // reference the project details
         $this->getApplication()->project = $project;
         $this->getApplication()->output = $output;
@@ -85,13 +85,13 @@ class TestCommand extends Command
                 $env_variables[] = $env_var;
                 putenv($env_var);
             }
-            $this->getApplication()->log('Setting enviroment variables', implode(', ',$env_variables), 0, $set_env_variables);
+            $this->getApplication()->log('Setting environment variables', implode(', ',$env_variables), 0, $set_env_variables);
         }
 
         // Switch to the project directory, and clone the repo into it.
         chdir($project_folder);
 
-        // Add a fake "clone" log entry. This is a lot cleaner when outputing the logs.
+        // Add a fake "clone" log entry. This is a lot cleaner when outputting the logs.
         $prelog_clone = $this->getApplication()->preLog('Cloning ' . $project->repo);
         $clone_start = microtime(true);
 
@@ -178,7 +178,7 @@ class TestCommand extends Command
             }
         } elseif ($test_type === 'phpunit') {
             // Check to see if a composer.json file exists, if it does then
-            // we need to run "composer install" to get all dependancies
+            // we need to run "composer install" to get all dependencies
             $is_composer = \Criterion\Helper\Test::isComposer($test_folder);
             if ($is_composer) {
 
@@ -189,7 +189,7 @@ class TestCommand extends Command
             }
 
             // Because there are a few ways of running phpunit, we need to
-            // check them. First we check the vendor dir incase composer
+            // check them. First we check the vendor dir in case composer
             // has installed it.
             if (file_exists($test_folder . '/vendor/bin/phpunit')) {
                 $response = $this->getApplication()->executeAndLog('vendor/bin/phpunit');
