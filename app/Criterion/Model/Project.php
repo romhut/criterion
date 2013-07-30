@@ -94,6 +94,18 @@ class Project extends \Criterion\Model
         return $this->serverConfig;
     }
 
+    public function hasServerConfig()
+    {
+        $this->getServerConfig();
+        foreach ($this->serverConfig as $config) {
+            if (count($config)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function getServerConfig()
     {
         $data = array_merge($this->serverConfigWhitelist, $this->data);
