@@ -1,7 +1,6 @@
 <?php
 
 namespace Criterion\Test;
-use Criterion\Application;
 use Criterion\Utils;
 
 class ArraySortTest extends TestCase

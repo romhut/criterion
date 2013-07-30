@@ -1,7 +1,6 @@
 <?php
 
 namespace Criterion\Test;
-use Criterion\Application;
 use Criterion\Utils;
 
 class ArrayMergeTest extends TestCase
@@ -24,7 +23,6 @@ class ArrayMergeTest extends TestCase
             'key3' => 'three'
         ));
     }
-
 
     public function testNestedArrayMerge()
     {
