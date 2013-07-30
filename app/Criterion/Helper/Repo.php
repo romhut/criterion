@@ -25,8 +25,13 @@ class Repo extends \Criterion\Helper
         return 'ssh';
     }
 
-    public static function cloneCommand($test, $project)
+    public static function fetchCommand($test, $project)
     {
+
+        if (is_dir($project->source)) {
+            return 'cp -R ' . $project->source . ' ' . (string) $test->id;
+        }
+
         $git_clone = null;
         if (self::cloneType($project->source) === 'ssh') {
             $git_clone = 'export GIT_SSH=' . ROOT . '/bin/git; export PKEY=' .  Project::sshKeyFile($project) . ';';

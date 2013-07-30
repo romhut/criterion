@@ -93,22 +93,22 @@ class TestCommand extends Command
         chdir($project_folder);
 
         // Add a fake "clone" log entry. This is a lot cleaner when outputting the logs.
-        $prelog_clone = $this->getApplication()->preLog('Cloning ' . $project->source);
-        $clone_start = microtime(true);
+        $prelog_clone = $this->getApplication()->preLog('Fetching ' . $project->source);
+        $fetch_start = microtime(true);
 
         // Get a fully formatted clone command, and then run it.
-        $clone_command = \Criterion\Helper\Repo::cloneCommand($test, $project);
-        $git_clone = $this->getApplication()->executeAndLog($clone_command, true);
+        $fetch_command = \Criterion\Helper\Repo::fetchCommand($test, $project);
+        $fetch = $this->getApplication()->executeAndLog($fetch_command, true);
 
-        $clone_end = microtime(true);
+        $fetch_end = microtime(true);
         $clone_output = 'Failed';
-        if ($git_clone->response === '0') {
-            $clone_output = 'Cloned in ' . number_format($clone_end - $clone_start) . ' seconds';
+        if ($fetch->response === '0') {
+            $clone_output = 'Fetched in ' . number_format($fetch_end - $fetch_start) . ' seconds';
         }
 
         // Update fake log command with the response
-        $this->getApplication()->log('Cloning ' . $project->source, $clone_output, $git_clone->response, $prelog_clone);
-        if ($git_clone->response != 0) {
+        $this->getApplication()->log('Fetching ' . $project->source, $clone_output, $fetch->response, $prelog_clone);
+        if ($fetch->response != 0) {
             return $this->getApplication()->testFailed();
         }
 
