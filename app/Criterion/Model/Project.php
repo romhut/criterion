@@ -96,9 +96,11 @@ class Project extends \Criterion\Model
 
     public function hasServerConfig()
     {
+
         $this->getServerConfig();
-        foreach ($this->serverConfig as $config) {
-            if (count($config)) {
+        foreach (array('script','setup','pass','fail') as $config) {
+
+            if (count($this->serverConfig[$config]) && !empty($this->serverConfig[$config])) {
                 return true;
             }
         }

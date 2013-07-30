@@ -30,9 +30,9 @@ class Test extends \Criterion\Model
 
     public function getType()
     {
-        if (file_exists($this->path . '.criterion.yml') || $this->getProject()->hasServerConfig()) {
+        if (file_exists($this->path . '/.criterion.yml') || $this->getProject()->hasServerConfig()) {
             return 'criterion';
-        } else if (file_exists($this->path . 'phpunit.xml') || file_exists($this->path . 'phpunit.xml')) {
+        } else if (file_exists($this->path . '/phpunit.xml') || file_exists($this->path . '/phpunit.xml.dist')) {
             return 'phpunit';
         } else {
             return false;

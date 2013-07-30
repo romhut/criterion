@@ -177,17 +177,12 @@ class Application extends SymfonyApplication
             $criterion = array();
         }
 
-        $command = 'Parsing Criterion config';
-        $prelog = $this->preLog($command);
-
         if (! is_array($criterion)) {
-            $this->log($command, 'The .criterion.yml file does not seem valid, or does not exist', '1', $prelog);
+            $this->log($command, 'The .criterion.yml file does not seem valid, or does not exist', '1');
             return false;
         }
 
         $serverConfig = $this->project->getServerConfig();
-
-        $this->log($command, 'Successfully parsed Criterion config', '0', $prelog);
 
         foreach (array('setup', 'script', 'fail', 'pass') as $section) {
 
