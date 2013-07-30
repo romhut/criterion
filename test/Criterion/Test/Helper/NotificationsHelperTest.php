@@ -17,7 +17,7 @@ class NotificationsHelperTest extends \Criterion\Test\TestCase
         $this->markTestIncomplete('We need to work out a way to mock emails');
 
         $project = new \Criterion\Model\Project(array(
-            'repo' => 'git@github.com:romhut/criterion'
+            'source' => 'git@github.com:romhut/criterion'
         ));
         $project->email = 'testing@localhost';
 
@@ -32,7 +32,7 @@ class NotificationsHelperTest extends \Criterion\Test\TestCase
         $this->markTestIncomplete('We need to work out a way to mock emails');
 
         $project = new \Criterion\Model\Project(array(
-            'repo' => 'git@github.com:romhut/criterion'
+            'source' => 'git@github.com:romhut/criterion'
         ));
 
         $test = new \Criterion\Model\Test();

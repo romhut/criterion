@@ -47,14 +47,16 @@ class RepoHelperTest extends \Criterion\Test\TestCase
     public function testCloneCommand()
     {
         $project = new \Criterion\Model\Project(array(
-            'repo' => 'git@github.com:romhut/criterion'
+            'source' => 'git@github.com:romhut/criterion'
         ));
 
         $test = new \Criterion\Model\Test();
         $test->branch = 'master';
 
         $clone_command = \Criterion\Helper\Repo::cloneCommand($test, $project);
-        $this->assertEquals('export GIT_SSH='.ROOT.'/bin/git; export PKEY='.ROOT.'/data/keys/'.$project->id.'; git clone -b master --depth=1 git@github.com:romhut/criterion '.$test->id, $clone_command);
+
+        $expected = 'export GIT_SSH='.ROOT.'/bin/git; export PKEY='.ROOT.'/data/keys/'.$project->id.'; git clone -b master --depth=1 git@github.com:romhut/criterion '.$test->id;
+        $this->assertEquals($expected, $clone_command);
     }
 
     public function testCloneTypeHttps()

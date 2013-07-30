@@ -44,7 +44,7 @@ class Github extends \Criterion\Helper
     public static function updateStatus($state, $test, $project)
     {
         $app = new \Criterion\Application();
-        $shortrepo = self::shortRepo($project->repo);
+        $shortrepo = self::shortRepo($project->source);
         $url = 'https://api.github.com/repos/' . $shortrepo . '/statuses/' . $test->commit['hash']['long'];
 
         $description = array(

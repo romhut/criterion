@@ -30,7 +30,7 @@ class HookController
         }
 
         $project = new \Criterion\Model\Project(array(
-            'repo' => $repo
+            'source' => $repo
         ));
 
         if (! $project->exists) {

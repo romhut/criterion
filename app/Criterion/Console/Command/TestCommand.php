@@ -93,7 +93,7 @@ class TestCommand extends Command
         chdir($project_folder);
 
         // Add a fake "clone" log entry. This is a lot cleaner when outputting the logs.
-        $prelog_clone = $this->getApplication()->preLog('Cloning ' . $project->repo);
+        $prelog_clone = $this->getApplication()->preLog('Cloning ' . $project->source);
         $clone_start = microtime(true);
 
         // Get a fully formatted clone command, and then run it.
@@ -107,7 +107,7 @@ class TestCommand extends Command
         }
 
         // Update fake log command with the response
-        $this->getApplication()->log('Cloning ' . $project->repo, $clone_output, $git_clone->response, $prelog_clone);
+        $this->getApplication()->log('Cloning ' . $project->source, $clone_output, $git_clone->response, $prelog_clone);
         if ($git_clone->response != 0) {
             return $this->getApplication()->testFailed();
         }
@@ -117,7 +117,7 @@ class TestCommand extends Command
         chdir($test_folder);
 
         // Fetch the commit info from the commit helper
-        $commit = \Criterion\Helper\Commit::getInfo($project->repo, $test->branch);
+        $commit = \Criterion\Helper\Commit::getInfo($project->source, $test->branch);
 
         // Check to see if the commit is testable
         if (! \Criterion\Helper\Commit::isValid($commit)) {
@@ -134,7 +134,7 @@ class TestCommand extends Command
         // Update the current test with some details we just gathered
         // such as: repo, commit info, and test type
         $test->commit = $commit;
-        $test->repo = $project->repo;
+        $test->source = $project->source;
         $test->type = $test_type;
         $test->save();
 
