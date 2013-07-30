@@ -9,27 +9,23 @@ class HookController
 
         $token = new \Criterion\Model\Token($query_token);
 
-        if ( ! $token->exists)
-        {
+        if (! $token->exists) {
             return $app->abort(403, 'Token is invalid');
         }
 
         $user = new \Criterion\Model\User($token->user_id);
-        if ( ! $user->isAdmin())
-        {
+        if ( ! $user->isAdmin()) {
             return $app->abort(403, 'User does not have permission to do this.');
         }
 
         $payload = json_decode($app['request']->get('payload'), true);
-        if ( ! isset($payload['repository']['url']))
-        {
+        if ( ! isset($payload['repository']['url'])) {
             return $app->abort(404, 'Page does not exist');
         }
 
         $repo = $payload['repository']['url'];
         // Detect if its an private repository, if so then we need to use SSH
-        if ($payload['repository']['private'])
-        {
+        if ($payload['repository']['private']) {
             $repo = \Criterion\Helper\Github::toSSHUrl($repo);
         }
 
@@ -37,8 +33,7 @@ class HookController
             'repo' => $repo
         ));
 
-        if ( ! $project->exists)
-        {
+        if (! $project->exists) {
             $project->save();
         }
 

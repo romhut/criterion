@@ -12,13 +12,11 @@ class User extends \Criterion\Model
 
     public function password($check = false)
     {
-        if ( ! $this->password)
-        {
+        if (! $this->password) {
             return false;
         }
 
-        if ($check)
-        {
+        if ($check) {
             return password_verify($check, $this->password);
         }
 

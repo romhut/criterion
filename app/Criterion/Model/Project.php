@@ -22,8 +22,7 @@ class Project extends \Criterion\Model
         $raw_query = $query;
         parent::__construct($query, $existing);
 
-        if ( ! $this->exists && isset($raw_query['repo']))
-        {
+        if ( ! $this->exists && isset($raw_query['repo'])) {
             $this->repo = $raw_query['repo'];
             $this->github = array(
                 'token' => ''
@@ -60,8 +59,7 @@ class Project extends \Criterion\Model
         ));
 
         $test_models = array();
-        foreach ($tests as $test)
-        {
+        foreach ($tests as $test) {
             $test_models[] = new Test(null, $test);
         }
 

@@ -4,7 +4,6 @@ namespace Criterion\Console\Command;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class TestCommand extends Command
@@ -25,16 +24,18 @@ class TestCommand extends Command
         $test_id = new \MongoId($input->getArgument('test_id'));
         $test = new \Criterion\Model\Test($test_id);
 
-        if ( ! $test->exists) {
+        if (! $test->exists) {
             $output->writeln('<error>No test found</error>');
+
             return false;
         }
 
         $project_id = $test->project_id;
         $project = $test->getProject();
 
-        if ( ! $project->exists) {
+        if (! $project->exists) {
             $output->writeln('<error>No project found</error>');
+
             return false;
         }
 
@@ -121,6 +122,7 @@ class TestCommand extends Command
         // Check to see if the commit is testable
         if (! \Criterion\Helper\Commit::isValid($commit)) {
             $test->delete();
+
             return false;
         }
 

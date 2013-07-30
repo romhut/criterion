@@ -2,9 +2,8 @@
 
 namespace Criterion;
 
-class Utils {
-
-
+class Utils
+{
     /**
      * Multi Dimensional Array Sorting
      */
@@ -28,6 +27,7 @@ class Utils {
                     : strcasecmp($a[$k], $b[$k]);
             }
         }
+
         return 0;
     }
     public static function array_sort (&$array)
@@ -40,7 +40,6 @@ class Utils {
         self::array_sort_func($keys);
         usort($array, 'Criterion\\Utils::array_sort_func');
     }
-
 
     /**
      * Multi Dimensional Object Sorting (Experimental)
@@ -65,6 +64,7 @@ class Utils {
                     : strcasecmp($a->$k, $b->$k);
             }
         }
+
         return 0;
     }
     public static function object_sort(&$array)
@@ -77,7 +77,6 @@ class Utils {
         self::object_sort_func($keys);
         usort($array, 'Criterion\\Utils::object_sort_func');
     }
-
 
     /**
      * Array merge recursive
@@ -92,6 +91,7 @@ class Utils {
                 $merged[$key] = $value;
             }
         }
+
         return $merged;
     }
 

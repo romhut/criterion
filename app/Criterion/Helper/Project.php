@@ -7,8 +7,7 @@ class Project extends \Criterion\Helper
     {
         $path = KEY_DIR . '/' . $project->id;
 
-        if ( ! is_file($path))
-        {
+        if ( ! is_file($path)) {
             file_put_contents($path, $project->ssh_key['private']);
         }
 

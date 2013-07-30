@@ -6,8 +6,7 @@ class AuthController
     public function login(\Silex\Application $app)
     {
         $data = array();
-        if ($app['request']->getMethod() === 'POST')
-        {
+        if ($app['request']->getMethod() === 'POST') {
             $username = strtolower($app['request']->get('username'));
             $password = $app['request']->get('password');
 
@@ -15,15 +14,13 @@ class AuthController
                 'username' => $username
             ));
 
-            if ($user->exists && $user->password($password))
-            {
+            if ($user->exists && $user->password($password)) {
                 $app['session']->set('user', array(
                     'username' => $username
                 ));
+
                 return $app->redirect('/');
-            }
-            else
-            {
+            } else {
                 $data['error'] = 'Account could not be found, please try again.';
             }
         }
@@ -33,14 +30,12 @@ class AuthController
 
     public function tokens(\Silex\Application $app)
     {
-        if ( ! $app['user']->isAdmin())
-        {
+        if ( ! $app['user']->isAdmin()) {
             return $app->abort(403, 'You do not have permission to do this');
         }
 
         $data = array();
-        if ($app['request']->getMethod() === 'POST')
-        {
+        if ($app['request']->getMethod() === 'POST') {
             $token = new \Criterion\Model\Token();
             $token->user_id = $app['user']->id;
             $token->generated = new \MongoDate();
@@ -58,6 +53,7 @@ class AuthController
     public function logout(\Silex\Application $app)
     {
         $app['session']->clear();
+
         return $app->redirect('/');
     }
 }
