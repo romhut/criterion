@@ -44,7 +44,7 @@ class RepoHelperTest extends \Criterion\Test\TestCase
         $this->assertEquals('git', $username);
     }
 
-    public function testCloneCommand()
+    public function testFetchCommandRepo()
     {
         $project = new \Criterion\Model\Project(array(
             'source' => 'git@github.com:romhut/criterion'
@@ -53,10 +53,25 @@ class RepoHelperTest extends \Criterion\Test\TestCase
         $test = new \Criterion\Model\Test();
         $test->branch = 'master';
 
-        $clone_command = \Criterion\Helper\Repo::cloneCommand($test, $project);
+        $clone_command = \Criterion\Helper\Repo::fetchCommand($test, $project);
 
         $expected = 'export GIT_SSH='.ROOT.'/bin/git; export PKEY='.ROOT.'/data/keys/'.$project->id.'; git clone -b master --depth=1 git@github.com:romhut/criterion '.$test->id;
         $this->assertEquals($expected, $clone_command);
+    }
+
+    public function testFetchCommandFolder()
+    {
+        $project = new \Criterion\Model\Project(array(
+            'source' => ROOT
+        ));
+
+        $test = new \Criterion\Model\Test();
+        $test->branch = 'master';
+
+        $fetch_command = \Criterion\Helper\Repo::fetchCommand($test, $project);
+
+        $expected = 'cp -R ' . ROOT . ' ' . $test->id;
+        $this->assertEquals($expected, $fetch_command);
     }
 
     public function testCloneTypeHttps()
