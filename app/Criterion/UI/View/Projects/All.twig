@@ -27,17 +27,13 @@
                         {% set project_class = 'warning' %}
                     {% endif %}
 
-                    <tr class="{{ project_class }}" >
+                    <tr class="{{ project_class }}">
                         <td>
                             {% if project.provider %}
                             <i class="icon-{{ project.provider == 'folder' ? 'folder-close' : project.provider }}"></i>
                             {% endif %}
                             <a href="/project/{{ project._id }}">
-                                {% if project.name is defined and project.name %}
-                                    {{ project.name }}
-                                {% else %}
-                                    {{ project.short_repo }}
-                                {% endif %}
+                                {{ project.name ?: project.short_repo }}
                             </a>
                         </td>
                         <td class="hidden-phone">
