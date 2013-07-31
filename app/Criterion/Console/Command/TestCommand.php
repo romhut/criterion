@@ -22,20 +22,18 @@ class TestCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $test_id = new \MongoId($input->getArgument('test_id'));
+
+        // Get the project and make sure it exists
         $test = new \Criterion\Model\Test($test_id);
-
         if (! $test->exists) {
-            $output->writeln('<error>No test found</error>');
-
+            $output->writeln('<error>Test could not be found.</error>');
             return false;
         }
 
-        $project_id = $test->project_id;
+        // Get the project linked to this test, if its not found, then remove the test
         $project = $test->getProject();
-
         if (! $project->exists) {
-            $output->writeln('<error>No project found</error>');
-
+            $output->writeln('<error>Project could not be found, removing test.</error>');
             return false;
         }
 
@@ -52,12 +50,12 @@ class TestCommand extends Command
         }
 
         $output->writeln('Criterion test has started...');
-        $output->writeln('     - Project: '. (string) $project_id);
-        $output->writeln('     - test: '.  (string) $test_id);
+        $output->writeln('     - Project: '. (string) $project->id);
+        $output->writeln('     - test: '.  (string) $test->id);
         $output->writeln('');
 
-        $project_folder = TEST_DIR . '/' . (string) $project_id;
-        $test_folder = $project_folder . '/' . (string) $test_id;
+        $project_folder = TEST_DIR . '/' . (string) $project->id;
+        $test_folder = $project_folder . '/' . (string) $test->id;
         if (! is_dir($project_folder)) {
             mkdir($project_folder, 0777, true);
         }
@@ -116,7 +114,6 @@ class TestCommand extends Command
         // Check to see if the commit is testable
         if (! \Criterion\Helper\Commit::isValid($commit)) {
             $test->delete();
-
             return false;
         }
 
@@ -133,8 +130,8 @@ class TestCommand extends Command
         $test->config = array(
             'path' => is_file(realpath($test_folder . '/.criterion.yml')) ? realpath($test_folder . '/.criterion.yml') : false
         );
-
         $test->save();
+
         return $test->run();
     }
 }
