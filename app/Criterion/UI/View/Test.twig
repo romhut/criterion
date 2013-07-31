@@ -27,28 +27,18 @@
     </div>
     <div style="clear:both"></div>
 
-{% if test.status.code == '0' %}
-    {% set status_class = 'error' %}
-{% elseif test.status.code == '1' %}
-    {% set status_class = 'success' %}
-{% elseif test.status.code == '3' %}
-    {% set status_class = 'warning' %}
-{% elseif test.status.code == '4' %}
-    {% set status_class = 'info' %}
-{% endif %}
-
     <table class="table">
         <thead>
             <tr>
                 <th class="hidden-phone">Author</th>
                 <th>Message</th>
                 <th>Commit</th>
-                <th class="hidden-phone">Started</th>
-                <th>Status</th>
+                <th class="hidden-phone" width="250">Started</th>
+                <th width="200">Status</th>
             </tr>
         </thead>
         <tbody>
-            <tr class="{{ status_class }}">
+            <tr id="commit-status">
                 <td id="commit-author" class="hidden-phone">
                     ...
                 </td>

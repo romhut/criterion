@@ -116,6 +116,7 @@ var Criterion = new function()
                 } else if (data.status.code == '0') {
                     status_class = 'important';
                 }
+                $('#commit-status')[0].className = status_class;
 
                 // Stop test, and show "re-test" button
                 if (data.test_again !== false) {
