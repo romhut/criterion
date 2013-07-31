@@ -70,35 +70,29 @@ class TestCommand extends Command
         $test->path = $test_folder;
 
         // Pass the test into the application for future use
-        $this->getApplication()->test = $test;
-
-        // Pass the project and output variables into the application.
-        // This allows for a consistent output, and makes it easier to
-        // reference the project details
-        $this->getApplication()->project = $project;
-        $this->getApplication()->output = $output;
+        $command = new \Criterion\Helper\Command($project, $test);
 
         if (is_array($project->enviroment_variables)) {
-            $set_env_variables = $this->getApplication()->preLog('Setting enviroment variables');
+            $set_env_variables = $command->preLog('Setting enviroment variables');
 
             $env_variables = array();
             foreach ($project->enviroment_variables as $env_var) {
                 $env_variables[] = $env_var;
                 putenv($env_var);
             }
-            $this->getApplication()->log('Setting environment variables', implode(', ',$env_variables), 0, $set_env_variables);
+            $command->log('Setting environment variables', implode(', ',$env_variables), 0, $set_env_variables);
         }
 
         // Switch to the project directory, and clone the repo into it.
         chdir($project_folder);
 
         // Add a fake "clone" log entry. This is a lot cleaner when outputting the logs.
-        $prelog_clone = $this->getApplication()->preLog('Fetching ' . $project->source);
+        $prelog_clone = $command->preLog('Fetching ' . $project->source);
         $fetch_start = microtime(true);
 
         // Get a fully formatted clone command, and then run it.
         $fetch_command = \Criterion\Helper\Repo::fetchCommand($test, $project);
-        $fetch = $this->getApplication()->executeAndLog($fetch_command, true);
+        $fetch = $command->execute($fetch_command, true, true);
 
         $fetch_end = microtime(true);
         $clone_output = 'Failed';
@@ -107,9 +101,9 @@ class TestCommand extends Command
         }
 
         // Update fake log command with the response
-        $this->getApplication()->log('Fetching ' . $project->source, $clone_output, $fetch->response, $prelog_clone);
-        if ($fetch->response != 0) {
-            return $this->getApplication()->testFailed();
+        $command->log('Fetching ' . $project->source, $clone_output, $fetch->response, $prelog_clone);
+        if ($fetch->response !== '0') {
+            return $test->failed();
         }
 
         // Switch into the test directory we just cloned, so we can
@@ -129,52 +123,55 @@ class TestCommand extends Command
         // Detect the test type. E.G. if .criterion.yml file does
         // not exist, it may be a PHPUnit project
         $test_type = $test->getType();
-        $this->getApplication()->log('Detecting test type', $test_type ?: 'Not Found', $test_type ? '0' : '1');
+        $command->log('Detecting test type', $test_type ?: 'Not Found', $test_type ? '0' : '1');
 
         // Update the current test with some details we just gathered
         // such as: repo, commit info, and test type
         $test->commit = $commit;
         $test->source = $project->source;
         $test->type = $test_type;
+        $test->config = array(
+            'path' => is_file(realpath($test_folder . '/.criterion.yml')) ? realpath($test_folder . '/.criterion.yml') : false
+        );
+
+        $config = $test->getConfig();
+
         $test->save();
 
         // Push pending status to github
         if ($project->provider === 'github' && $project->github['token']) {
             $github_status = \Criterion\Helper\Github::updateStatus('pending', $test, $project);
-            $this->getApplication()->log('Posting "running" status to Github', $github_status ? 'Success' : 'Failed');
+            $command->log('Posting "running" status to Github', $github_status ? 'Success' : 'Failed');
         }
-
-        $config_file = realpath($test_folder . '/.criterion.yml');
-        $criterion = $this->getApplication()->parseConfig($config_file);
 
         if ($test_type === 'criterion') {
             // Check the config file
-            if (! $criterion) {
-                return $this->getApplication()->testFailed();
+            if (! $config) {
+                return $test->failed();
             }
 
             // Run any setup commands that we have
             $output->writeln('<question>Running "setup" commands</question>');
-            if (count($criterion['setup'])) {
+            if (count($config['setup'])) {
 
-                foreach ($criterion['setup'] as $setup) {
+                foreach ($config['setup'] as $setup) {
 
-                    $response = $this->getApplication()->executeAndLog($setup);
-                    if ($response->response !== '0') {
-                        return $this->getApplication()->testFailed();
+                    $response = $command->execute($setup);
+                    if (! $response) {
+                        return $test->failed();
                     }
                 }
             }
 
             // Run any script commands we have
             $output->writeln('<question>Running "script" commands</question>');
-            if (count($criterion['script'])) {
+            if (count($config['script'])) {
 
-                foreach ($criterion['script'] as $script) {
+                foreach ($config['script'] as $script) {
 
-                    $response = $this->getApplication()->executeAndLog($script);
-                    if ($response->response !== '0') {
-                        return $this->getApplication()->testFailed();
+                    $response = $command->execute($script);
+                    if (! $response) {
+                        return $test->failed();
                     }
                 }
             }
@@ -184,9 +181,9 @@ class TestCommand extends Command
             $is_composer = \Criterion\Helper\Test::isComposer($test_folder);
             if ($is_composer) {
 
-                $response = $this->getApplication()->executeAndLog('composer install');
-                if ($response->response !== '0') {
-                    return $this->getApplication()->testFailed();
+                $response = $command->execute('composer install');
+                if (! $response) {
+                    return $test->failed();
                 }
             }
 
@@ -194,21 +191,21 @@ class TestCommand extends Command
             // check them. First we check the vendor dir in case composer
             // has installed it.
             if (file_exists($test_folder . '/vendor/bin/phpunit')) {
-                $response = $this->getApplication()->executeAndLog('vendor/bin/phpunit');
-                if ($response->response !== '0') {
-                    return $this->getApplication()->testFailed();
+                $response = $command->execute('vendor/bin/phpunit');
+                if (! $response) {
+                    return $test->failed();
                 }
             } else {
-                $response = $this->getApplication()->executeAndLog('phpunit');
-                if ($response->response !== '0') {
-                    return $this->getApplication()->testFailed();
+                $response = $command->execute('phpunit');
+                if (! $response) {
+                    return $test->failed();
                 }
             }
         } else {
-            return $this->getApplication()->testFailed();
+            return $test->failed();
         }
 
         // The test has passed, update the test status, and project status
-        return $this->getApplication()->testPassed();
+        return $test->passed();
     }
 }
