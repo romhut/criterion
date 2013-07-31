@@ -134,77 +134,7 @@ class TestCommand extends Command
             'path' => is_file(realpath($test_folder . '/.criterion.yml')) ? realpath($test_folder . '/.criterion.yml') : false
         );
 
-        $config = $test->getConfig();
-
         $test->save();
-
-        // Push pending status to github
-        if ($project->provider === 'github' && $project->github['token']) {
-            $github_status = \Criterion\Helper\Github::updateStatus('pending', $test, $project);
-            $test->log('Posting "running" status to Github', $github_status ? 'Success' : 'Failed');
-        }
-
-        if ($test_type === 'criterion') {
-            // Check the config file
-            if (! $config) {
-                return $test->failed();
-            }
-
-            // Run any setup commands that we have
-            $output->writeln('<question>Running "setup" commands</question>');
-            if (count($config['setup'])) {
-
-                foreach ($config['setup'] as $setup) {
-
-                    $response = $command->execute($setup);
-                    if (! $response) {
-                        return $test->failed();
-                    }
-                }
-            }
-
-            // Run any script commands we have
-            if (count($config['script'])) {
-
-                foreach ($config['script'] as $script) {
-
-                    $response = $command->execute($script);
-                    if (! $response) {
-                        return $test->failed();
-                    }
-                }
-            }
-        } elseif ($test_type === 'phpunit') {
-            // Check to see if a composer.json file exists, if it does then
-            // we need to run "composer install" to get all dependencies
-            $is_composer = \Criterion\Helper\Test::isComposer($test_folder);
-            if ($is_composer) {
-
-                $response = $command->execute('composer install');
-                if (! $response) {
-                    return $test->failed();
-                }
-            }
-
-            // Because there are a few ways of running phpunit, we need to
-            // check them. First we check the vendor dir in case composer
-            // has installed it.
-            if (file_exists($test_folder . '/vendor/bin/phpunit')) {
-                $response = $command->execute('vendor/bin/phpunit');
-                if (! $response) {
-                    return $test->failed();
-                }
-            } else {
-                $response = $command->execute('phpunit');
-                if (! $response) {
-                    return $test->failed();
-                }
-            }
-        } else {
-            return $test->failed();
-        }
-
-        // The test has passed, update the test status, and project status
-        return $test->passed();
+        return $test->run();
     }
 }

@@ -171,6 +171,8 @@ class Test extends \Criterion\Model
             'content' => $config
         );
 
+        $this->save();
+
         return $config;
     }
 
@@ -211,5 +213,80 @@ class Test extends \Criterion\Model
         $log->save();
 
         return $log;
+    }
+
+    public function run()
+    {
+        $this->getProject();
+        $this->getConfig();
+
+        $command = new \Criterion\Helper\Command($this->project, $this);
+
+        // Push pending status to github
+        if ($this->project->provider === 'github' && $this->project->github['token']) {
+            $github_status = \Criterion\Helper\Github::updateStatus('pending', $this, $this->project);
+            $this->log('Posting "running" status to Github', $github_status ? 'Success' : 'Failed');
+        }
+
+        if ($this->type === 'criterion') {
+            // Check the config file
+            if (! $this->config['content']) {
+                return $this->failed();
+            }
+
+            // Run any setup commands that we have
+            if (count($this->config['content']['setup'])) {
+
+                foreach ($this->config['content']['setup'] as $setup) {
+
+                    $response = $command->execute($setup);
+                    if (! $response) {
+                        return $this->failed();
+                    }
+                }
+            }
+
+            // Run any script commands we have
+            if (count($this->config['content']['script'])) {
+
+                foreach ($this->config['content']['script'] as $script) {
+
+                    $response = $command->execute($script);
+                    if (! $response) {
+                        return $this->failed();
+                    }
+                }
+            }
+        } elseif ($this->type === 'phpunit') {
+            // Check to see if a composer.json file exists, if it does then
+            // we need to run "composer install" to get all dependencies
+            $is_composer = \Criterion\Helper\Test::isComposer($this->path);
+            if ($is_composer) {
+
+                $response = $command->execute('composer install');
+                if (! $response) {
+                    return $this->failed();
+                }
+            }
+
+            // Because there are a few ways of running phpunit, we need to
+            // check them. First we check the vendor dir in case composer
+            // has installed it.
+            if (file_exists($this->path . '/vendor/bin/phpunit')) {
+                $response = $command->execute('vendor/bin/phpunit');
+                if (! $response) {
+                    return $this->failed();
+                }
+            } else {
+                $response = $command->execute('phpunit');
+                if (! $response) {
+                    return $this->failed();
+                }
+            }
+        } else {
+            return $this->failed();
+        }
+
+        return $this->passed();
     }
 }
