@@ -84,8 +84,8 @@ class Test extends \Criterion\Model
 
         \Criterion\Helper\Notifications::failedEmail($this->id, $this->project);
 
-        if (isset($this->criterion['fail']) && count($this->criterion['fail'])) {
-            foreach ($this->criterion['fail'] as $fail) {
+        if (isset($this->config['content']['fail']) && count($this->config['content']['fail'])) {
+            foreach ($this->config['content']['fail'] as $fail) {
                 $response = $command->execute($fail);
             }
         }
@@ -93,7 +93,7 @@ class Test extends \Criterion\Model
         $path = TEST_DIR . '/' . $this->project->id  . '/' . (string) $this->id;
         $command->execute(sprintf('rm -rf %s', $path), true);
 
-        return false;
+        return true;
     }
 
     public function passed()
@@ -120,8 +120,8 @@ class Test extends \Criterion\Model
             $command->log('Posting "success" status to Github', $github_status ? 'Success' : 'Failed');
         }
 
-        if (isset($this->criterion['pass']) && count($this->criterion['pass'])) {
-            foreach ($this->criterion['pass'] as $pass) {
+        if (isset($this->config['content']['pass']) && count($this->config['content']['pass'])) {
+            foreach ($this->config['content']['pass'] as $pass) {
                 $response = $command->execute($pass);
             }
         }
@@ -129,7 +129,7 @@ class Test extends \Criterion\Model
         $path = TEST_DIR . '/' . $this->project->id  . '/' . (string) $this->id;
         $command->execute(sprintf('rm -rf %s', $path), true);
 
-        return false;
+        return true;
     }
 
     public function getConfig()
