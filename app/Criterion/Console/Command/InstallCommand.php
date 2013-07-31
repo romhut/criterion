@@ -135,7 +135,7 @@ class InstallCommand extends Command
         if ($install_samples === 'y') {
             foreach ($samples as $sample) {
                 $project = new \Criterion\Model\Project(array(
-                    'repo' => 'https://github.com/' . $sample
+                    'source' => 'https://github.com/' . $sample
                 ));
                 $project->save();
 

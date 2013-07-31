@@ -9,7 +9,7 @@ class Notifications extends \Criterion\Helper
         $config = $app->config;
 
         if ($project->email && isset($config['email'])) {
-            $subject = '['.$project->repo.'] Tests Failed (' . $test . ')';
+            $subject = '['.$project->source.'] Tests Failed (' . $test . ')';
             $body = "This is a short email to let you know that the following project's tests are failing: \n\n";
             $body .= $config['url'] . '/test/' . $test . "\n\n";
             $body .= 'Thanks';
