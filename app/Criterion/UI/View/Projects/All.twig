@@ -30,15 +30,9 @@
                     <tr class="{{ project_class }}" >
                         <td>
                             {% if project.provider %}
-                                {% if project.provider == 'folder' %}
-                                    {% set icon = 'folder-close' %}
-                                {% else %}
-                                    {% set icon = project.provider %}
-                                {% endif %}
-                                <i class="icon-{{ icon }}"></i>
+                            <i class="icon-{{ project.provider == 'folder' ? 'folder-close' : project.provider }}"></i>
                             {% endif %}
                             <a href="/project/{{ project._id }}">
-
                                 {% if project.name is defined and project.name %}
                                     {{ project.name }}
                                 {% else %}
