@@ -15,7 +15,7 @@ class TestController
         $data['_id'] = (string) $test->id;
         $data['test_again'] = false;
 
-        if ($data['status']['code'] === '1' && $app['user'] && $app['user']->isAdmin()) {
+        if (($data['status']['code'] === '1' || $data['status']['code'] === '0') && $app['user'] && $app['user']->isAdmin()) {
             $data['test_again'] = true;
         }
 
