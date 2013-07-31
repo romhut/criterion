@@ -60,11 +60,11 @@ var Criterion = new function()
         });
 
         // Hack to check if we're on a test page
-        if(window.location.href.indexOf("test") > -1) 
+        if(window.location.href.indexOf("test") > -1)
         {
             var url = window.location.href;
             url = url.split("/");
-            
+
             // get the project ID from the last part of the URL
             self.test.initPoller(url[url.length - 1], 1000);
         }
@@ -96,6 +96,7 @@ var Criterion = new function()
                 pollerInterval = interval;
             }
 
+            self.test.getStatus(id);
             poller = setInterval(function()
             {
                 self.test.getStatus(id);
@@ -115,6 +116,7 @@ var Criterion = new function()
                 } else if (data.status.code == '0') {
                     status_class = 'important';
                 }
+                $('#commit-status')[0].className = status_class;
 
                 // Stop test, and show "re-test" button
                 if (data.test_again !== false) {
@@ -131,6 +133,8 @@ var Criterion = new function()
                 $('#status').removeClass().addClass('label').addClass('label-' + status_class);
                 if (typeof data.commit != 'undefined') {
 
+                    $('#commit-message').text(data.commit.message);
+
                     if (data.commit.url) {
                         $('#commit-hash').html(
                             '<a href="' + data.commit.url + '">' +
@@ -141,17 +145,19 @@ var Criterion = new function()
                         $('#commit-hash').text(data.commit.hash.short);
                     }
 
-                    $('#commit-author').text(data.commit.author.name);
-
                     if (data.commit.branch.url) {
-                        $('#branch').html(
-                            '<a href="' + data.commit.branch.url + '">' +
+                        $('#commit-branch').html(
+                            '<a href="' + data.commit.branch.url + '">(' +
                                 data.commit.branch.name +
-                            '</a>'
+                            ')</a>'
                         );
                     } else {
-                        $('#branch').text(data.commit.branch.name);
+                        $('#commit-branch').text('(' + data.commit.branch.name + ')');
                     }
+
+                    $('#commit-author').text(data.commit.author.name);
+
+
                 }
 
                 if (data.log.length > 0) {

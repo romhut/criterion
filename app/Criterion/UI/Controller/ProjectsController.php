@@ -41,12 +41,11 @@ class ProjectsController
             'source' => $app['request']->get('source')
         ));
 
+
         if ($project->exists) {
             return $app->redirect('/project/' . (string) $project->id);
         }
 
-        $project->github = array('token' => $app['request']->get('github_token'));
-        $project->email = $app['request']->get('email');
         if ($project->save()) {
             return $app->redirect('/project/' . (string) $project->id);
         }
@@ -174,10 +173,14 @@ class ProjectsController
 
         }
 
-        $data['tests'] = $project->getTests();
-        $data['title'] = $project->short_repo;
-        $data['project'] = $project;
+        if (isset($project->name) && $project->name) {
+            $data['title'] = $project->name;
+        } else {
+            $data['title'] = $project->short_repo;
+        }
 
+        $data['tests'] = $project->getTests();
+        $data['project'] = $project;
         $data['config'] = Yaml::dump($project->getServerConfig());
 
         return $app['twig']->render('Project.twig', $data);
