@@ -4,9 +4,19 @@
 
     <h1 class="lead pull-left" style="margin-top:0">
         {% if project.provider %}
-            <i class="icon-{{ project.provider }}"></i>
+            {% if project.provider == 'folder' %}
+                {% set icon = 'folder-close' %}
+            {% else %}
+                {% set icon = project.provider %}
+            {% endif %}
+            <i class="icon-{{ icon }}"></i>
         {% endif %}
-        {{ project.short_repo }}
+
+        {% if project.name is defined and project.name %}
+            {{ project.name }}
+        {% else %}
+            {{ project.short_repo }}
+        {% endif %}
     </h1>
     {% if app.user and app.user.isAdmin %}
         <div class="pull-right">

@@ -11,7 +11,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th>Source</th>
+                    <th>Project</th>
                     <th class="hidden-phone">Last Run</th>
                     {% if app.user and app.user.isAdmin %}<th class="actions">Actions</th>{% endif %}
                 </tr>
@@ -30,10 +30,20 @@
                     <tr class="{{ project_class }}" >
                         <td>
                             {% if project.provider %}
-                                <i class="icon-{{ project.provider }}"></i>
+                                {% if project.provider == 'folder' %}
+                                    {% set icon = 'folder-close' %}
+                                {% else %}
+                                    {% set icon = project.provider %}
+                                {% endif %}
+                                <i class="icon-{{ icon }}"></i>
                             {% endif %}
                             <a href="/project/{{ project._id }}">
-                                {{ project.short_repo }}
+
+                                {% if project.name is defined and project.name %}
+                                    {{ project.name }}
+                                {% else %}
+                                    {{ project.short_repo }}
+                                {% endif %}
                             </a>
                         </td>
                         <td class="hidden-phone">

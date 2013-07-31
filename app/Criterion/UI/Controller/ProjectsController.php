@@ -41,12 +41,11 @@ class ProjectsController
             'source' => $app['request']->get('source')
         ));
 
+
         if ($project->exists) {
             return $app->redirect('/project/' . (string) $project->id);
         }
 
-        $project->github = array('token' => $app['request']->get('github_token'));
-        $project->email = $app['request']->get('email');
         if ($project->save()) {
             return $app->redirect('/project/' . (string) $project->id);
         }
