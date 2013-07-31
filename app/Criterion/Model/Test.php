@@ -173,4 +173,43 @@ class Test extends \Criterion\Model
 
         return $config;
     }
+
+    public function preLog($command, $internal = false)
+    {
+        $command = str_replace(DATA_DIR, null, $command);
+
+        $log = new \Criterion\Model\Log();
+        $log->output = 'Running...';
+        $log->response = false;
+        $log->command = $command;
+        $log->test_id = $this->id;
+        $log->time = new \MongoDate();
+        $log->status = '0';
+        $log->internal = $internal;
+        $log->save();
+
+        return $log->id;
+    }
+
+    public function log($command, $output, $response = '0', $log_id = null, $internal = false)
+    {
+        $this->getProject();
+
+        $command = str_replace(DATA_DIR, null, $command);
+        $output = str_replace(DATA_DIR, null, $output);
+
+        $log = new \Criterion\Model\Log($log_id);
+
+        $log->output = $output;
+        $log->response = (string) $response;
+        $log->command = $command;
+        $log->test_id = $this->id;
+        $log->project_id = $this->project->id;
+        $log->time = new \MongoDate();
+        $log->status = '1';
+        $log->internal = $internal;
+        $log->save();
+
+        return $log;
+    }
 }

@@ -73,21 +73,21 @@ class TestCommand extends Command
         $command = new \Criterion\Helper\Command($project, $test);
 
         if (is_array($project->enviroment_variables)) {
-            $set_env_variables = $command->preLog('Setting enviroment variables');
+            $set_env_variables = $test->preLog('Setting enviroment variables');
 
             $env_variables = array();
             foreach ($project->enviroment_variables as $env_var) {
                 $env_variables[] = $env_var;
                 putenv($env_var);
             }
-            $command->log('Setting environment variables', implode(', ',$env_variables), 0, $set_env_variables);
+            $test->log('Setting environment variables', implode(', ',$env_variables), 0, $set_env_variables);
         }
 
         // Switch to the project directory, and clone the repo into it.
         chdir($project_folder);
 
         // Add a fake "clone" log entry. This is a lot cleaner when outputting the logs.
-        $prelog_clone = $command->preLog('Fetching ' . $project->source);
+        $prelog_clone = $test->preLog('Fetching ' . $project->source);
         $fetch_start = microtime(true);
 
         // Get a fully formatted clone command, and then run it.
@@ -101,7 +101,7 @@ class TestCommand extends Command
         }
 
         // Update fake log command with the response
-        $command->log('Fetching ' . $project->source, $clone_output, $fetch->response, $prelog_clone);
+        $test->log('Fetching ' . $project->source, $clone_output, $fetch->response, $prelog_clone);
         if ($fetch->response !== '0') {
             return $test->failed();
         }
@@ -123,7 +123,7 @@ class TestCommand extends Command
         // Detect the test type. E.G. if .criterion.yml file does
         // not exist, it may be a PHPUnit project
         $test_type = $test->getType();
-        $command->log('Detecting test type', $test_type ?: 'Not Found', $test_type ? '0' : '1');
+        $test->log('Detecting test type', $test_type ?: 'Not Found', $test_type ? '0' : '1');
 
         // Update the current test with some details we just gathered
         // such as: repo, commit info, and test type
@@ -141,7 +141,7 @@ class TestCommand extends Command
         // Push pending status to github
         if ($project->provider === 'github' && $project->github['token']) {
             $github_status = \Criterion\Helper\Github::updateStatus('pending', $test, $project);
-            $command->log('Posting "running" status to Github', $github_status ? 'Success' : 'Failed');
+            $test->log('Posting "running" status to Github', $github_status ? 'Success' : 'Failed');
         }
 
         if ($test_type === 'criterion') {
@@ -164,7 +164,6 @@ class TestCommand extends Command
             }
 
             // Run any script commands we have
-            $output->writeln('<question>Running "script" commands</question>');
             if (count($config['script'])) {
 
                 foreach ($config['script'] as $script) {
