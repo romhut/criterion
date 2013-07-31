@@ -92,10 +92,10 @@
                             {% if test.commit is defined %}
                                 {% if test.commit.url %}
                                     <a href="{{ test.commit.url }}">
-                                        {{ test.commit.hash.short }}
+                                        {{ test.commit.hash.short }} - {{ test.commit.message }}
                                     </a>
                                 {% else %}
-                                    {{test.commit.hash.short}}
+                                    {{ test.commit.hash.short }} - {{ test.commit.message }}
                                 {% endif %}
                             {% else %}
                                 N/A
