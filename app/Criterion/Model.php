@@ -91,18 +91,14 @@ class Model
 
     public function save()
     {
-        if ($this->exists) {
-            unset($this->data['_id']);
-            $save = $this->db->update(array(
-                '_id' => $this->id
-            ), array(
-                '$set' => $this->data
-            ));
-        } else {
-            $save = $this->db->insert($this->data);
-            $this->exists = true;
+        if ($this->id && ! isset($this->data['_id'])) {
+            $this->data['_id'] = $this->id;
         }
-
-        return (bool) $save['ok'];
+        $save = $this->db->save($this->data);
+        if ((bool) $save['ok'] === true) {
+            $this->exists = true;
+            return true;
+        }
+        return fakse;
     }
 }
