@@ -29,7 +29,41 @@ class ProjectModelTest extends \Criterion\Test\TestCase
         $this->assertTrue(is_object($project));
 
         $config = array(
-            'source' => 'test'
+            'source' => 'test',
+        );
+
+        $this->assertCount(count($project->serverConfigWhitelist), $project->setServerConfig($config));
+    }
+
+    public function testSetServerConfigEnvPass()
+    {
+        $project = new \Criterion\Model\Project(array(
+            'source' => 'https://github.com/romhut/criterion'
+        ));
+
+        $this->assertTrue(is_object($project));
+
+        $config = array(
+            'enviroment_variables' => array(
+                'test=test'
+            )
+        );
+
+        $this->assertCount(count($project->serverConfigWhitelist), $project->setServerConfig($config));
+    }
+
+    public function testSetServerConfigEnvFail()
+    {
+        $project = new \Criterion\Model\Project(array(
+            'source' => 'https://github.com/romhut/criterion'
+        ));
+
+        $this->assertTrue(is_object($project));
+
+        $config = array(
+            'enviroment_variables' => array(
+                'test fail'
+            )
         );
 
         $this->assertCount(count($project->serverConfigWhitelist), $project->setServerConfig($config));

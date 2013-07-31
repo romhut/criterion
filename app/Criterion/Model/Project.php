@@ -82,7 +82,7 @@ class Project extends \Criterion\Model
                         }
                     }
 
-                    if (is_array($config_data[$key])) {
+                    if (isset($config_data[$key]) && is_array($config_data[$key])) {
                         $config_data[$key] = array_unique($config_data[$key]);
                     }
                 } else {
