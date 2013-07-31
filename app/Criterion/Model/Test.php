@@ -215,6 +215,22 @@ class Test extends \Criterion\Model
         return $log;
     }
 
+    public function setEnviromentVariables()
+    {
+        $this->getProject();
+
+        if (is_array($this->project->enviroment_variables)) {
+            $set_env_variables = $this->preLog('Setting enviroment variables');
+
+            $env_variables = array();
+            foreach ($this->project->enviroment_variables as $env_var) {
+                $env_variables[] = $env_var;
+                putenv($env_var);
+            }
+            $this->log('Setting environment variables', implode(', ',$env_variables), 0, $set_env_variables);
+        }
+    }
+
     public function run()
     {
         $this->getProject();

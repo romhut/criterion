@@ -70,16 +70,8 @@ class TestCommand extends Command
         // Pass the test into the application for future use
         $command = new \Criterion\Helper\Command($project, $test);
 
-        if (is_array($project->enviroment_variables)) {
-            $set_env_variables = $test->preLog('Setting enviroment variables');
-
-            $env_variables = array();
-            foreach ($project->enviroment_variables as $env_var) {
-                $env_variables[] = $env_var;
-                putenv($env_var);
-            }
-            $test->log('Setting environment variables', implode(', ',$env_variables), 0, $set_env_variables);
-        }
+        // Setup the enviroment variables from project config
+        $test->setEnviromentVariables();
 
         // Switch to the project directory, and clone the repo into it.
         chdir($project_folder);
