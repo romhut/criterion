@@ -37,6 +37,8 @@ class TestCommand extends Command
             return false;
         }
 
+        $test->source = $project->source;
+
         // Check to see if the current status is not already "running".
         // The reason for this is that the worker sets it to 3 atomically,
         // however, these tests can be run manually via the console.
@@ -73,35 +75,19 @@ class TestCommand extends Command
         // Setup the enviroment variables from project config
         $test->setEnviromentVariables();
 
-        // Switch to the project directory, and clone the repo into it.
+        // Switch to the project directory, and fetch the project source
         chdir($project_folder);
 
-        // Add a fake "clone" log entry. This is a lot cleaner when outputting the logs.
-        $prelog_clone = $test->preLog('Fetching ' . $project->source);
-        $fetch_start = microtime(true);
+        // Fetch the test from the project source
+        $test->fetch();
 
-        // Get a fully formatted clone command, and then run it.
-        $fetch_command = \Criterion\Helper\Repo::fetchCommand($test, $project);
-        $fetch = $command->execute($fetch_command, true, true);
-
-        $fetch_end = microtime(true);
-        $clone_output = 'Failed';
-        if ($fetch->response === '0') {
-            $clone_output = 'Fetched in ' . number_format($fetch_end - $fetch_start) . ' seconds';
-        }
-
-        // Update fake log command with the response
-        $test->log('Fetching ' . $project->source, $clone_output, $fetch->response, $prelog_clone);
-        if ($fetch->response !== '0') {
-            return $test->failed();
-        }
-
-        // Switch into the test directory we just cloned, so we can
+        // Switch into the test directory we just fetched into, so we can
         // run all future commands from here
         chdir($test_folder);
 
         // Fetch the commit info from the commit helper
         $commit = \Criterion\Helper\Commit::getInfo($project->source, $test->branch);
+        $test->commit = $commit;
 
         // Check to see if the commit is testable
         if (! \Criterion\Helper\Commit::isValid($commit)) {
@@ -111,14 +97,12 @@ class TestCommand extends Command
 
         // Detect the test type. E.G. if .criterion.yml file does
         // not exist, it may be a PHPUnit project
-        $test_type = $test->getType();
-        $test->log('Detecting test type', $test_type ?: 'Not Found', $test_type ? '0' : '1');
+        $test->type = $test->getType();
+        $test->log('Detecting test type', $test->type ?: 'Not Found', $test->type ? '0' : '1');
 
         // Update the current test with some details we just gathered
         // such as: repo, commit info, and test type
-        $test->commit = $commit;
-        $test->source = $project->source;
-        $test->type = $test_type;
+
         $test->config = array(
             'path' => is_file(realpath($test_folder . '/.criterion.yml')) ? realpath($test_folder . '/.criterion.yml') : false
         );

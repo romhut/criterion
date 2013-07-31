@@ -231,6 +231,32 @@ class Test extends \Criterion\Model
         }
     }
 
+    public function fetch()
+    {
+        $this->getProject();
+        $command = new \Criterion\Helper\Command($this->project, $this);
+
+        // Add a fake "clone" log entry. This is a lot cleaner when outputting the logs.
+        $prelog_fetch = $this->preLog('Fetching ' . $project->source);
+        $fetch_start = microtime(true);
+
+        // Get a fully formatted clone command, and then run it.
+        $fetch_command = \Criterion\Helper\Repo::fetchCommand($this, $this->project);
+        $fetch = $command->execute($fetch_command, true, true);
+
+        $fetch_end = microtime(true);
+        $clone_output = 'Failed';
+        if ($fetch->response === '0') {
+            $clone_output = 'Fetched in ' . number_format($fetch_end - $fetch_start) . ' seconds';
+        }
+
+        // Update fake log command with the response
+        $this->log('Fetching ' . $this->project->source, $clone_output, $fetch->response, $prelog_fetch);
+        if ($fetch->response !== '0') {
+            return $this->failed();
+        }
+    }
+
     public function run()
     {
         $this->getProject();
