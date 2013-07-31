@@ -14,10 +14,10 @@
 
     <h1 class="lead pull-left" style="margin-top:0">
         {% if project.provider %}
-            <i class="icon-{{ project.provider }}"></i>
+        <i class="icon-{{ project.provider == 'folder' ? 'folder-close' : project.provider }}"></i>
         {% endif %}
         <a href="/project/{{ project._id }}">
-            {{ project.short_repo }}
+            {{ project.name ?: project.short_repo }}
         </a>
     </h1>
     <div class="pull-right hidden-phone">
@@ -27,36 +27,35 @@
     </div>
     <div style="clear:both"></div>
 
-
     <table class="table">
         <thead>
             <tr>
-                <th>Status</th>
-                <th>Commit</th>
                 <th class="hidden-phone">Author</th>
-                <th>Branch</th>
-                <th class="hidden-phone">Started</th>
+                <th>Message</th>
+                <th>Commit</th>
+                <th class="hidden-phone" width="250">Started</th>
+                <th width="200">Status</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>
-                    <span id="status" class="label">
-                        ...
-                    </span>
-                </td>
-                <td id="commit-hash">
-                    ...
-                </td>
+            <tr id="commit-status">
                 <td id="commit-author" class="hidden-phone">
                     ...
                 </td>
-                <td id="branch">
+                <td id="commit-message">
                     ...
+                </td>
+                <td>
+                    <span id="commit-hash">...</span> <span id="commit-branch"></span>
                 </td>
                 <td class="hidden-phone">
                     <span class="timeago" title="{{ test.started.sec|date('c') }}">
                         {{ test.started.sec|date('jS M Y') }}
+                    </span>
+                </td>
+                <td>
+                    <span id="status" class="label">
+                        ...
                     </span>
                 </td>
             </tr>

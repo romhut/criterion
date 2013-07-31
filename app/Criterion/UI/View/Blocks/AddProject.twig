@@ -1,23 +1,13 @@
 <div id="addProject" class="modal" tabindex="-1" role="dialog" aria-labelledby="addProjectLabel" aria-hidden="true">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        <h3 id="addProjectLabel">Add Project</h3>
-    </div>
     <form method="post" action="/project/create">
         <div class="modal-body">
             <div class="row-fluid">
-                <label for="source">Source (GIT or Local Folder)</label>
+                <label for="source"><b>Source (GIT or Local Folder)</b></label>
                 <input id="source" name="source" required type="text" placeholder="git@github.com:romhut/criterion" class="span12">
-
-                <label for="email">Notifications Email</label>
-                <input id="email" name="email" class="span12" type="email">
-
-                <label for="github_token">Github Token</label>
-                <input id="github_token" name="github_token" class="span12" type="text">
             </div>
-        </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-success">Create</button>
+            <div class="pull-right">
+                <button type="submit" class="btn btn-success">Add Project</button>
+            </div>
         </div>
     </form>
 </div>

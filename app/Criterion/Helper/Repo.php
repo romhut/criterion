@@ -5,6 +5,10 @@ class Repo extends \Criterion\Helper
 {
     public static function provider($url)
     {
+        if (is_dir($url)) {
+            return 'folder';
+        }
+
         if (strpos($url, 'github.com')) {
             return 'github';
         }
@@ -60,6 +64,11 @@ class Repo extends \Criterion\Helper
         $provider = self::provider($url);
 
         switch ($provider) {
+
+            case 'folder':
+                return $url;
+                break;
+
             case 'github':
                 return Github::shortRepo($url);
                 break;

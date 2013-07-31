@@ -15,7 +15,7 @@ class TestController
         $data['_id'] = (string) $test->id;
         $data['test_again'] = false;
 
-        if ($data['status']['code'] === '1' && $app['user'] && $app['user']->isAdmin()) {
+        if (($data['status']['code'] === '1' || $data['status']['code'] === '0') && $app['user'] && $app['user']->isAdmin()) {
             $data['test_again'] = true;
         }
 
@@ -44,7 +44,14 @@ class TestController
         }
 
         $data['logs'] = $data['test']->getLogs();
-        $data['title'] = $data['test']->id . ' | ' . $data['project']->short_repo;
+
+        if (isset($data['project']->name) && $data['project']->name) {
+            $project_title = $data['project']->name;
+        } else {
+            $project_title = $data['project']->short_repo;
+        }
+
+        $data['title'] = $data['test']->id . ' | ' . $project_title;
 
         return $app['twig']->render('Test.twig', $data);
     }
