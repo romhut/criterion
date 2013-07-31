@@ -44,7 +44,14 @@ class TestController
         }
 
         $data['logs'] = $data['test']->getLogs();
-        $data['title'] = $data['test']->id . ' | ' . $data['project']->short_repo;
+
+        if (isset($data['project']->name) && $data['project']->name) {
+            $project_title = $data['project']->name;
+        } else {
+            $project_title = $data['project']->short_repo;
+        }
+
+        $data['title'] = $data['test']->id . ' | ' . $project_title;
 
         return $app['twig']->render('Test.twig', $data);
     }

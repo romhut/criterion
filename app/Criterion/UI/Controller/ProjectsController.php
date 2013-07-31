@@ -173,10 +173,14 @@ class ProjectsController
 
         }
 
-        $data['tests'] = $project->getTests();
-        $data['title'] = $project->short_repo;
-        $data['project'] = $project;
+        if (isset($project->name) && $project->name) {
+            $data['title'] = $project->name;
+        } else {
+            $data['title'] = $project->short_repo;
+        }
 
+        $data['tests'] = $project->getTests();
+        $data['project'] = $project;
         $data['config'] = Yaml::dump($project->getServerConfig());
 
         return $app['twig']->render('Project.twig', $data);
