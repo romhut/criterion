@@ -25,7 +25,7 @@ class Project extends \Criterion\Model
         $raw_query = $query;
         parent::__construct($query, $existing);
 
-        if (! $this->exists && isset($raw_query['source'])) {
+        if (! $this->exists && is_array($raw_query) && isset($raw_query['source'])) {
             $this->name = null;
             $this->source = $raw_query['source'];
             $this->github = array(
