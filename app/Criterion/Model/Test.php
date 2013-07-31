@@ -237,7 +237,7 @@ class Test extends \Criterion\Model
         $command = new \Criterion\Helper\Command($this->project, $this);
 
         // Add a fake "clone" log entry. This is a lot cleaner when outputting the logs.
-        $prelog_fetch = $this->preLog('Fetching ' . $project->source);
+        $prelog_fetch = $this->preLog('Fetching ' . $this->project->source);
         $fetch_start = microtime(true);
 
         // Get a fully formatted clone command, and then run it.

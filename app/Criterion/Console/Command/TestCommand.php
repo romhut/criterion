@@ -21,6 +21,7 @@ class TestCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
         $test_id = new \MongoId($input->getArgument('test_id'));
 
         // Get the project and make sure it exists
@@ -39,6 +40,9 @@ class TestCommand extends Command
 
         $test->source = $project->source;
 
+        // Setup the command helper
+        $command = new \Criterion\Helper\Command($project, $test);
+
         // Check to see if the current status is not already "running".
         // The reason for this is that the worker sets it to 3 atomically,
         // however, these tests can be run manually via the console.
@@ -56,58 +60,46 @@ class TestCommand extends Command
         $output->writeln('     - test: '.  (string) $test->id);
         $output->writeln('');
 
-        $project_folder = TEST_DIR . '/' . (string) $project->id;
-        $test_folder = $project_folder . '/' . (string) $test->id;
-        if (! is_dir($project_folder)) {
-            mkdir($project_folder, 0777, true);
+        // If the project path does not exist, then create it
+        $project_path = TEST_DIR . '/' . (string) $project->id;
+        if (! is_dir($project_path)) {
+            mkdir($project_path, 0777, true);
         }
 
-        // Reset to master branch if there is no branch specified
+        $test->path = $project_path . '/' . (string) $test->id;
         if (! $test->branch) {
             $test->branch = 'master';
         }
 
-        $test->path = $test_folder;
-
-        // Pass the test into the application for future use
-        $command = new \Criterion\Helper\Command($project, $test);
-
-        // Setup the enviroment variables from project config
+        // Set any enviroment variables from the project config
         $test->setEnviromentVariables();
 
-        // Switch to the project directory, and fetch the project source
-        chdir($project_folder);
-
-        // Fetch the test from the project source
+        // Switch to the project folder, and fetch the source
+        chdir($project_path);
         $test->fetch();
 
-        // Switch into the test directory we just fetched into, so we can
-        // run all future commands from here
-        chdir($test_folder);
+        // Switch to the test folder
+        chdir($test->path);
 
-        // Fetch the commit info from the commit helper
+        // Make sure the commit is vailid (No [skip ci] etc)
         $commit = \Criterion\Helper\Commit::getInfo($project->source, $test->branch);
         $test->commit = $commit;
-
-        // Check to see if the commit is testable
-        if (! \Criterion\Helper\Commit::isValid($commit)) {
+        if (! \Criterion\Helper\Commit::isValid($test->commit)) {
             $test->delete();
             return false;
         }
 
-        // Detect the test type. E.G. if .criterion.yml file does
-        // not exist, it may be a PHPUnit project
+        // Detect the test type. Could be .criterion.yml, server or automatic
         $test->type = $test->getType();
         $test->log('Detecting test type', $test->type ?: 'Not Found', $test->type ? '0' : '1');
 
-        // Update the current test with some details we just gathered
-        // such as: repo, commit info, and test type
-
+        // Set the config path for later use
         $test->config = array(
-            'path' => is_file(realpath($test_folder . '/.criterion.yml')) ? realpath($test_folder . '/.criterion.yml') : false
+            'path' => is_file(realpath($test->path . '/.criterion.yml')) ? realpath($test->path . '/.criterion.yml') : false
         );
-        $test->save();
 
+        // Finally, save the test and run it
+        $test->save();
         return $test->run();
     }
 }
