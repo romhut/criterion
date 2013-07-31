@@ -60,11 +60,11 @@ var Criterion = new function()
         });
 
         // Hack to check if we're on a test page
-        if(window.location.href.indexOf("test") > -1) 
+        if(window.location.href.indexOf("test") > -1)
         {
             var url = window.location.href;
             url = url.split("/");
-            
+
             // get the project ID from the last part of the URL
             self.test.initPoller(url[url.length - 1], 1000);
         }
@@ -96,6 +96,7 @@ var Criterion = new function()
                 pollerInterval = interval;
             }
 
+            self.test.getStatus(id);
             poller = setInterval(function()
             {
                 self.test.getStatus(id);
