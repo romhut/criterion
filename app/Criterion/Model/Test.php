@@ -242,17 +242,17 @@ class Test extends \Criterion\Model
 
         // Get a fully formatted clone command, and then run it.
         $fetch_command = \Criterion\Helper\Repo::fetchCommand($this, $this->project);
-        $fetch = $command->execute($fetch_command, true, true);
+        $fetch = $command->execute($fetch_command, true);
 
         $fetch_end = microtime(true);
         $clone_output = 'Failed';
-        if ($fetch->response === '0') {
+        if ($fetch->success) {
             $clone_output = 'Fetched in ' . number_format($fetch_end - $fetch_start) . ' seconds';
         }
 
         // Update fake log command with the response
         $this->log('Fetching ' . $this->project->source, $clone_output, $fetch->response, $prelog_fetch);
-        if ($fetch->response !== '0') {
+        if (! $fetch->success) {
             return $this->failed();
         }
     }
@@ -282,7 +282,7 @@ class Test extends \Criterion\Model
                 foreach ($this->config['content']['setup'] as $setup) {
 
                     $response = $command->execute($setup);
-                    if (! $response) {
+                    if (! $response->success) {
                         return $this->failed();
                     }
                 }
@@ -294,7 +294,7 @@ class Test extends \Criterion\Model
                 foreach ($this->config['content']['script'] as $script) {
 
                     $response = $command->execute($script);
-                    if (! $response) {
+                    if (! $response->success) {
                         return $this->failed();
                     }
                 }
@@ -306,7 +306,7 @@ class Test extends \Criterion\Model
             if ($is_composer) {
 
                 $response = $command->execute('composer install');
-                if (! $response) {
+                if (! $response->success) {
                     return $this->failed();
                 }
             }
@@ -316,12 +316,12 @@ class Test extends \Criterion\Model
             // has installed it.
             if (file_exists($this->path . '/vendor/bin/phpunit')) {
                 $response = $command->execute('vendor/bin/phpunit');
-                if (! $response) {
+                if (! $response->success) {
                     return $this->failed();
                 }
             } else {
                 $response = $command->execute('phpunit');
-                if (! $response) {
+                if (! $response->success) {
                     return $this->failed();
                 }
             }

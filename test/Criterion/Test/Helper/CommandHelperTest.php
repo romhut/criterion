@@ -14,7 +14,6 @@ class CommandHelperTest extends \Criterion\Test\TestCase
 
         $command = new \Criterion\Helper\Command($project, $test);
         $response = $command->execute('echo "hi";');
-
-        $this->assertTrue($response);
+        $this->assertTrue($response->success);
     }
 }
