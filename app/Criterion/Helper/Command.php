@@ -30,7 +30,7 @@ class Command extends \Criterion\Helper
         }
 
         $this->command = str_replace('{path}', $this->test->path, $command);
-        $log_id = $this->test->prelog($this->command, $internal);
+        $log = $this->test->log($this->command, false, false, $internal);
 
         ob_start();
         passthru($this->command . ' 2>&1', $response);
@@ -43,7 +43,12 @@ class Command extends \Criterion\Helper
         $this->output = str_replace(DATA_DIR, null, $this->output);
         $this->command = str_replace(DATA_DIR, null, $this->command);
 
-        $this->test->log($this->command, $this->output, $this->response, $log_id, $internal);
+        // Update the original log
+        $log->command = $this->command;
+        $log->response = $this->response;
+        $log->output = $this->output;
+        $log->status = '1';
+        $log->save();
 
         if ($this->response === '0') {
             $this->success = true;

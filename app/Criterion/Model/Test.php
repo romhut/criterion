@@ -176,39 +176,30 @@ class Test extends \Criterion\Model
         return $config;
     }
 
-    public function preLog($command, $internal = false)
+    public function log($command, $output = false, $response = '0', $internal = false)
     {
-        $command = str_replace(DATA_DIR, null, $command);
+        // Setup to allow "pre logging" which logs the command before it runs
+        $status = '1';
+        if ($output === false) {
+            $output = 'Running...';
+            $status = '0';
+            $response = false;
+        }
 
-        $log = new \Criterion\Model\Log();
-        $log->output = 'Running...';
-        $log->response = false;
-        $log->command = $command;
-        $log->test_id = $this->id;
-        $log->time = new \MongoDate();
-        $log->status = '0';
-        $log->internal = $internal;
-        $log->save();
-
-        return $log->id;
-    }
-
-    public function log($command, $output, $response = '0', $log_id = null, $internal = false)
-    {
         $this->getProject();
 
         $command = str_replace(DATA_DIR, null, $command);
         $output = str_replace(DATA_DIR, null, $output);
 
-        $log = new \Criterion\Model\Log($log_id);
+        $log = new \Criterion\Model\Log();
 
         $log->output = $output;
-        $log->response = (string) $response;
+        $log->response = $response;
         $log->command = $command;
         $log->test_id = $this->id;
         $log->project_id = $this->project->id;
         $log->time = new \MongoDate();
-        $log->status = '1';
+        $log->status = $status;
         $log->internal = $internal;
         $log->save();
 
@@ -220,15 +211,21 @@ class Test extends \Criterion\Model
         $this->getProject();
 
         if (is_array($this->project->enviroment_variables)) {
-            $set_env_variables = $this->preLog('Setting enviroment variables');
+            $log = $this->log('Setting enviroment variables');
 
             $env_variables = array();
             foreach ($this->project->enviroment_variables as $env_var) {
                 $env_variables[] = $env_var;
                 putenv($env_var);
             }
-            $this->log('Setting environment variables', implode(', ',$env_variables), 0, $set_env_variables);
+
+            $log->status = '1';
+            $log->response = '0';
+            $log->output = implode(', ',$env_variables);
+            $log->save();
         }
+
+        return true;
     }
 
     public function fetch()
@@ -237,7 +234,7 @@ class Test extends \Criterion\Model
         $command = new \Criterion\Helper\Command($this->project, $this);
 
         // Add a fake "clone" log entry. This is a lot cleaner when outputting the logs.
-        $prelog_fetch = $this->preLog('Fetching ' . $this->project->source);
+        $fetch_log = $this->log('Fetching ' . $this->project->source);
         $fetch_start = microtime(true);
 
         // Get a fully formatted clone command, and then run it.
@@ -245,13 +242,16 @@ class Test extends \Criterion\Model
         $fetch = $command->execute($fetch_command, true);
 
         $fetch_end = microtime(true);
-        $clone_output = 'Failed';
+
+        $fetch_log->output = 'Failed';
         if ($fetch->success) {
-            $clone_output = 'Fetched in ' . number_format($fetch_end - $fetch_start) . ' seconds';
+            $fetch_log->output  = 'Fetched in ' . number_format($fetch_end - $fetch_start) . ' seconds';
         }
 
-        // Update fake log command with the response
-        $this->log('Fetching ' . $this->project->source, $clone_output, $fetch->response, $prelog_fetch);
+        $fetch_log->response = $fetch->response;
+        $fetch_log->status = '1';
+        $fetch_log->save();
+
         if (! $fetch->success) {
             return $this->failed();
         }
