@@ -76,7 +76,9 @@ class TestCommand extends Command
 
         // Switch to the project folder, and fetch the source
         chdir($project_path);
-        $test->fetch();
+        if(! $test->fetch()) {
+            return $test->failed();
+        }
 
         // Switch to the test folder
         chdir($test->path);

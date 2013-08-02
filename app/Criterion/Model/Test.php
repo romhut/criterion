@@ -252,9 +252,7 @@ class Test extends \Criterion\Model
         $fetch_log->status = '1';
         $fetch_log->save();
 
-        if (! $fetch->success) {
-            return $this->failed();
-        }
+        return $fetch->success;
     }
 
     public function run()
