@@ -48,9 +48,9 @@ class Github extends \Criterion\Helper
         $url = 'https://api.github.com/repos/' . $shortrepo . '/statuses/' . $test->commit['hash']['long'];
 
         $description = array(
-            'pending' => 'Tests are running.',
-            'success' => 'Tests have passed.',
-            'error' => 'Tests have failed.'
+            'pending' => 'The Criterion test is running',
+            'success' => 'The Criterion test passed',
+            'error' => 'The Criterion test failed'
         );
 
         $status = array(
