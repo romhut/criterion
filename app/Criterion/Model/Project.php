@@ -8,16 +8,16 @@ class Project extends \Criterion\Model
     public $collection = 'projects';
     public $serverConfig = array();
     public $serverConfigWhitelist = array(
-        'name' => null,
-        'source' => null,
-        'email' => null,
+        'name' => '',
+        'source' => '',
+        'email' => '',
         'ssh_key' => array(),
         'enviroment_variables' => array(),
         'github' => array(),
-        'script' => null,
-        'setup' => null,
-        'fail' => null,
-        'pass' => null
+        'script' => '',
+        'setup' => '',
+        'fail' => '',
+        'pass' => ''
     );
 
     public function __construct($query = null, $existing = null)
@@ -26,7 +26,7 @@ class Project extends \Criterion\Model
         parent::__construct($query, $existing);
 
         if (! $this->exists && is_array($raw_query) && isset($raw_query['source'])) {
-            $this->name = null;
+            $this->name = '';
             $this->source = $raw_query['source'];
             $this->github = array(
                 'token' => ''
