@@ -95,10 +95,8 @@ class Model
             $this->data['_id'] = $this->id;
         }
         $save = $this->db->save($this->data);
-        if ((bool) $save['ok'] === true) {
-            $this->exists = true;
-            return true;
-        }
-        return fakse;
+
+        $this->exists = (bool) $save['ok'];
+        return (bool) $save['ok'];
     }
 }
