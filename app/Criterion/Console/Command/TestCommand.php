@@ -86,8 +86,15 @@ class TestCommand extends Command
         // Make sure the commit is vailid (No [skip ci] etc)
         $commit = \Criterion\Helper\Commit::getInfo($project->source, $test->branch);
         $test->commit = $commit;
+
         if (! \Criterion\Helper\Commit::isValid($test->commit)) {
-            $test->delete();
+            $test->log('Checking if commit is valid', 'Invalid', '1');
+            $test->status = array(
+                'code' => '1',
+                'message' => 'Skipped'
+            );
+            $test->save();
+            $test->removeFolder();
             return false;
         }
 

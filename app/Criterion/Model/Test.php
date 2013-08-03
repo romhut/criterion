@@ -90,10 +90,18 @@ class Test extends \Criterion\Model
             }
         }
 
-        $path = TEST_DIR . '/' . $this->project->id  . '/' . (string) $this->id;
-        $command->execute(sprintf('rm -rf %s', $path), true);
+        $this->removeFolder();
 
         return true;
+    }
+
+    public function removeFolder()
+    {
+        $this->getProject();
+        $command = new \Criterion\Helper\Command($this->project, $this);
+
+        $path = TEST_DIR . '/' . $this->project->id  . '/' . (string) $this->id;
+        $command->execute(sprintf('rm -rf %s', $path), true);
     }
 
     public function passed()
@@ -126,8 +134,7 @@ class Test extends \Criterion\Model
             }
         }
 
-        $path = TEST_DIR . '/' . $this->project->id  . '/' . (string) $this->id;
-        $command->execute(sprintf('rm -rf %s', $path), true);
+        $this->removeFolder();
 
         return true;
     }
