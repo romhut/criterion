@@ -81,7 +81,8 @@ $app->error(function(\Exception $e, $code) use ($app) {
 $app->get('/', 'Criterion\UI\Controller\ProjectsController::all');
 
 $app->match('/auth/login', 'Criterion\UI\Controller\AuthController::login')->method('POST|GET');
-$app->match('/auth/tokens', 'Criterion\UI\Controller\AuthController::tokens')->method('POST|GET');
+$app->match('/tokens', 'Criterion\UI\Controller\AuthController::tokens')->method('POST|GET');
+$app->match('/tokens/delete/{id}', 'Criterion\UI\Controller\AuthController::delete_token');
 $app->get('/auth/logout', 'Criterion\UI\Controller\AuthController::logout');
 
 $app->post('/project/create', 'Criterion\UI\Controller\ProjectsController::create');

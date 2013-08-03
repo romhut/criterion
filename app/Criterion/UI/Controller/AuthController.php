@@ -42,12 +42,22 @@ class AuthController
             $token->save();
         }
 
-        $data['tokens'] = $app['criterion']->db->tokens->find(array(
-            'user_id' => $app['user']->id
-        ))->asArray();
-
+        $data['tokens'] = $app['user']->getTokens();
         return $app['twig']->render('Auth/Tokens.twig', $data);
+    }
 
+    public function delete_token(\Silex\Application $app)
+    {
+        if (! $app['user']->isAdmin()) {
+            return $app->abort(403, 'You do not have permission to do this');
+        }
+
+        $token = $app['user']->validToken($app['request']->get('id'));
+        if ($token) {
+            $token->delete();
+        }
+
+        return $app->redirect('/tokens');
     }
 
     public function logout(\Silex\Application $app)
