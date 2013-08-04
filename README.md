@@ -67,8 +67,3 @@ If you need a hand with anything then use one of the following methods:
  - [Github Issues](http://github.com/romhut/criterion/issues)
  - IRC (#criterion on Freenode)
  - Twitter: [@criterionapp](http://twitter.com/criterionapp)
-
-### Contributors
-- [Scott Robertson](http://github.com/scottymeuk)
-- [Marc Qualie](http://github.com/marcqualie)
-- [Chris Roach](https://github.com/outrunthewolf)
