@@ -37,4 +37,26 @@ class TestModelTest extends \Criterion\Test\TestCase
 
         $this->assertTrue(is_array($test->getLogs()));
     }
+
+    public function testFailedNoCommands()
+    {
+        $test = new \Criterion\Model\Test();
+        $this->assertTrue(is_object($test));
+
+        $project = new \Criterion\Model\Project();
+        $project->save();
+
+        $this->assertTrue($test->failed());
+    }
+
+    public function testPassedNoCommands()
+    {
+        $test = new \Criterion\Model\Test();
+        $this->assertTrue(is_object($test));
+
+        $project = new \Criterion\Model\Project();
+        $project->save();
+
+        $this->assertTrue($test->passed());
+    }
 }

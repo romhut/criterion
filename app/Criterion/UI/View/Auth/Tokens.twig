@@ -5,7 +5,10 @@
     <div>
 
         <form method="post">
-            <button name="generate" class="btn btn-primary">Generate</button>
+            <button name="generate" class="btn btn-success btn-mini">
+                <i class="icon-lock"></i>
+                Generate
+            </button>
         </form>
 
         {% if error is defined %}
@@ -16,14 +19,13 @@
             <div class="alert alert-block alert-success">{{ success }}</div>
         {% endif %}
 
-        <div class="alert alert-block alert-info">Currently, these tokens are used for Github Hooks, but they will eventually have access your full account, so be careful what you do with them.</div>
-
         {% if tokens|length > 0 %}
             <table class="table table-stripped">
                 <thead>
                     <tr>
                         <th>Token</th>
                         <th>Generated</th>
+                        <th></th>
                     </tr>
                 </thead>
 
@@ -35,13 +37,16 @@
                                 {{ token.generated.sec|date('jS M Y') }}
                             </span>
                         </td>
+                        <td>
+                            <a class="btn btn-mini btn-danger" href="/tokens/delete/{{token._id}}">Delete</a>
+                        </td>
                     </tr>
                 {% endfor %}
             </table>
 
         {% else %}
             <hr />
-            <div class="alert alert-block alert-danger">No tokens found.</div>
+            <div class="alert alert-block alert-danger">No tokens on your account.</div>
         {% endif %}
 
 

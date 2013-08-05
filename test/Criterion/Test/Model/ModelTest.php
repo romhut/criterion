@@ -1,14 +1,14 @@
 <?php
 
-namespace Criterion\Test;
+namespace Criterion\Test\Model;
 
-class ModelTest extends TestCase
+class ModelTest extends \Criterion\Test\TestCase
 {
 
     public function testInit()
     {
         $model = new \Criterion\Model();
-        $this->assertTrue(is_object($model));
+        $this->assertTrue($model instanceof \Criterion\Model);
         $this->assertTrue(is_object($model->id));
     }
 
@@ -81,6 +81,7 @@ class ModelTest extends TestCase
         $model = new \Criterion\Model();
         $model->testing = 'test';
         $this->assertTrue($model->save());
+        $this->assertTrue($model->exists);
         $this->assertTrue($model->delete());
         $this->assertFalse($model->exists);
     }
