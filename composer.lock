@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "61cdac9788955f10ff13a8ac0968077d",
+    "hash": "502dc718dded8fa5c7ab454e23511622",
     "packages": [
         {
             "name": "ircmaxell/password-compat",
@@ -46,16 +46,16 @@
         },
         {
             "name": "marcqualie/mongominify",
-            "version": "v1.0.2",
+            "version": "v1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/marcqualie/mongominify.git",
-                "reference": "v1.0.2"
+                "reference": "v1.0.3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/marcqualie/mongominify/zipball/v1.0.2",
-                "reference": "v1.0.2",
+                "url": "https://api.github.com/repos/marcqualie/mongominify/zipball/v1.0.3",
+                "reference": "v1.0.3",
                 "shasum": ""
             },
             "require": {
@@ -63,7 +63,6 @@
                 "php": ">=5.3.3"
             },
             "require-dev": {
-                "phpunit/php-code-coverage": "~1.2",
                 "phpunit/phpunit": "~3.7",
                 "silex/silex": "~1.0"
             },
@@ -92,7 +91,7 @@
                 "library",
                 "mongodb"
             ],
-            "time": "2013-07-17 15:02:25"
+            "time": "2013-08-04 19:18:33"
         },
         {
             "name": "pimple/pimple",
@@ -700,16 +699,16 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.13.1",
+            "version": "v1.13.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "v1.13.1"
+                "reference": "v1.13.2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/v1.13.1",
-                "reference": "v1.13.1",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/v1.13.2",
+                "reference": "v1.13.2",
                 "shasum": ""
             },
             "require": {
@@ -728,7 +727,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD-3"
+                "BSD-3-Clause"
             ],
             "authors": [
                 {
@@ -745,7 +744,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-06-06 06:06:01"
+            "time": "2013-08-03 15:35:31"
         }
     ],
     "packages-dev": [
@@ -996,16 +995,16 @@
         },
         {
             "name": "phpunit/php-token-stream",
-            "version": "1.1.8",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-token-stream.git",
-                "reference": "1.1.8"
+                "reference": "1.2.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/1.1.8",
-                "reference": "1.1.8",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-token-stream/zipball/1.2.0",
+                "reference": "1.2.0",
                 "shasum": ""
             },
             "require": {
@@ -1013,6 +1012,11 @@
                 "php": ">=5.3.3"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2-dev"
+                }
+            },
             "autoload": {
                 "classmap": [
                     "PHP/"
@@ -1037,7 +1041,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2013-08-02 19:10:55"
+            "time": "2013-08-04 05:57:48"
         },
         {
             "name": "phpunit/phpunit",
