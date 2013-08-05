@@ -34,6 +34,7 @@ class HookController
         ));
 
         if (! $project->exists) {
+            $project->emptyProject($repo);
             $project->save();
         }
 

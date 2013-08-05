@@ -40,7 +40,8 @@ class WorkerRunCommand extends Command
         $output->writeln('<comment>Worker Started: ' . $worker . ' (Interval: ' . $interval . ')</comment>');
         $output->writeln('');
 
-        $tests = $this->getApplication()->db->tests;
+        $app = new \Criterion\Application();
+        $tests = $app->db->tests;
 
         while (true) {
             $test = $tests->findAndModify(array(
@@ -56,28 +57,17 @@ class WorkerRunCommand extends Command
             ));
 
             $test = new \Criterion\Model\Test(null, $test);
+            $test_id = (string) $test->id;
 
             if ($test->exists) {
+
                 $output->writeln('-----------');
-                $project_id = (string) $test->project_id;
-                $test_id = (string) $test->id;
+                $output->writeln('<comment>Test Started</comment>');
 
-                $project = $test->getProject();
+                $shell_command = $input->getOption('debug') ? 'passthru' : 'shell_exec';
+                $shell_command('php ' . ROOT . '/bin/cli test ' . $test_id);
 
-                if ($project->exists) {
-                    $output->writeln('<comment>Test Started</comment>');
-                    $output->writeln(' - Project:' . $project->source);
-                    $output->writeln(' - Test ID:' . $test_id);
-
-                    $shell_command = $input->getOption('debug') ? 'passthru' : 'shell_exec';
-                    $shell_command('php ' . ROOT . '/bin/cli test ' . $test_id);
-
-                    $output->writeln('<info>Test has finished</info>');
-                } else {
-                    $output->writeln('<error>Project does not exist, removing test.</error>');
-                    $test->delete();
-                }
-
+                $output->writeln('<info>Test Finished</info>');
                 $output->writeln('');
             }
 

@@ -46,9 +46,8 @@ class RepoHelperTest extends \Criterion\Test\TestCase
 
     public function testFetchCommandRepo()
     {
-        $project = new \Criterion\Model\Project(array(
-            'source' => 'git@github.com:romhut/criterion'
-        ));
+        $project = new \Criterion\Model\Project();
+        $project->emptyProject('git@github.com:romhut/criterion');
 
         $test = new \Criterion\Model\Test();
         $test->branch = 'master';
@@ -61,9 +60,8 @@ class RepoHelperTest extends \Criterion\Test\TestCase
 
     public function testFetchCommandFolder()
     {
-        $project = new \Criterion\Model\Project(array(
-            'source' => ROOT
-        ));
+        $project = new \Criterion\Model\Project();
+        $project->emptyProject(ROOT);
 
         $test = new \Criterion\Model\Test();
         $test->branch = 'master';

@@ -6,9 +6,14 @@ class CommandHelperTest extends \Criterion\Test\TestCase
 {
     public function testExecute()
     {
-        $command = new \Criterion\Helper\Command();
-        $response = $command->execute('echo "hi";');
+        $project = new \Criterion\Model\Project(array(
+            'source' => ROOT
+        ));
 
-        $this->assertTrue($response);
+        $test = new \Criterion\Model\Test();
+
+        $command = new \Criterion\Helper\Command($project, $test);
+        $response = $command->execute('echo "hi";');
+        $this->assertTrue($response->success);
     }
 }

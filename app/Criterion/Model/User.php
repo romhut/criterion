@@ -31,4 +31,29 @@ class User extends \Criterion\Model
         ));
     }
 
+    public function validToken($token)
+    {
+        $getToken = new \Criterion\Model\Token($token);
+
+        if ($getToken->user_id === $this->id) {
+            return false;
+        }
+
+        return $getToken;
+    }
+
+    public function getTokens()
+    {
+        $getTokens = $this->app->db->tokens->find(array(
+            'user_id' => $this->id
+        ));
+
+        $tokens = array();
+        foreach ($getTokens as $token) {
+            $tokens[] = new \Criterion\Model\Token(false, $token);
+        }
+
+        return $tokens;
+    }
+
 }

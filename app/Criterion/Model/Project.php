@@ -8,50 +8,45 @@ class Project extends \Criterion\Model
     public $collection = 'projects';
     public $serverConfig = array();
     public $serverConfigWhitelist = array(
-        'name' => null,
-        'source' => null,
-        'email' => null,
+        'name' => '',
+        'source' => '',
+        'email' => '',
         'ssh_key' => array(),
         'enviroment_variables' => array(),
         'github' => array(),
-        'script' => null,
-        'setup' => null,
-        'fail' => null,
-        'pass' => null
+        'script' => '',
+        'setup' => '',
+        'fail' => '',
+        'pass' => ''
     );
 
-    public function __construct($query = null, $existing = null)
+    public function emptyProject($source)
     {
-        $raw_query = $query;
-        parent::__construct($query, $existing);
+        $this->name = '';
+        $this->source = $source;
+        $this->github = array(
+            'token' => ''
+        );
+        $this->email = '';
+        $this->short_repo = \Criterion\Helper\Repo::short($this->source);
+        $this->provider = \Criterion\Helper\Repo::provider($this->source);
+        $this->last_run = new \MongoDate();
+        $this->status = array(
+            'code' => '2',
+            'message' => 'New'
+        );
+        $this->enviroment_variables = array(
+            'APP_ENV=testing'
+        );
 
-        if (! $this->exists && is_array($raw_query) && isset($raw_query['source'])) {
-            $this->name = null;
-            $this->source = $raw_query['source'];
-            $this->github = array(
-                'token' => ''
-            );
-            $this->email = '';
-            $this->short_repo = \Criterion\Helper\Repo::short($this->source);
-            $this->provider = \Criterion\Helper\Repo::provider($this->source);
-            $this->last_run = new \MongoDate();
-            $this->status = array(
-                'code' => '2',
-                'message' => 'New'
-            );
-            $this->enviroment_variables = array(
-                'APP_ENV=testing'
-            );
-
-            $ssh_key_file = KEY_DIR . '/' . $this->id;
-            $ssh_key_helper = new \Criterion\Helper\SshKey();
-            $ssh_key_helper->generate($ssh_key_file);
-            $this->ssh_key = array(
-                'public' => $ssh_key_helper->getPublicKey(),
-                'private' => $ssh_key_helper->getPrivateKey()
-            );
-            $ssh_key_helper->destroy();
-        }
+        $ssh_key_file = KEY_DIR . '/' . $this->id;
+        $ssh_key_helper = new \Criterion\Helper\SshKey();
+        $ssh_key_helper->generate($ssh_key_file);
+        $this->ssh_key = array(
+            'public' => $ssh_key_helper->getPublicKey(),
+            'private' => $ssh_key_helper->getPrivateKey()
+        );
+        $ssh_key_helper->destroy();
     }
 
     public function getTests()
@@ -82,7 +77,7 @@ class Project extends \Criterion\Model
                         }
                     }
 
-                    if (is_array($config_data[$key])) {
+                    if (isset($config_data[$key]) && is_array($config_data[$key])) {
                         $config_data[$key] = array_unique($config_data[$key]);
                     }
                 } else {
