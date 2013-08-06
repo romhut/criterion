@@ -8,17 +8,13 @@ class Test extends \Criterion\Model
     public $collection = 'tests';
     public $project = false;
 
-    public function __construct($query = null, $existing = null)
+    public function defaultData($query)
     {
-        parent::__construct($query, $existing);
-
-        if (! $this->exists) {
-            $this->status = array(
-                'code' => '4',
-                'message' => 'Pending'
-            );
-            $this->started = new \MongoDate();
-        }
+        $this->status = array(
+            'code' => '4',
+            'message' => 'Pending'
+        );
+        $this->started = new \MongoDate();
     }
 
     public function getProject()
