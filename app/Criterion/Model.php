@@ -46,6 +46,12 @@ class Model
             } else {
                 $this->id = new \MongoId();
                 $this->data['_id'] = $this->id;
+
+                // Build a default data set for this model
+                if (method_exists($this, 'defaultData')) {
+                    $this->defaultData($query);
+                }
+
             }
         }
     }
