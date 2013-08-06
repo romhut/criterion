@@ -34,8 +34,7 @@ class User extends \Criterion\Model
     public function validToken($token)
     {
         $getToken = new \Criterion\Model\Token($token);
-
-        if ($getToken->user_id === $this->id) {
+        if ($getToken->user_id !== $this->id) {
             return false;
         }
 
