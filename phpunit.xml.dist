@@ -2,7 +2,7 @@
 <phpunit bootstrap="vendor/autoload.php">
     <testsuites>
         <testsuite name="Criterion Test Suite">
-            <directory>test/Criterion/Test</directory>
+            <directory>tests</directory>
         </testsuite>
     </testsuites>
     <filter>
