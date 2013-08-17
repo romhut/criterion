@@ -1,5 +1,6 @@
 <?php
 namespace Criterion\Console\Command;
+
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,9 +27,11 @@ class UserRoleCommand extends Command
         $username = trim(strtolower($input->getArgument('username')));
 
         // Check if user exists
-        $user = new \Criterion\Model\User(array(
-            'username' => $username
-        ));
+        $user = new \Criterion\Model\User(
+            array(
+                'username' => $username
+            )
+        );
 
         if (! $user->exists) {
             $output->writeln('<error>Could not find user</error>');

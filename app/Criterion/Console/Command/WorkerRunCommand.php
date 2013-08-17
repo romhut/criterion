@@ -1,5 +1,6 @@
 <?php
 namespace Criterion\Console\Command;
+
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -13,16 +14,16 @@ class WorkerRunCommand extends Command
             ->setName('worker:start')
             ->setDescription('Start a worker')
             ->addOption(
-               'debug',
-               null,
-               InputOption::VALUE_NONE,
-               'If set, the worker will run in verbose mode'
+                'debug',
+                null,
+                InputOption::VALUE_NONE,
+                'If set, the worker will run in verbose mode'
             )
             ->addOption(
-               'interval',
-               null,
-               InputOption::VALUE_OPTIONAL,
-               'How often should we poll?'
+                'interval',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'How often should we poll?'
             )
             ;
     }
@@ -44,17 +45,20 @@ class WorkerRunCommand extends Command
         $tests = $app->db->tests;
 
         while (true) {
-            $test = $tests->findAndModify(array(
-                'status.code' => '4'
-            ), array(
-                '$set' => array(
-                    'worker' => $worker,
-                    'status' => array(
-                        'code' => '3',
-                        'message' => 'Running'
+            $test = $tests->findAndModify(
+                array(
+                    'status.code' => '4'
+                ),
+                array(
+                    '$set' => array(
+                        'worker' => $worker,
+                        'status' => array(
+                            'code' => '3',
+                            'message' => 'Running'
+                        )
                     )
                 )
-            ));
+            );
 
             $test = new \Criterion\Model\Test(null, $test);
             $test_id = (string) $test->id;

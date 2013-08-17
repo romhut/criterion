@@ -1,6 +1,6 @@
 <?php
-
 namespace Criterion\Test;
+
 use Criterion\Utils;
 
 class ArrayMergeTest extends TestCase
@@ -17,11 +17,14 @@ class ArrayMergeTest extends TestCase
             'key3' => 'three'
         );
         $array3 = Utils::arrayMerge($array1, $array2);
-        $this->assertEquals($array3, array(
-            'key1' => 1,
-            'key2' => 'two',
-            'key3' => 'three'
-        ));
+        $this->assertEquals(
+            $array3,
+            array(
+                'key1' => 1,
+                'key2' => 'two',
+                'key3' => 'three'
+            )
+        );
     }
 
     public function testNestedArrayMerge()
@@ -42,16 +45,18 @@ class ArrayMergeTest extends TestCase
             )
         );
         $array3 = Utils::arrayMerge($array1, $array2);
-        $this->assertEquals($array3, array(
-            'key1' => 1,
-            'key2' => array(
-                'nested1' => 1,
-                'nested2' => 'two'
-            ),
-            'key3' => array(
-                'nested3' => 3
+        $this->assertEquals(
+            $array3,
+            array(
+                'key1' => 1,
+                'key2' => array(
+                    'nested1' => 1,
+                    'nested2' => 'two'
+                ),
+                'key3' => array(
+                    'nested3' => 3
+                )
             )
-        ));
+        );
     }
-
 }

@@ -1,6 +1,6 @@
 <?php
-
 namespace Criterion\Model;
+
 use Criterion\Utils;
 
 class Project extends \Criterion\Model
@@ -51,11 +51,16 @@ class Project extends \Criterion\Model
 
     public function getTests()
     {
-        $tests = $this->app->db->tests->find(array(
-            'project_id' => $this->id
-        ))->sort(array(
-            'started' => -1
-        ));
+        $tests = $this->app->db->tests->find(
+            array(
+                'project_id' => $this->id
+            )
+        )
+        ->sort(
+            array(
+                'started' => -1
+            )
+        );
 
         $test_models = array();
         foreach ($tests as $test) {

@@ -58,6 +58,4 @@ class Command extends \Criterion\Helper
 
         return $this;
     }
-
-
 }

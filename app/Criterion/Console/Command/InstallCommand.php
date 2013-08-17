@@ -1,5 +1,6 @@
 <?php
 namespace Criterion\Console\Command;
+
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -74,9 +75,11 @@ class InstallCommand extends Command
         $output->writeln('<info>You need to create an admin user to login to the web interface</info>');
         $username = $dialog->ask($output, 'Username [admin]: ', 'admin');
 
-        $user = new \Criterion\Model\User(array(
-            'username' => $username
-        ));
+        $user = new \Criterion\Model\User(
+            array(
+                'username' => $username
+            )
+        );
 
         $user->username = $username;
 
@@ -134,9 +137,11 @@ class InstallCommand extends Command
         $install_samples = strtolower($dialog->ask($output, 'Do you want to install sample projects? [y/N]: '));
         if ($install_samples === 'y') {
             foreach ($samples as $sample) {
-                $project = new \Criterion\Model\Project(array(
-                    'source' => 'https://github.com/' . $sample
-                ));
+                $project = new \Criterion\Model\Project(
+                    array(
+                        'source' => 'https://github.com/' . $sample
+                    )
+                );
                 $project->save();
 
                 $output->writeln('<info>- Installed ' . $sample . '</info>');

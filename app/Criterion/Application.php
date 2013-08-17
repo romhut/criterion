@@ -1,6 +1,7 @@
 <?php
 
 namespace Criterion;
+
 use Criterion\Exception\ConfigurationException;
 
 class Application

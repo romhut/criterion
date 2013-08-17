@@ -13,18 +13,22 @@ class ProjectModelTest extends \Criterion\Test\TestCase
 
     public function testInitWithRepo()
     {
-        $project = new \Criterion\Model\Project(array(
-            'source' => 'https://github.com/romhut/criterion'
-        ));
+        $project = new \Criterion\Model\Project(
+            array(
+                'source' => 'https://github.com/romhut/criterion'
+            )
+        );
 
         $this->assertTrue(is_object($project));
     }
 
     public function testSetServerConfig()
     {
-        $project = new \Criterion\Model\Project(array(
-            'source' => 'https://github.com/romhut/criterion'
-        ));
+        $project = new \Criterion\Model\Project(
+            array(
+                'source' => 'https://github.com/romhut/criterion'
+            )
+        );
 
         $this->assertTrue(is_object($project));
 
@@ -37,9 +41,11 @@ class ProjectModelTest extends \Criterion\Test\TestCase
 
     public function testSetServerConfigEnvPass()
     {
-        $project = new \Criterion\Model\Project(array(
-            'source' => 'https://github.com/romhut/criterion'
-        ));
+        $project = new \Criterion\Model\Project(
+            array(
+                'source' => 'https://github.com/romhut/criterion'
+            )
+        );
 
         $this->assertTrue(is_object($project));
 
@@ -54,9 +60,11 @@ class ProjectModelTest extends \Criterion\Test\TestCase
 
     public function testSetServerConfigEnvFail()
     {
-        $project = new \Criterion\Model\Project(array(
-            'source' => 'https://github.com/romhut/criterion'
-        ));
+        $project = new \Criterion\Model\Project(
+            array(
+                'source' => 'https://github.com/romhut/criterion'
+            )
+        );
 
         $this->assertTrue(is_object($project));
 
@@ -71,9 +79,11 @@ class ProjectModelTest extends \Criterion\Test\TestCase
 
     public function testGetServerConfig()
     {
-        $project = new \Criterion\Model\Project(array(
-            'source' => 'https://github.com/romhut/criterion'
-        ));
+        $project = new \Criterion\Model\Project(
+            array(
+                'source' => 'https://github.com/romhut/criterion'
+            )
+        );
 
         $this->assertTrue(is_object($project));
         $this->assertCount(count($project->serverConfigWhitelist), $project->getServerConfig());
@@ -81,9 +91,11 @@ class ProjectModelTest extends \Criterion\Test\TestCase
 
     public function testHasServerConfigTrue()
     {
-        $project = new \Criterion\Model\Project(array(
-            'source' => 'https://github.com/romhut/criterion'
-        ));
+        $project = new \Criterion\Model\Project(
+            array(
+                'source' => 'https://github.com/romhut/criterion'
+            )
+        );
 
         $config = array(
             'script' => array(
@@ -98,9 +110,11 @@ class ProjectModelTest extends \Criterion\Test\TestCase
 
     public function testHasServerConfigFalse()
     {
-        $project = new \Criterion\Model\Project(array(
-            'source' => 'https://github.com/romhut/criterion'
-        ));
+        $project = new \Criterion\Model\Project(
+            array(
+                'source' => 'https://github.com/romhut/criterion'
+            )
+        );
 
         $this->assertTrue(is_object($project));
         $this->assertFalse($project->hasServerConfig());

@@ -7,9 +7,11 @@ class ProjectsController
 {
     public function all(\Silex\Application $app)
     {
-        $projects = $app['criterion']->db->projects->find()->sort(array(
-            'last_run' => -1
-        ));
+        $projects = $app['criterion']->db->projects->find()->sort(
+            array(
+                'last_run' => -1
+            )
+        );
 
         $data['projects'] = array();
         $data['failing'] = 0;
@@ -50,12 +52,17 @@ class ProjectsController
 
     public function status(\Silex\Application $app)
     {
-        $project = new \Criterion\Model\Project(array(
-            'short_repo' => implode('/', array(
-                $app['request']->get('vendor'),
-                $app['request']->get('package')
-            ))
-        ));
+        $project = new \Criterion\Model\Project(
+            array(
+                'short_repo' => implode(
+                    '/',
+                    array(
+                        $app['request']->get('vendor'),
+                        $app['request']->get('package')
+                    )
+                )
+            )
+        );
 
         if (! $project->exists) {
             return $app->abort(404, 'Project not found.');
@@ -77,11 +84,15 @@ class ProjectsController
             readfile($file);
         };
 
-        return $app->stream($stream, 200, array(
-            'Content-Type' => 'image/jpg',
-            'Cache-Control' => 'no-cache, must-revalidate',
-            'Expires' => 'Sat, 26 Jul 1997 05:00:00 GMT'
-        ));
+        return $app->stream(
+            $stream,
+            200,
+            array(
+                'Content-Type' => 'image/jpg',
+                'Cache-Control' => 'no-cache, must-revalidate',
+                'Expires' => 'Sat, 26 Jul 1997 05:00:00 GMT'
+            )
+        );
     }
 
     public function delete(\Silex\Application $app)

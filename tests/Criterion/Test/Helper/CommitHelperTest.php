@@ -17,7 +17,7 @@ class CommitHelperTest extends \Criterion\Test\TestCase
         $this->assertEquals('https://github.com/romhut/criterion/commit/75d9fa65fdd211fd22a8c00aaf9008a1917e0f15', $commit_url);
     }
 
-        public function testBitbucketCommitUrl()
+    public function testBitbucketCommitUrl()
     {
         $repo = 'git@bitbucket.org:romhut/criterion';
         $commit = array(

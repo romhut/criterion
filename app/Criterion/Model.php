@@ -83,9 +83,11 @@ class Model
     public function delete()
     {
         if ($this->exists) {
-            $delete = $this->db->remove(array(
-                '_id' => $this->id
-            ));
+            $delete = $this->db->remove(
+                array(
+                    '_id' => $this->id
+                )
+            );
 
             $this->exists = false;
 

@@ -10,14 +10,19 @@ class AuthController
             $username = strtolower($app['request']->get('username'));
             $password = $app['request']->get('password');
 
-            $user = new \Criterion\Model\User(array(
-                'username' => $username
-            ));
+            $user = new \Criterion\Model\User(
+                array(
+                    'username' => $username
+                )
+            );
 
             if ($user->exists && $user->password($password)) {
-                $app['session']->set('user', array(
-                    'username' => $username
-                ));
+                $app['session']->set(
+                    'user',
+                    array(
+                        'username' => $username
+                    )
+                );
 
                 return $app->redirect('/');
             } else {

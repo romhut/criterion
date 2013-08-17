@@ -3,7 +3,6 @@ namespace Criterion\UI\Controller;
 
 class TestController
 {
-
     public function status(\Silex\Application $app)
     {
         $test = new \Criterion\Model\Test($app['request']->get('id'));

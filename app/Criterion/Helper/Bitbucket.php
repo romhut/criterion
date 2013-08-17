@@ -1,5 +1,6 @@
 <?php
 namespace Criterion\Helper;
+
 class Bitbucket extends \Criterion\Helper
 {
     public static function toSSHUrl($url)

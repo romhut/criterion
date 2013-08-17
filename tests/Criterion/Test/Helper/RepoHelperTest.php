@@ -93,5 +93,4 @@ class RepoHelperTest extends \Criterion\Test\TestCase
         $provider = \Criterion\Helper\Repo::provider($repo);
         $this->assertEquals(false, $provider);
     }
-
 }

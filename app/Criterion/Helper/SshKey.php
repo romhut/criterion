@@ -66,5 +66,4 @@ class SshKey extends \Criterion\Helper
 
         return true;
     }
-
 }

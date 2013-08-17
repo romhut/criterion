@@ -53,9 +53,11 @@ class GithubHelperTest extends \Criterion\Test\TestCase
      */
     public function testUpdateStatus()
     {
-        $project = new \Criterion\Model\Project(array(
-            'source' => 'git@github.com:romhut/criterion'
-        ));
+        $project = new \Criterion\Model\Project(
+            array(
+                'source' => 'git@github.com:romhut/criterion'
+            )
+        );
 
         $project->github = array(
             'token' => 'invalidtoken'
@@ -72,5 +74,4 @@ class GithubHelperTest extends \Criterion\Test\TestCase
         $this->assertFalse($update); // HACK: this will be true in a real use case. See comment above.
 
     }
-
 }

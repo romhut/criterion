@@ -13,5 +13,4 @@ class Application extends SymfonyApplication
         parent::__construct($name, $version);
         $this->app = new \Criterion\Application();
     }
-
 }

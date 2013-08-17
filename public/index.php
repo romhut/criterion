@@ -23,60 +23,71 @@ if (isset($app['criterion']->config['debug']) && $app['criterion']->config['debu
     $app->register(new WhoopsServiceProvider);
 }
 
-$app->register(new Silex\Provider\TwigServiceProvider(), array(
-    'twig.path' => dirname(__DIR__) . '/app/Criterion/UI/View',
-));
+$app->register(
+    new Silex\Provider\TwigServiceProvider(),
+    array(
+        'twig.path' => dirname(__DIR__) . '/app/Criterion/UI/View',
+    )
+);
 
 $app->register(new Silex\Provider\SessionServiceProvider());
 
 // Autehntication
-$app->before(function() use ($app) {
+$app->before(
+    function () use ($app) {
+        $authenticated = false;
+        $app['user'] = false;
 
-    $authenticated = false;
-    $app['user'] = false;
+        if ($app['session']->get('user') || ! isset($app['criterion']->config['visibility']) || $app['criterion']->config['visibility'] !== 'public') {
+            $path_info = pathinfo($app['request']->getPathInfo());
+            $uri = $app['request']->server->get('REQUEST_URI');
 
-    if ($app['session']->get('user') || ! isset($app['criterion']->config['visibility']) || $app['criterion']->config['visibility'] !== 'public') {
-        $path_info = pathinfo($app['request']->getPathInfo());
-        $uri = $app['request']->server->get('REQUEST_URI');
+            $allowed_urls = array('/auth/login');
 
-        $allowed_urls = array('/auth/login');
+            if (strpos($uri, '/hook/github') === 0 || in_array($uri, $allowed_urls) || (isset($path_info['extension']) && in_array($path_info['extension'], array('png', 'jpg')))) {
+                 $authenticated = true;
+            } else {
+                if ($app['session']->get('user')) {
+                    $session = $app['session']->get('user');
+                    $user = new \Criterion\Model\User(
+                        array(
+                            'username' => $session['username']
+                        )
+                    );
 
-        if (strpos($uri, '/hook/github') === 0 || in_array($uri, $allowed_urls) || (isset($path_info['extension']) && in_array($path_info['extension'], array('png', 'jpg')))) {
-             $authenticated = true;
-        } else {
-            if ($app['session']->get('user')) {
-                $session = $app['session']->get('user');
-                $user = new \Criterion\Model\User(array(
-                    'username' => $session['username']
-                ));
-
-                if ($user->exists) {
-                    $app['user'] = $user;
-                    $authenticated = true;
+                    if ($user->exists) {
+                        $app['user'] = $user;
+                        $authenticated = true;
+                    }
                 }
             }
-        }
 
-        if (! $authenticated) {
-            return $app->redirect('/auth/login');
+            if (! $authenticated) {
+                return $app->redirect('/auth/login');
+            }
         }
     }
-});
+);
 
-$app->error(function(\Exception $e, $code) use ($app) {
+$app->error(
+    function (\Exception $e, $code) use ($app) {
 
-    $allowed_codes = array(401, 404, 403);
-    if (! in_array($code, $allowed_codes)) {
-        $code = 404;
+        $allowed_codes = array(401, 404, 403);
+        if (! in_array($code, $allowed_codes)) {
+            $code = 404;
+        }
+
+        $app['user'] = false;
+        $app['token'] = false;
+
+        return $app['twig']->render(
+            'Error/' . $code . '.twig',
+            array(
+                'error' => $e
+            )
+        );
     }
-
-    $app['user'] = false;
-    $app['token'] = false;
-
-    return $app['twig']->render('Error/'.$code.'.twig', array(
-        'error' => $e
-    ));
-});
+);
 
 $app->get('/', 'Criterion\UI\Controller\ProjectsController::all');
 

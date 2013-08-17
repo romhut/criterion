@@ -26,9 +26,13 @@ class User extends \Criterion\Model
 
     private function passwordHash($password)
     {
-        return password_hash($this->password, PASSWORD_BCRYPT, array(
-            'cost' => 12
-        ));
+        return password_hash(
+            $this->password,
+            PASSWORD_BCRYPT,
+            array(
+                'cost' => 12
+            )
+        );
     }
 
     public function validToken($token)
@@ -43,9 +47,11 @@ class User extends \Criterion\Model
 
     public function getTokens()
     {
-        $getTokens = $this->app->db->tokens->find(array(
-            'user_id' => $this->id
-        ));
+        $getTokens = $this->app->db->tokens->find(
+            array(
+                'user_id' => $this->id
+            )
+        );
 
         $tokens = array();
         foreach ($getTokens as $token) {
@@ -54,5 +60,4 @@ class User extends \Criterion\Model
 
         return $tokens;
     }
-
 }

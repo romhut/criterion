@@ -1,6 +1,6 @@
 <?php
-
 namespace Criterion\Test;
+
 use Criterion\Application;
 
 class ConfigTest extends TestCase
@@ -39,5 +39,4 @@ class ConfigTest extends TestCase
         $this->assertEquals($app->config['mongo']['server'], 'mongodb://localhost');
         $this->assertEquals($app->config['mongo']['database'], 'criterion');
     }
-
 }

@@ -29,9 +29,11 @@ class HookController
             $repo = \Criterion\Helper\Github::toSSHUrl($repo);
         }
 
-        $project = new \Criterion\Model\Project(array(
-            'source' => $repo
-        ));
+        $project = new \Criterion\Model\Project(
+            array(
+                'source' => $repo
+            )
+        );
 
         if (! $project->exists) {
             $project->emptyProject($repo);
@@ -43,9 +45,11 @@ class HookController
         $test->branch = str_replace('refs/heads/', null, $payload['ref']);
         $test->save();
 
-        return $app->json(array(
-            'success' => true,
-            'test' => (string) $test->id
-        ));
+        return $app->json(
+            array(
+                'success' => true,
+                'test' => (string) $test->id
+            )
+        );
     }
 }

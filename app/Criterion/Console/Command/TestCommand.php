@@ -13,10 +13,11 @@ class TestCommand extends Command
         $this
             ->setName('test')
             ->setDescription('Run a test using the test ID.')
-             ->setDefinition(array(
-                new InputArgument('test_id', InputArgument::REQUIRED, 'The test ID', null),
-             ))
-            ;
+            ->setDefinition(
+                array(
+                    new InputArgument('test_id', InputArgument::REQUIRED, 'The test ID', null),
+                )
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -76,7 +77,7 @@ class TestCommand extends Command
 
         // Switch to the project folder, and fetch the source
         chdir($project_path);
-        if(! $test->fetch()) {
+        if (! $test->fetch()) {
             return $test->failed();
         }
 

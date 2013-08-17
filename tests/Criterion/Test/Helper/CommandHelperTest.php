@@ -6,9 +6,11 @@ class CommandHelperTest extends \Criterion\Test\TestCase
 {
     public function testExecute()
     {
-        $project = new \Criterion\Model\Project(array(
-            'source' => ROOT
-        ));
+        $project = new \Criterion\Model\Project(
+            array(
+                'source' => ROOT
+            )
+        );
 
         $test = new \Criterion\Model\Test();
 

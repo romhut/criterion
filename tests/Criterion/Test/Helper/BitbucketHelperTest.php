@@ -45,5 +45,4 @@ class BitbucketHelperTest extends \Criterion\Test\TestCase
         $commit_url = \Criterion\Helper\Bitbucket::shortRepo($repo);
         $this->assertEquals('romhut/criterion', $commit_url);
     }
-
 }

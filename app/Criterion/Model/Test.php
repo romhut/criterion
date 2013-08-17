@@ -39,12 +39,17 @@ class Test extends \Criterion\Model
 
     public function getLogs($internal = false)
     {
-        $logs = $this->app->db->logs->find(array(
-            'test_id' => new \MongoId($this->id),
-            'internal' => $internal
-        ))->sort(array(
-            'time' => 1
-        ));
+        $logs = $this->app->db->logs->find(
+            array(
+                'test_id' => new \MongoId($this->id),
+                'internal' => $internal
+            )
+        )
+        ->sort(
+            array(
+                'time' => 1
+            )
+        );
 
         $log_models = array();
         foreach ($logs as $log) {
@@ -224,7 +229,7 @@ class Test extends \Criterion\Model
 
             $log->status = '1';
             $log->response = '0';
-            $log->output = implode(', ',$env_variables);
+            $log->output = implode(', ', $env_variables);
             $log->save();
         }
 
