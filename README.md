@@ -68,3 +68,7 @@ If you need a hand with anything then use one of the following methods:
  - [Github Issues](http://github.com/romhut/criterion/issues)
  - IRC (#criterion on Freenode)
  - Twitter: [@criterionapp](http://twitter.com/criterionapp)
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/romhut/criterion/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
