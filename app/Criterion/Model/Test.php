@@ -80,7 +80,7 @@ class Test extends \Criterion\Model
 
         if ($this->project->provider === 'github' && $this->project->github['token']) {
             $github_status = \Criterion\Helper\Github::updateStatus('error', $this, $this->project);
-            $command->log('Posting "error" status to Github', $github_status ? 'Success' : 'Failed');
+            $this->log('Posting "error" status to Github', $github_status ? 'Success' : 'Failed');
         }
 
         \Criterion\Helper\Notifications::failedEmail($this->id, $this->project);
@@ -126,7 +126,7 @@ class Test extends \Criterion\Model
 
         if ($this->project->provider === 'github' && $this->project->github['token']) {
             $github_status = \Criterion\Helper\Github::updateStatus('success', $this, $this->project);
-            $command->log('Posting "success" status to Github', $github_status ? 'Success' : 'Failed');
+            $this->log('Posting "success" status to Github', $github_status ? 'Success' : 'Failed');
         }
 
         if (isset($this->config['content']['pass']) && count($this->config['content']['pass'])) {
@@ -152,7 +152,7 @@ class Test extends \Criterion\Model
         }
 
         if (! is_array($config)) {
-            $command->log($command, 'The .criterion.yml file does not seem valid, or does not exist', '1');
+            $this->log($command, 'The .criterion.yml file does not seem valid, or does not exist', '1');
 
             return false;
         }
