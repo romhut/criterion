@@ -55,7 +55,7 @@ class Github extends \Criterion\Helper
 
         $status = array(
             'state' => $state,
-            'target_url' => $app->config['url'] . '/test/' . $test->id,
+            'target_url' => rtrim($app->config['url'], '/') . '/test/' . $test->id,
             'description' => $description[$state]
         );
 
