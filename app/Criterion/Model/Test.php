@@ -80,7 +80,7 @@ class Test extends \Criterion\Model
 
         if ($this->project->provider === 'github' && $this->project->github['token']) {
             $github_status = \Criterion\Helper\Github::updateStatus('error', $this, $this->project);
-            $this->log('Posting "error" status to Github', $github_status ? 'Success' : 'Failed');
+            $this->log('Posting "error" status to Github', $github_status ? 'Success' : 'Failed', $github_status ? '0' : '1');
         }
 
         \Criterion\Helper\Notifications::failedEmail($this->id, $this->project);
@@ -126,7 +126,7 @@ class Test extends \Criterion\Model
 
         if ($this->project->provider === 'github' && $this->project->github['token']) {
             $github_status = \Criterion\Helper\Github::updateStatus('success', $this, $this->project);
-            $this->log('Posting "success" status to Github', $github_status ? 'Success' : 'Failed');
+            $this->log('Posting "success" status to Github', $github_status ? 'Success' : 'Failed', $github_status ? '0' : '1');
         }
 
         if (isset($this->config['content']['pass']) && count($this->config['content']['pass'])) {
@@ -270,7 +270,7 @@ class Test extends \Criterion\Model
         // Push pending status to github
         if ($this->project->provider === 'github' && $this->project->github['token']) {
             $github_status = \Criterion\Helper\Github::updateStatus('pending', $this, $this->project);
-            $this->log('Posting "running" status to Github', $github_status ? 'Success' : 'Failed');
+            $this->log('Posting "running" status to Github', $github_status ? 'Success' : 'Failed', $github_status ? '0' : '1');
         }
 
         $test_method = 'run_' . ($this->type);
