@@ -33,7 +33,12 @@ class Repo extends \Criterion\Helper
     {
 
         if (is_dir($project->source)) {
-            return 'cp -R ' . $project->source . ' ' . (string) $test->id;
+            $command = 'cp -R ' . $project->source . ' ' . (string) $test->id;
+            if ($test->branch) {
+                $command .= ' && git checkout ' . $test->branch;
+            }
+
+            return $command;
         }
 
         $git_clone = null;
