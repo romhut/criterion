@@ -76,7 +76,11 @@ class RepoHelperTest extends \Criterion\Test\TestCase
         $project = new \Criterion\Model\Project();
         $project->emptyProject(ROOT);
 
-        $branches = \Criterion\Helper\Repo::branches($project);
+        $test = new \Criterion\Model\Test();
+        $test->branch = 'master';
+        $test->id = './';
+
+        $branches = \Criterion\Helper\Repo::branches($test);
         $this->assertTrue(in_array('master', $branches));
     }
 

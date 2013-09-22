@@ -29,13 +29,13 @@ class Repo extends \Criterion\Helper
         return 'ssh';
     }
 
-    public static function branches($project, $fetch = true)
+    public static function branches($test, $fetch = true)
     {
         if ($fetch) {
-            exec(sprintf('cd %s && git fetch --all', $project->source));
+            exec(sprintf('cd %s && git fetch --all', (string) $test->id));
         }
 
-        exec(sprintf('cd %s && git branch', $project->source), $branches);
+        exec(sprintf('cd %s && git branch', (string) $test->id), $branches);
 
         $branch_list = array();
         foreach ($branches as $branch) {

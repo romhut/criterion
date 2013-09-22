@@ -249,6 +249,10 @@ class Test extends \Criterion\Model
         $fetch_command = \Criterion\Helper\Repo::fetchCommand($this, $this->project);
         $fetch = $command->execute($fetch_command, true);
 
+        // Fetch latest branches
+        $this->project->branches = \Criterion\Helper\Repo::branches($this);
+        $this->project->save();
+
         $fetch_end = microtime(true);
 
         $fetch_log->output = 'Failed';
