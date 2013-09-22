@@ -71,6 +71,15 @@ class RepoHelperTest extends \Criterion\Test\TestCase
         $this->assertEquals($expected, $fetch_command);
     }
 
+    public function testBranches()
+    {
+        $project = new \Criterion\Model\Project();
+        $project->emptyProject(ROOT);
+
+        $branches = \Criterion\Helper\Repo::branches($project);
+        $this->assertTrue(in_array('master', $branches));
+    }
+
     public function testFetchCommandFolderWithoutBranch()
     {
         $project = new \Criterion\Model\Project();
