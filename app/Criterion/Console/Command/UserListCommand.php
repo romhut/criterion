@@ -18,7 +18,7 @@ class UserListCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         // Check for users
-        $users = $this->getApplication()->db->selectCollection('users')->find();
+        $users = $this->getApplication()->app->db->selectCollection('users')->find();
         if ($users->count() < 1) {
             $output->writeln('<error>Could not find any users</error>');
 
