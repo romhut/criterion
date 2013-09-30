@@ -29,11 +29,36 @@ class Repo extends \Criterion\Helper
         return 'ssh';
     }
 
+    public static function branches($test, $fetch = true)
+    {
+        if ($fetch) {
+            exec(sprintf('cd %s && git fetch --all', (string) $test->id));
+        }
+
+        exec(sprintf('cd %s && git branch', (string) $test->id), $branches);
+
+        $branch_list = array();
+        foreach ($branches as $branch) {
+            if (strpos($branch, '*') === 0) {
+                $branch = ltrim($branch, '* ');
+            }
+
+            $branch_list[] = $branch;
+        }
+
+        return $branch_list;
+    }
+
     public static function fetchCommand($test, $project)
     {
 
         if (is_dir($project->source)) {
-            return 'cp -R ' . $project->source . ' ' . (string) $test->id;
+            $command = 'cp -R ' . $project->source . ' ' . (string) $test->id;
+            if ($test->branch) {
+                $command .= ' && git checkout ' . $test->branch;
+            }
+
+            return $command;
         }
 
         $git_clone = null;

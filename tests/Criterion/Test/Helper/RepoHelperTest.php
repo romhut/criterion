@@ -58,14 +58,38 @@ class RepoHelperTest extends \Criterion\Test\TestCase
         $this->assertEquals($expected, $clone_command);
     }
 
-    public function testFetchCommandFolder()
+    public function testFetchCommandFolderWithBranch()
     {
         $project = new \Criterion\Model\Project();
         $project->emptyProject(ROOT);
 
         $test = new \Criterion\Model\Test();
         $test->branch = 'master';
+        $fetch_command = \Criterion\Helper\Repo::fetchCommand($test, $project);
 
+        $expected = 'cp -R ' . ROOT . ' ' . $test->id . ' && git checkout master';
+        $this->assertEquals($expected, $fetch_command);
+    }
+
+    public function testBranches()
+    {
+        $project = new \Criterion\Model\Project();
+        $project->emptyProject(ROOT);
+
+        $test = new \Criterion\Model\Test();
+        $test->branch = 'master';
+        $test->id = './';
+
+        $branches = \Criterion\Helper\Repo::branches($test);
+        $this->assertTrue(in_array('master', $branches));
+    }
+
+    public function testFetchCommandFolderWithoutBranch()
+    {
+        $project = new \Criterion\Model\Project();
+        $project->emptyProject(ROOT);
+
+        $test = new \Criterion\Model\Test();
         $fetch_command = \Criterion\Helper\Repo::fetchCommand($test, $project);
 
         $expected = 'cp -R ' . ROOT . ' ' . $test->id;
