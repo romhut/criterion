@@ -21,6 +21,7 @@ include ROOT . '/vendor/autoload.php';
 $cli = new Criterion\Console\Application('Criterion', '1.0');
 $cli->addCommands(array(
     new Criterion\Console\Command\InstallCommand(),
+    new Criterion\Console\Command\ProjectTestCommand(),
     new Criterion\Console\Command\WorkerRunCommand(),
     new Criterion\Console\Command\TestCommand(),
     new Criterion\Console\Command\UserCreateCommand(),
