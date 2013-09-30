@@ -78,7 +78,8 @@ class TestCommand extends Command
         // Switch to the project folder, and fetch the source
         chdir($project_path);
         if (! $test->fetch()) {
-            return $test->failed();
+            $test->failed();
+            exit (1);
         }
 
         // Switch to the test folder
@@ -96,7 +97,7 @@ class TestCommand extends Command
             );
             $test->save();
             $test->removeFolder();
-            return false;
+            exit(1);
         }
 
         // Detect the test type. Could be .criterion.yml, server or automatic
@@ -110,6 +111,14 @@ class TestCommand extends Command
 
         // Finally, save the test and run it
         $test->save();
-        return $test->run();
+
+        $run = $test->run();
+
+        if ($run) {
+            exit (0);
+        } else {
+            exit (1);
+        }
+
     }
 }

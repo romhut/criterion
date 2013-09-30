@@ -92,7 +92,6 @@ class Test extends \Criterion\Model
         }
 
         $this->removeFolder();
-
         return true;
     }
 
@@ -281,11 +280,16 @@ class Test extends \Criterion\Model
 
         if (method_exists($this, $test_method)) {
             if ($this->$test_method()) {
-                return $this->passed();
+                $this->passed();
+                return true;
             }
         }
 
-        return $this->failed();
+        $this->failed();
+
+
+
+        return false;
     }
 
     public function run_phpunit()

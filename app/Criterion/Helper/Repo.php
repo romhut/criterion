@@ -5,7 +5,7 @@ class Repo extends \Criterion\Helper
 {
     public static function provider($url)
     {
-        if (is_dir($url)) {
+        if (@is_dir($url)) {
             return 'folder';
         }
 
@@ -52,12 +52,8 @@ class Repo extends \Criterion\Helper
     public static function fetchCommand($test, $project)
     {
 
-        if (is_dir($project->source)) {
-            $command = 'cp -R ' . $project->source . ' ' . (string) $test->id;
-            if ($test->branch) {
-                $command .= ' && git checkout ' . $test->branch;
-            }
-
+        if (@is_dir($project->source)) {
+            $command = 'cp -r ' . $project->source . ' ' . (string) $test->id;
             return $command;
         }
 

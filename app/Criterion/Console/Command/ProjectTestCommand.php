@@ -30,15 +30,18 @@ class ProjectTestCommand extends Command
                 InputOption::VALUE_NONE,
                 'If set, the worker will run in verbose mode'
             )
+            ->addOption(
+                'skip-open',
+                null,
+                InputOption::VALUE_NONE,
+                'Should we skip the "open" command if the test fails?'
+            )
             ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $worker = uniqid();
-        $output->writeln('<comment>Worker Running for Project</comment>');
-        $output->writeln('');
-
         $app = new \Criterion\Application();
 
         $test = new \Criterion\Model\Test();
@@ -49,15 +52,18 @@ class ProjectTestCommand extends Command
         $test_id = (string) $test->id;
 
         if ($test->exists) {
+            exec('php ' . ROOT . '/bin/cli test ' . $test_id, $response, $pass);
 
-            $output->writeln('-----------');
-            $output->writeln('<comment>Test Started</comment>');
+            if ($pass != 0) {
+                $output->writeln('<error>Criterion tests failed</error>');
 
-            $shell_command = $input->getOption('debug') ? 'passthru' : 'shell_exec';
-            $shell_command('php ' . ROOT . '/bin/cli test ' . $test_id);
+                if (! $input->getOption('skip-open')) {
+                    exec('open ' . $app->config['url'] . '/test/' . $test_id);
+                }
 
-            $output->writeln('<info>Test Finished</info>');
-            $output->writeln('');
+            }
+
+            exit ((int)$pass);
         }
     }
 }
