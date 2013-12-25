@@ -1,0 +1,13 @@
+services:
+    composer:
+        dev: true
+        method: install
+    phpunit:
+        config : phpunit.xml.dist
+
+hooks:
+    post:
+        url: http://example.com
+        subscribe:
+            - success
+            - failure
