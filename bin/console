@@ -1,0 +1,15 @@
+#!/usr/bin/env php
+<?php
+
+use Symfony\Component\Console\Application;
+
+define('ROOT', dirname(__DIR__));
+define('SRC_PATH', ROOT . '/src');
+define('CONFIG_PATH', ROOT . '/config');
+
+require_once  SRC_PATH . '/bootstrap.php';
+
+$console = new Application();
+$console->add(new \Criterion\Console\Worker\JobCommand);
+$console->add(new \Criterion\Console\Runner\JobCommand);
+$console->run();

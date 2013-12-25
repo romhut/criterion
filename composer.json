@@ -4,7 +4,7 @@
     "authors": [
         {
             "name": "Scott Robertson",
-            "homepage": "https://github.com/scottymeuk",
+            "homepage": "https://github.com/scottrobertson",
             "role": "Developer"
         }
     ],
@@ -15,7 +15,8 @@
         "symfony/console": "~2.4",
         "twig/twig": "~1.0",
         "symfony/yaml": "~2.3",
-        "igorw/config-service-provider" : "~1.2"
+        "igorw/config-service-provider" : "~1.2",
+        "mockery/mockery": "~0.8"
     },
     "require-dev": {
         "phpunit/phpunit": "~3.7",
@@ -24,7 +25,10 @@
     },
     "autoload": {
         "psr-0": {
-            "Criterion": ["src", "test"]
+            "Criterion": [
+                "src",
+                "tests"
+            ]
         }
     }
 }
