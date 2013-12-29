@@ -36,11 +36,9 @@ class Post extends \Criterion\Hook
                     'Content-Length: ' . strlen($payload)
                 ]
             ]
-
         );
 
-        $result = curl_exec($ch);
-
-        var_dump($result);
+        $this->response = curl_exec($ch);
+        return $this;
     }
 }
