@@ -1,13 +1,16 @@
 language: php
 
 php:
-  - 5.3
   - 5.4
   - 5.5
 
+services:
+  - mongodb
+
 before_script:
+  - echo "extension=mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
   - composer self-update
   - composer install
 
 script:
-  - phpunit --coverage-text
+  - vendor/bin/phpunit --coverage-text
