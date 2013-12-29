@@ -1,5 +1,1 @@
-vendor
-data
-composer.phar
-config.json
-.DS_Store
+/vendor

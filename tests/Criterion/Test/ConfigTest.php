@@ -1,42 +1,139 @@
 <?php
 namespace Criterion\Test;
 
-use Criterion\Application;
-
 class ConfigTest extends TestCase
 {
-
-    public function tearDown()
+    public function testInit()
     {
-        if (file_exists(CONFIG_FILE)) {
-            unlink(CONFIG_FILE);
-        }
+        $strJob = '\\Criterion\\Model\\Job';
+
+        $mockJob = \Mockery::mock($strJob)
+            ->shouldReceive('getPath')
+            ->once()
+            ->andReturn(ROOT)
+            ->mock();
+
+        $config = new \Criterion\Config($mockJob);
+
+        $this->assertInstanceOf('Criterion\Config', $config);
     }
 
-    public function testDefaultConfig()
+    public function testSetConfig()
     {
-        $app = new Application();
-        $this->assertFalse(empty($app->config), 'No default config defined');
-        $this->assertArrayHasKey('mongo', $app->config);
-        $this->assertEquals($app->config['mongo']['server'], 'mongodb://127.0.0.1');
-        $this->assertEquals($app->config['mongo']['database'], 'criterion');
+        $strJob = '\\Criterion\\Model\\Job';
+
+        $mockJob = \Mockery::mock($strJob)
+            ->shouldReceive('getPath')
+            ->once()
+            ->andReturn(ROOT)
+            ->mock();
+
+        $config = new \Criterion\Config($mockJob);
+        $config->setConfig([]);
+
+        $this->assertEquals([], $config->getConfig());
     }
 
-    public function testConfigFile()
+    public function testEmptyServices()
     {
+        $strJob = '\\Criterion\\Model\\Job';
 
-        // Write fake config
-        $config = array(
-            'mongo' => array(
-                'server' => 'mongodb://localhost'
-            )
-        );
-        file_put_contents(CONFIG_FILE, json_encode($config));
+        $mockJob = \Mockery::mock($strJob)
+            ->shouldReceive('getPath')
+            ->once()
+            ->andReturn(ROOT)
+            ->mock();
 
-        // Initialize application
-        $app = new Application();
-        $this->assertArrayHasKey('mongo', $app->config);
-        $this->assertEquals($app->config['mongo']['server'], 'mongodb://localhost');
-        $this->assertEquals($app->config['mongo']['database'], 'criterion');
+        $config = new \Criterion\Config($mockJob);
+        $config->setConfig([]);
+
+        $this->assertCount(0, $config->getServices());
+    }
+
+    public function testGetServices()
+    {
+        $strJob = '\\Criterion\\Model\\Job';
+
+        $mockJob = \Mockery::mock($strJob)
+            ->shouldReceive('getPath')
+            ->once()
+            ->andReturn(ROOT)
+            ->mock();
+
+        $config = new \Criterion\Config($mockJob);
+
+        $services = $config->getServices();
+        $this->assertInstanceOf('\Criterion\Service', $services[0]);
+    }
+
+    public function testServiceNotFound()
+    {
+        $strJob = '\\Criterion\\Model\\Job';
+
+        $mockJob = \Mockery::mock($strJob)
+            ->shouldReceive('getPath')
+            ->once()
+            ->andReturn(ROOT)
+            ->mock();
+
+        $config = new \Criterion\Config($mockJob);
+        $config->setConfig([
+            'services' => [
+                'notfound' => []
+            ]
+        ]);
+
+        $this->assertCount(0, $config->getServices());
+    }
+
+    public function testGetHooks()
+    {
+        $strJob = '\\Criterion\\Model\\Job';
+
+        $mockJob = \Mockery::mock($strJob)
+            ->shouldReceive('getPath')
+            ->once()
+            ->andReturn(ROOT)
+            ->mock();
+
+        $config = new \Criterion\Config($mockJob);
+        $hooks = $config->getHooks();
+        $this->assertInstanceOf('\Criterion\Hook', $hooks[0]);
+    }
+
+    public function testEmptyHooks()
+    {
+        $strJob = '\\Criterion\\Model\\Job';
+
+        $mockJob = \Mockery::mock($strJob)
+            ->shouldReceive('getPath')
+            ->once()
+            ->andReturn(ROOT)
+            ->mock();
+
+        $config = new \Criterion\Config($mockJob);
+        $config->setConfig([]);
+
+        $this->assertCount(0, $config->getHooks());
+    }
+
+    public function testHookNotFound()
+    {
+        $strJob = '\\Criterion\\Model\\Job';
+
+        $mockJob = \Mockery::mock($strJob)
+            ->shouldReceive('getPath')
+            ->once()
+            ->andReturn(ROOT)
+            ->mock();
+
+        $config = new \Criterion\Config($mockJob);
+        $config->setConfig([
+            'hooks' => [
+                'notfound' => []
+            ]
+        ]);
+
+        $this->assertCount(0, $config->getHooks());
     }
 }

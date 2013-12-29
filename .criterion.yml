@@ -1,7 +1,13 @@
-setup:
-    - composer install
-    - mkdir -p data/keys
-    - mkdir -p data/tests
-    - chmod -R 0777 data/
-script:
-    - vendor/bin/phpunit
+services:
+    composer:
+        dev: true
+        method: install
+    phpunit:
+        config : phpunit.xml.dist
+
+hooks:
+    post:
+        url: http://example.com
+        subscribe:
+            - success
+            - failure

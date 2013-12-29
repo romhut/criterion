@@ -4,34 +4,31 @@
     "authors": [
         {
             "name": "Scott Robertson",
-            "homepage": "https://github.com/scottymeuk",
-            "role": "Developer"
-        },
-        {
-            "name": "Marc Qualie",
-            "homepage": "https://github.com/marcqualie",
+            "homepage": "https://github.com/scottrobertson",
             "role": "Developer"
         }
     ],
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.4",
         "ext-mongo": ">=1.3.0",
         "silex/silex": "~1.1",
-        "symfony/console": "~2.3",
+        "symfony/console": "~2.4",
         "twig/twig": "~1.0",
-        "marcqualie/mongominify": "~1.0",
         "symfony/yaml": "~2.3",
-        "ircmaxell/password-compat": "~1.0",
-        "swiftmailer/swiftmailer": "~5.0"
+        "igorw/config-service-provider" : "~1.2",
+        "mockery/mockery": "~0.8"
     },
     "require-dev": {
         "phpunit/phpunit": "~3.7",
-        "symfony/browser-kit": "~2.3",
+        "symfony/browser-kit": "~2.4",
         "filp/whoops": "~1.0"
     },
     "autoload": {
         "psr-0": {
-            "Criterion": ["app", "tests"]
+            "Criterion": [
+                "src",
+                "tests"
+            ]
         }
     }
 }
