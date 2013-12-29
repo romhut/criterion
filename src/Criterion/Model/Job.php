@@ -84,7 +84,8 @@ class Job extends \Criterion\Model
         );
 
         foreach ($this->getSubscriptions($event) as $hook) {
-            $hook->notify($event, $this);
+            $notify = $hook->notify($event, $this);
+            $notify->log($event);
         }
     }
 

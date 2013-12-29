@@ -28,6 +28,12 @@ abstract class Hook
     protected $options;
 
     /**
+     * Response from the Hook::notify
+     * @var string
+     */
+    protected $response;
+
+    /**
      * Required options for this Service
      * @var array
      */
@@ -59,6 +65,28 @@ abstract class Hook
                 );
             }
         }
+    }
+
+    /**
+     * Log the response of a Hook::notify
+     * @author Scott Robertson <scottymeuk@gmail.com>
+     * @return void
+     */
+    public function log($event)
+    {
+
+        $hook = array_merge(
+            [
+                $this->getName() => [
+                    $event => [
+                        'response' => $this->response
+                    ]
+                ]
+            ],
+            $this->job->hook ?: []
+        );
+
+        $this->job->hook = $hook;
     }
 
     /**
