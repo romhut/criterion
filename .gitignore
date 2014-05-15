@@ -1,5 +1,8 @@
 vendor
 data
 composer.phar
+composer.lock
 config.json
 .DS_Store
+
+.idea
