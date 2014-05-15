@@ -1,5 +1,7 @@
 Criterion
 ===
+**This project is no longer maintained**
+
 "A principle or standard by which something may be judged or decided"
 
 ----
